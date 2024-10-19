@@ -1,0 +1,1 @@
+ /Users/macbook/Documents/flutter/fare_riding_app/.dart_tool/flutter_build/661a4101ecd14cecd4ff39211a2fe643/native_assets.yaml: 
