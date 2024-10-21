@@ -242,6 +242,10 @@ geolocator_windows
 2.15
 file:///Users/macbook/.pub-cache/hosted/pub.dev/geolocator_windows-0.2.3/
 file:///Users/macbook/.pub-cache/hosted/pub.dev/geolocator_windows-0.2.3/lib/
+get
+2.15
+file:///Users/macbook/.pub-cache/hosted/pub.dev/get-4.6.6/
+file:///Users/macbook/.pub-cache/hosted/pub.dev/get-4.6.6/lib/
 glob
 2.19
 file:///Users/macbook/.pub-cache/hosted/pub.dev/glob-2.1.2/
@@ -588,8 +592,8 @@ file:///Users/macbook/.pub-cache/hosted/pub.dev/yaml-3.1.2/
 file:///Users/macbook/.pub-cache/hosted/pub.dev/yaml-3.1.2/lib/
 fare_riding_app
 3.5
-file:///Users/macbook/Documents/flutter/fare_riding_app/
-file:///Users/macbook/Documents/flutter/fare_riding_app/lib/
+file:///Users/macbook/Documents/DATN2024/DoAnTotNghiep2024/fare_riding_app/
+file:///Users/macbook/Documents/DATN2024/DoAnTotNghiep2024/fare_riding_app/lib/
 _macros
 3.4
 file:///Users/macbook/Downloads/flutter_3_24/bin/cache/dart-sdk/pkg/_macros/

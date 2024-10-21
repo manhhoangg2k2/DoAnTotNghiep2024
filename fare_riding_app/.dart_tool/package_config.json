@@ -392,6 +392,12 @@
       "languageVersion": "2.15"
     },
     {
+      "name": "get",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/get-4.6.6",
+      "packageUri": "lib/",
+      "languageVersion": "2.15"
+    },
+    {
       "name": "glob",
       "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/glob-2.1.2",
       "packageUri": "lib/",
@@ -920,7 +926,7 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-10-13T03:12:55.147431Z",
+  "generated": "2024-10-20T09:26:06.237387Z",
   "generator": "pub",
   "generatorVersion": "3.5.0",
   "flutterRoot": "file:///Users/macbook/Downloads/flutter_3_24",

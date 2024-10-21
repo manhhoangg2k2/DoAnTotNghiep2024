@@ -1,0 +1,41 @@
+import 'package:flutter/material.dart';
+
+class AppSizes {
+  AppSizes._();
+  static const double size_0 = 0;
+  static const double size_1 = 1;
+  static const double size_2 = 2;
+  static const double size_3 = 4;
+  static const double size_5 = 5;
+  static const double size_4 = 4;
+  static const double size_6 = 6;
+  static const double size_7 = 7;
+  static const double size_8 = 8;
+  static const double size_9 = 9;
+  static const double size_10 = 10;
+  static const double size_11 = 11;
+  static const double size_12 = 12;
+  static const double size_13 = 13;
+  static const double size_14 = 14;
+  static const double size_15 = 15;
+  static const double size_16 = 16;
+  static const double size_17 = 17;
+  static const double size_18 = 18;
+  static const double size_19 = 19;
+  static const double size_20 = 20;
+  static const double size_21 = 21;
+  static const double size_22 = 22;
+  static const double size_23 = 23;
+  static const double size_24 = 24;
+  static const double size_25 = 25;
+  static const double size_28 = 28;
+  static const double size_30 = 30;
+  static const double size_35 = 35;
+  static const double size_40 = 40;
+  static const double size_50 = 50;
+  static const double size_70 = 70;
+  static const double size_80 = 80;
+  static const double size_90 = 90;
+  static const double size_100 = 100;
+  static const double size_tabbar = kToolbarHeight - 20;
+}
