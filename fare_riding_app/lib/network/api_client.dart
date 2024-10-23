@@ -11,7 +11,7 @@ abstract class ApiClient{
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   @POST("/api/account/login")
-  Future<String> login(@Body() Map<String, dynamic> body);
+  Future<APIResponse> login(@Body() Map<String, dynamic> body);
 
   @POST("/api/account/signUp")
   Future<APIResponse<SignUpRes>> signUp(@Body() Map<String, dynamic> body);

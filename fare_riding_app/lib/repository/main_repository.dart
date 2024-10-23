@@ -7,7 +7,7 @@ import '../network/api_util.dart';
 
 abstract class MainRepository{
   Future<LoginRes?> getToken();
-  Future<String> Login(String phoneNumber);
+  // Future<String> Login(String phoneNumber);
   Future<void> saveToken(LoginRes loginRes);
   Future<void> removeToken();
   Future<APIResponse<SignUpRes>> signUp({
@@ -44,11 +44,11 @@ class MainRepositoryImpl extends MainRepository{
     return SecureStorageHelper.instance.saveToken(loginRes);
   }
 
-  @override
-  Future<String> Login(String phoneNumber) async {
-    final body = {"phone_number": phoneNumber};
-    return apiClient.login(body);
-  }
+  // @override
+  // Future<String> Login(String phoneNumber) async {
+  //   final body = {"phone_number": phoneNumber};
+  //   return apiClient.login(body);
+  // }
 
   @override
   Future<APIResponse<SignUpRes>> signUp(

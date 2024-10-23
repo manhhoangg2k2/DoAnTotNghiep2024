@@ -7,7 +7,7 @@ import '../network/api_util.dart';
 
 abstract class AuthRepository{
   Future<LoginRes?> getToken();
-  Future<String> Login(String phoneNumber);
+  Future<APIResponse> authentication(String phoneNumber);
   Future<void> saveToken(LoginRes loginRes);
   Future<void> removeToken();
   Future<APIResponse<SignUpRes>> signUp({
@@ -40,7 +40,7 @@ class AuthRepositoryImpl extends AuthRepository{
   }
 
   @override
-  Future<String> Login(String phoneNumber) async {
+  Future<APIResponse> authentication(String phoneNumber) async {
     final body = {"phone_number": phoneNumber};
     return apiClient.login(body);
   }

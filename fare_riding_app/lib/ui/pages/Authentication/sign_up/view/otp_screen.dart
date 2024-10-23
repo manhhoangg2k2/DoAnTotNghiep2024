@@ -103,29 +103,7 @@ class OtpScreen extends StatelessWidget {
                       }
                     },
                   ),
-                  SizedBox(
-                    height: AppSizes.size_15,
-                  ),
-                  TextBase(
-                    text: "Hoặc",
-                    color: AppColor.contentDisable,
-                  ),
-                  SizedBox(
-                    height: AppSizes.size_15,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      TextBase(text: "Nếu bạn đã có tài khoản? "),
-                      InkWell(
-                        child: TextBase(
-                          text: AppText.logIn,
-                          color: AppColor.main,
-                        ),
-                        onTap: () {},
-                      ),
-                    ],
-                  ),
+                  
                 ],
               ),
             ],
