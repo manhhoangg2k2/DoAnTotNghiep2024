@@ -14,8 +14,11 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
   Future<void> authentication(String phoneNumber)async{
     try{
       final result = await authRepo.authentication(phoneNumber);
-      if(result.data.code == 200){
-
+      if(result.code == 200){
+        await authRepo.saveToken(result.data!);
+      }
+      else{
+        
       }
     }catch(e){
 

@@ -24,20 +24,20 @@ class _ApiClient implements ApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<APIResponse<dynamic>> login(Map<String, dynamic> body) async {
+  Future<APIResponse<LoginRes>> login(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<APIResponse<dynamic>>(Options(
+    final _options = _setStreamType<APIResponse<LoginRes>>(Options(
       method: 'POST',
       headers: _headers,
       extra: _extra,
     )
         .compose(
           _dio.options,
-          '/api/account/login',
+          '/api/account/authentication',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -47,11 +47,11 @@ class _ApiClient implements ApiClient {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late APIResponse<dynamic> _value;
+    late APIResponse<LoginRes> _value;
     try {
-      _value = APIResponse<dynamic>.fromJson(
+      _value = APIResponse<LoginRes>.fromJson(
         _result.data!,
-        (json) => json as dynamic,
+        (json) => LoginRes.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

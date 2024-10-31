@@ -1,4 +1,7 @@
+import 'package:fare_riding_app/main.dart';
+import 'package:fare_riding_app/ui/pages/Authentication/log_in/cubit/authentication_cubit.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_otp_text_field/flutter_otp_text_field.dart';
 
 import '../../constant/AppColor.dart';
@@ -9,10 +12,9 @@ import 'MainButton.dart';
 import 'TextBase.dart';
 
 class OtpScreen extends StatelessWidget {
-  const OtpScreen({super.key, required this.onSubmit, required this.phoneNumber});
+  const OtpScreen({super.key, required this.phoneNumber});
 
   final String phoneNumber;
-  final Function onSubmit;
 
   @override
   Widget build(BuildContext context) {
@@ -57,8 +59,6 @@ class OtpScreen extends StatelessWidget {
                         fontWeight: AppFonts.semiBold,
                       ),
                       onTap: () {
-                        // Gọi lại mã OTP
-                        // signUpCubit.resendOtp();
                       },
                     ),
                   ],
@@ -70,7 +70,7 @@ class OtpScreen extends StatelessWidget {
               type: 1,
               onTap:(){
                 if(optController.text == '123456'){
-                  onSubmit;
+                  context.read<AuthenticationCubit>().authentication(phoneNumber);
                 }
               },
             ),

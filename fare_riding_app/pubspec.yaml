@@ -54,6 +54,7 @@ dependencies:
   equatable: ^2.0.5
   go_router: ^14.3.0
   get: ^4.6.6
+  shimmer: ^3.0.0
 
 dev_dependencies:
   flutter_test:
