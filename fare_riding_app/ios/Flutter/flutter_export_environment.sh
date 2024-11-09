@@ -7,6 +7,7 @@ export "FLUTTER_TARGET=/Users/macbook/Documents/DATN2024/DoAnTotNghiep2024/fare_
 export "FLUTTER_BUILD_DIR=build"
 export "FLUTTER_BUILD_NAME=1.0.0"
 export "FLUTTER_BUILD_NUMBER=1"
+export "CONFIGURATION_BUILD_DIR=/Users/macbook/Documents/DATN2024/DoAnTotNghiep2024/fare_riding_app/build/ios/iphoneos"
 export "DART_DEFINES=Zmx1dHRlci5pbnNwZWN0b3Iuc3RydWN0dXJlZEVycm9ycz10cnVl"
 export "DART_OBFUSCATION=false"
 export "TRACK_WIDGET_CREATION=true"
