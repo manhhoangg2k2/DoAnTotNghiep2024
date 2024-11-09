@@ -25,5 +25,8 @@ class AppColor{
 
   static const Color red_F2F= Color(0xFFD32F2F);
 
+  /// BottomSheet
+  static const Color bottomSheetStroke = Color(0xFFD1D1D1);
+  static const Color bottomSheetForeground = Color(0xFF242424);
 
 }

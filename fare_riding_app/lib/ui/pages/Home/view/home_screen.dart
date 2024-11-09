@@ -3,6 +3,7 @@ import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/constant/AppFont.dart';
 import 'package:fare_riding_app/constant/AppSize.dart';
 import 'package:fare_riding_app/constant/AppText.dart';
+import 'package:fare_riding_app/ui/pages/Home/widget/test.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -196,6 +197,27 @@ class HomeScreen extends StatelessWidget {
                           initialPage: 0,
                         ),
                       ),
+                      Container(
+                        child: Center(
+                          child: Stack(
+                            alignment: Alignment.center,
+                            clipBehavior: Clip.none,
+                            children: [
+                              CustomPaint(
+                                size: Size(200, 100), // Đặt kích thước tùy chỉnh cho nền
+                                painter: CurvedBottomBarPainter(),
+                              ),
+                              Positioned(
+                                bottom: 40, // Điều chỉnh vị trí của FAB
+                                child: FloatingActionButton(
+                                  onPressed: () {},
+                                  child: Icon(Icons.add),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        ),
                     ],
                   ),
                 )

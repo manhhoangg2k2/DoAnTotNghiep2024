@@ -1,9 +1,7 @@
 import 'package:fare_riding_app/ui/pages/Authentication/log_in/cubit/authentication_cubit.dart';
-import 'package:fare_riding_app/ui/pages/Authentication/log_in/view/authentication_screen.dart';
-import 'package:fare_riding_app/ui/pages/Authentication/sign_up/view/otp_screen.dart';
-import 'package:fare_riding_app/ui/pages/Authentication/sign_up/view/sign_up_screen.dart';
-import 'package:fare_riding_app/ui/pages/Home/view/choose_location.dart';
-import 'package:fare_riding_app/ui/pages/Home/view/home_screen.dart';
+import 'package:fare_riding_app/ui/pages/booking_screen/booking_screen.dart';
+import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location.dart';
+import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location/choose_locationn.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

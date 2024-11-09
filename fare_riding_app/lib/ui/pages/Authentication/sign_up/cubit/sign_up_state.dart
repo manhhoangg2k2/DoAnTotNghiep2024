@@ -14,5 +14,3 @@ class SignUpState {
     );
   }
 }
-
-class HomeMenuInitial extends SignUpState {}
