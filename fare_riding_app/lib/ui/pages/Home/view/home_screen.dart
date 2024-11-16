@@ -1,13 +1,19 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fare_riding_app/blocs/app_cubit.dart';
 import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/constant/AppFont.dart';
 import 'package:fare_riding_app/constant/AppSize.dart';
 import 'package:fare_riding_app/constant/AppText.dart';
-import 'package:fare_riding_app/ui/pages/Home/widget/test.dart';
+import 'package:fare_riding_app/models/response/user/user_info_res.dart';
+import 'package:fare_riding_app/ui/common/app_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:retrofit/retrofit.dart';
 
+import '../../../../router/route_config.dart';
 import '../../../common/TextBase.dart';
 import '../cubit/home_cubit.dart';
 
@@ -16,7 +22,8 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    PageController _pageController = new PageController();
+    final UserInfoRes? userInfor = context.read<AppCubit>().state.userInfo!;
+    // PageController _pageController = new PageController();
     return BlocProvider(
       create: (_) => HomeCubit(),
       child: Scaffold(
@@ -25,7 +32,7 @@ class HomeScreen extends StatelessWidget {
           child: Container(
             child: Column(
               children: [
-                Image.asset('assets/image/promotion.jpg'),
+                Image.asset('assets/images/promotion.jpg'),
                 Container(
                   padding: EdgeInsets.all(AppSizes.size_15),
                   child: Column(
@@ -41,14 +48,14 @@ class HomeScreen extends StatelessWidget {
                                 fontWeight: AppFonts.semiBold,
                               ),
                               TextBase(
-                                text: "Mạnh Hoàng",
+                                text: userInfor!.name,
                                 fontSize: AppSizes.size_20,
                                 fontWeight: AppFonts.semiBold,
                               )
                             ],
                           ),
                           TextBase(
-                            text: "100.000đ",
+                            text: "${formatCurrency(userInfor.balance)}đ",
                             fontSize: AppSizes.size_18,
                             color: AppColor.main,
                             fontWeight: AppFonts.semiBold,
@@ -162,9 +169,16 @@ class HomeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          iconWithLabel(
-                              () {}, "assets/svg/car_icon.svg", AppText.car),
-                          iconWithLabel(() {}, "assets/svg/motorbike_icon.svg",
+                          InkWell(
+                            onTap: (){
+                              Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'car-4');
+                            },
+                            child: iconWithLabel(
+                                () {}, "assets/svg/car_icon.svg", AppText.car),
+                          ),
+                          iconWithLabel(() {
+                            Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'motorbike');
+                          }, "assets/svg/motorbike_icon.svg",
                               AppText.motobike),
                           iconWithLabel(() {}, "assets/svg/delivery_icon.svg",
                               AppText.delivery),
@@ -182,7 +196,7 @@ class HomeScreen extends StatelessWidget {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
-                                'assets/image/promotion.jpg',
+                                'assets/images/promotion.jpg',
                                 fit: BoxFit.cover,
                               ),
                             ),
@@ -197,27 +211,7 @@ class HomeScreen extends StatelessWidget {
                           initialPage: 0,
                         ),
                       ),
-                      Container(
-                        child: Center(
-                          child: Stack(
-                            alignment: Alignment.center,
-                            clipBehavior: Clip.none,
-                            children: [
-                              CustomPaint(
-                                size: Size(200, 100), // Đặt kích thước tùy chỉnh cho nền
-                                painter: CurvedBottomBarPainter(),
-                              ),
-                              Positioned(
-                                bottom: 40, // Điều chỉnh vị trí của FAB
-                                child: FloatingActionButton(
-                                  onPressed: () {},
-                                  child: Icon(Icons.add),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        ),
+
                     ],
                   ),
                 )
@@ -231,7 +225,9 @@ class HomeScreen extends StatelessWidget {
 
   Widget iconWithLabel(Function onTap, String path, String label) {
     return InkWell(
-      onTap: () => onTap,
+      onTap: (){
+        onTap();
+      },
       child: Column(
         children: [
           Container(

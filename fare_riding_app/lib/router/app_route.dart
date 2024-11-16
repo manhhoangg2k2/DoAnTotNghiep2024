@@ -17,5 +17,10 @@ final GoRouter router = GoRouter(
       path: '/otp',
       builder: (context, state) => const OtpScreen(),
     ),
+    GoRoute(
+        path: '/bookingScreen',
+        builder: (context, state) {
+          return OtpScreen();
+        }),
   ],
 );

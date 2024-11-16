@@ -70,7 +70,7 @@ class OtpScreen extends StatelessWidget {
               type: 1,
               onTap:(){
                 if(optController.text == '123456'){
-                  context.read<AuthenticationCubit>().authentication(phoneNumber);
+                  context.read<AuthenticationCubit>().authentication(phoneNumber, context);
                 }
               },
             ),

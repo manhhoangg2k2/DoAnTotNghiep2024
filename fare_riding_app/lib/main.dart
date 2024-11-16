@@ -1,15 +1,19 @@
+import 'package:fare_riding_app/blocs/app_cubit.dart';
+import 'package:fare_riding_app/router/route_config.dart';
 import 'package:fare_riding_app/ui/pages/Authentication/log_in/cubit/authentication_cubit.dart';
-import 'package:fare_riding_app/ui/pages/booking_screen/booking_screen.dart';
-import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location.dart';
-import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location/choose_locationn.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
+import 'di/repository_module.dart';
 import 'firebase_options.dart';
 
 void main() async {
+  Get.testMode = true;
   WidgetsFlutterBinding.ensureInitialized();
+  await repoConfigDI();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
@@ -27,14 +31,14 @@ class MyApp extends StatelessWidget {
           BlocProvider<AuthenticationCubit>(
             create: (context) => AuthenticationCubit(),
           ),
-        ],
-        child: MaterialApp(
-          title: 'Flutter Demo',
-          theme: ThemeData(
-            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-            useMaterial3: true,
+          BlocProvider<AppCubit>(
+            create: (context) => AppCubit(),
           ),
-          home: ChooseLocation(),
+        ],
+        child: GetMaterialApp(
+          title: 'Fare Riding App',
+          initialRoute: RouteConfig.splash,
+          getPages: RouteConfig.getPages,
         ));
   }
 }

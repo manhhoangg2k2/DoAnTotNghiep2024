@@ -1,9 +1,11 @@
 import 'package:dio/dio.dart';
 import 'package:fare_riding_app/models/response/authen/login_res.dart';
+import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/response/api_response.dart';
 import '../models/response/authen/sign_up_res.dart';
+import '../models/response/user/user_info_res.dart';
 
 part 'api_client.g.dart';
 
@@ -17,6 +19,12 @@ abstract class ApiClient{
   @POST("/api/account/signUp")
   Future<APIResponse<SignUpRes>> signUp(@Body() Map<String, dynamic> body);
 
+  @GET("/api/account/getUserInfo")
+  Future<APIResponse<UserInfoRes>> getUserInfo();
+
   @POST("/api/account/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
+
+  @POST("/api/booking/getDirection")
+  Future<APIResponse<CalculationRes>> getBookingCalculation(@Body() Map<String, dynamic> body);
 }

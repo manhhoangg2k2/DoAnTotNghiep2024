@@ -82,7 +82,7 @@ class _ChooseLocationState extends State<_ChooseLocation> {
                 text: "Xác nhận",
                 type: 1,
                 onTap: () {
-                   _cubit.getAutofillLocation('ha noi');
+                   _cubit.getBookingCalculation(_cubit.fromLocation.text, _cubit.toLocation.text, '',context);
                 })
           ],
         ),

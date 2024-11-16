@@ -10,7 +10,7 @@ class ApiUtil {
     if (dio == null) {
       dio = Dio();
       dio!.options.connectTimeout = const Duration(seconds: 60);
-      // dio!.interceptors.add(ApiInterceptors());
+      dio!.interceptors.add(ApiInterceptors());
     }
     return dio!;
   }

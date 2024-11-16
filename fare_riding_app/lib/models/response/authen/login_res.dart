@@ -8,10 +8,13 @@ class LoginRes {
   String? phoneNumber;
   @JsonKey(name: "token")
   String? token;
+  @JsonKey(name: "expired")
+  String? expired;
 
   LoginRes({
     required this.phoneNumber,
     required this.token,
+    required this.expired,
   });
 
   factory LoginRes.fromJson(Map<String, dynamic> json) => _$LoginResFromJson(json);
