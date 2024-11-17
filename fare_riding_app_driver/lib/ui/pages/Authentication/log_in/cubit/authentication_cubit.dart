@@ -1,0 +1,32 @@
+import 'package:bloc/bloc.dart';
+import 'package:fare_riding_app/ui/pages/Home/view/home_screen.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+import 'package:meta/meta.dart';
+
+import '../../../../../repository/auth_repository.dart';
+import '../../sign_up/view/set_passcode_screen.dart';
+
+part 'authentication_state.dart';
+
+class AuthenticationCubit extends Cubit<AuthenticationState> {
+  AuthenticationCubit() : super(AuthenticationState());
+
+  AuthRepositoryImpl authRepo = AuthRepositoryImpl();
+
+
+  Future<void> authentication(String phoneNumber, BuildContext context)async{
+    try{
+      final result = await authRepo.authentication(phoneNumber);
+      if(result.code == 200){
+        await authRepo.saveToken(result.data!);
+        Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));
+      }
+      else{
+        
+      }
+    }catch(e){
+
+    }
+  }
+}

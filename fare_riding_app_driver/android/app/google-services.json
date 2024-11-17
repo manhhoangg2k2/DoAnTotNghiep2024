@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "352397951631",
+    "project_id": "fare-riding-app",
+    "storage_bucket": "fare-riding-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:352397951631:android:bd98d9db96346aa22ce6fa",
+        "android_client_info": {
+          "package_name": "com.example.fare_riding_app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA6TZoicUQFqq6yhW6k-bGTfuvP7uqxn2U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
