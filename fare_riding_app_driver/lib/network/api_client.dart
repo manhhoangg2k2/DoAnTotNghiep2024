@@ -13,16 +13,16 @@ part 'api_client.g.dart';
 abstract class ApiClient{
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
-  @POST("/api/account/authentication")
+  @POST("/api/driver/authentication")
   Future<APIResponse<LoginRes>> login(@Body() Map<String, dynamic> body);
 
-  @POST("/api/account/signUp")
+  @POST("/api/driver/signUp")
   Future<APIResponse<SignUpRes>> signUp(@Body() Map<String, dynamic> body);
 
-  @GET("/api/account/getUserInfo")
+  @GET("/api/driver/getDriverInfo")
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
-  @POST("/api/account/setPasscode")
+  @POST("/api/driver/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
 
   @POST("/api/booking/getDirection")

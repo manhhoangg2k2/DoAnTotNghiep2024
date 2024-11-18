@@ -37,7 +37,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/api/account/authentication',
+          '/api/driver/authentication',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -74,7 +74,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/api/account/signUp',
+          '/api/driver/signUp',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -110,7 +110,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/api/account/getUserInfo',
+          '/api/driver/getDriverInfo',
           queryParameters: queryParameters,
           data: _data,
         )
@@ -147,7 +147,7 @@ class _ApiClient implements ApiClient {
     )
         .compose(
           _dio.options,
-          '/api/account/setPasscode',
+          '/api/driver/setPasscode',
           queryParameters: queryParameters,
           data: _data,
         )

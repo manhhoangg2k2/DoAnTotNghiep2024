@@ -1,4 +1,5 @@
 
+import 'package:fare_riding_app/ui/pages/Authentication/log_in/view/authentication_screen.dart';
 import 'package:fare_riding_app/ui/pages/Home/view/home_screen.dart';
 import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location/choose_locationn.dart';
 import 'package:get/get.dart';
@@ -16,11 +17,13 @@ class RouteConfig {
   static const String chooseLocation = "/chooseLocation";
   static const String booking = "/booking";
   static const String home = "/home";
+  static const String signIn = "/signIn";
 
   static final List<GetPage> getPages = [
     GetPage(name: splash, page: () => const SplashPage()),
     GetPage(name: chooseLocation, page: () => const ChooseLocation()),
-    // GetPage(name: booking, page: () => const BookingScreen()),
+    GetPage(name: booking, page: () => const BookingScreen()),
     GetPage(name: home, page: () => const HomeScreen()),
+    GetPage(name: signIn, page: () => const AuthenticationScreen()),
   ];
 }

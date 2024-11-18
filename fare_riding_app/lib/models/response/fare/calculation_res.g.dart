@@ -18,6 +18,7 @@ CalculationRes _$CalculationResFromJson(Map<String, dynamic> json) =>
       coordinates: (json['coordinates'] as List<dynamic>)
           .map((e) => Location.fromJson(e as Map<String, dynamic>))
           .toList(),
+      vehicleType: json['vehicle_type'] as String,
     );
 
 Map<String, dynamic> _$CalculationResToJson(CalculationRes instance) =>
@@ -28,4 +29,5 @@ Map<String, dynamic> _$CalculationResToJson(CalculationRes instance) =>
       'pickup_location': instance.pickupLocation,
       'dropoff_location': instance.dropoffLocation,
       'coordinates': instance.coordinates,
+      'vehicle_type': instance.vehicleType,
     };

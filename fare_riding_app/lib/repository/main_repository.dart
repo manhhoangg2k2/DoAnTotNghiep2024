@@ -1,4 +1,5 @@
 import 'package:fare_riding_app/models/request/request_ride_req.dart';
+import 'package:fare_riding_app/models/response/coupon/coupon_res.dart';
 
 import '../database/secure_storage_helper.dart';
 import '../models/response/api_response.dart';
@@ -14,6 +15,7 @@ abstract class MainRepository {
   // Future<String> Login(String phoneNumber);
   Future<void> saveToken(LoginRes loginRes);
   Future<void> removeToken();
+  Future<APIResponse<CouponRes>> getListCoupon();
   Future<APIResponse<SignUpRes>> signUp({
     required String name,
     required String phoneNumber,
@@ -58,6 +60,10 @@ class MainRepositoryImpl extends MainRepository {
   @override
   Future<void> saveToken(LoginRes loginRes) async {
     return SecureStorageHelper.instance.saveToken(loginRes);
+  }
+
+  Future<APIResponse<CouponRes>> getListCoupon(){
+    return apiClient.getListCoupon();
   }
 
   @override

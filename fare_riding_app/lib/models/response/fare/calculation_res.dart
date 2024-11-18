@@ -15,6 +15,8 @@ class CalculationRes {
   @JsonKey(name: 'dropoff_location')
   final Location dropoffLocation;
   final List<Location> coordinates;
+  @JsonKey(name: 'vehicle_type')
+  final String vehicleType;
 
   CalculationRes({
     required this.finalPrice,
@@ -23,26 +25,13 @@ class CalculationRes {
     required this.pickupLocation,
     required this.dropoffLocation,
     required this.coordinates,
+    required this.vehicleType,
   });
 
   factory CalculationRes.fromJson(Map<String, dynamic> json) => _$CalculationResFromJson(json);
 
   Map<String, dynamic> toJson() => _$CalculationResToJson(this);
 }
-
-
-// extension CalculationResEx on CalculationRes {
-//   CalculationEntity get convertToEntity {
-//     return CalculationEntity(
-//       finalPrice: finalPrice,
-//       distance: distance,
-//       duration: duration,
-//       pickupLocation: pickupLocation.convertToEntity,
-//       dropoffLocation: dropoffLocation.convertToEntity,
-//       coordinates: coordinates.map((e) => e.convertToEntity).toList(),
-//     );
-//   }
-// }
 
 class CalculationEntity {
   final int finalPrice;

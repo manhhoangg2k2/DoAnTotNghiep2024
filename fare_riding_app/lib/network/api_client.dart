@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:fare_riding_app/models/response/authen/login_res.dart';
+import 'package:fare_riding_app/models/response/coupon/coupon_res.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
 import 'package:retrofit/retrofit.dart';
 
@@ -12,6 +13,9 @@ part 'api_client.g.dart';
 @RestApi(baseUrl: 'http://localhost:3000')
 abstract class ApiClient{
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
+
+  @GET("/api/app/getListCoupon")
+  Future<APIResponse<CouponRes>> getListCoupon();
 
   @POST("/api/account/authentication")
   Future<APIResponse<LoginRes>> login(@Body() Map<String, dynamic> body);

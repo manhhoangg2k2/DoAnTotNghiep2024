@@ -13,6 +13,7 @@ import 'package:get/get.dart';
 import '../di/app_module.dart';
 import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
+import '../router/route_config.dart';
 import '../ui/common/app_colors.dart';
 import '../utlis/logger.dart';
 
@@ -83,7 +84,11 @@ class AppCubit extends Cubit<AppState> {
       if (result.code == 200) {
         emit(state.copyWith(userInfo: result.data));
       }
+      else{
+        Get.offAllNamed(RouteConfig.signIn);
+      }
     } catch (error) {
+      Get.offAllNamed(RouteConfig.signIn);
       logger.e(error);
     }
   }

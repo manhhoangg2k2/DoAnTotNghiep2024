@@ -1,5 +1,8 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:dio/dio.dart';
+import 'package:fare_riding_app/models/entities/ride_entity.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
 import 'package:fare_riding_app/ui/pages/booking_screen/booking_screen.dart';
@@ -55,10 +58,11 @@ class ChooseLocationCubit extends Cubit<ChooseLocationState> {
       );
 
       if (result.code == 200 && result.data != null) {
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => BookingScreen(calculationRes: result.data!, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation,)),
-        );
+        Get.offAllNamed(RouteConfig.booking, arguments: RideEntity(calculationRes: result.data, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation, vehicleType: vehicleType));
+        // Navigator.push(
+        //   context,
+        //   MaterialPageRoute(builder: (context) => BookingScreen(calculationRes: result.data!, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation,)),
+        // );
       }
     } catch (e) {
       print(e);

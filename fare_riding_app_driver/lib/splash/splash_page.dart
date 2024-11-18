@@ -49,7 +49,12 @@ class _SplashChildPageState extends State<SplashChildPage> {
         if (state.isLoggedIn) {
           context.read<AppCubit>().setLoggedIn(true);
           await context.read<AppCubit>().getUserSession();
+          if(context.read<AppCubit>().state.userInfo != null)
           Get.offAllNamed(RouteConfig.home);
+        }
+        else{
+          Get.offAllNamed(RouteConfig.signIn);
+
         }
       },
       child: Scaffold(

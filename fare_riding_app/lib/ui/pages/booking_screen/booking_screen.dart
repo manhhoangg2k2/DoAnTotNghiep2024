@@ -1,3 +1,4 @@
+import 'package:fare_riding_app/blocs/app_cubit.dart';
 import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
 import 'package:fare_riding_app/ui/common/MainButton.dart';
@@ -11,6 +12,8 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../common/app_bottom_sheet.dart';
@@ -18,38 +21,20 @@ import '../../common/app_colors.dart';
 
 class BookingScreen extends StatelessWidget {
   const BookingScreen(
-      {super.key,
-      required this.calculationRes,
-      required this.pickupLocation,
-      required this.dropoffLocation});
-
-  final CalculationRes calculationRes;
-  final String pickupLocation;
-  final String dropoffLocation;
+      {super.key,});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider<BookingCubit>(
       create: (context) => BookingCubit(),
-      child: _BookingScreen(
-        calculationRes: calculationRes,
-        pickupLocation: pickupLocation,
-        dropoffLocation: dropoffLocation,
-      ),
+      child: _BookingScreen(),
     );
   }
 }
 
 class _BookingScreen extends StatefulWidget {
   const _BookingScreen(
-      {super.key,
-      required this.calculationRes,
-      required this.pickupLocation,
-      required this.dropoffLocation});
-
-  final CalculationRes calculationRes;
-  final String pickupLocation;
-  final String dropoffLocation;
+      {super.key,});
 
   @override
   State<_BookingScreen> createState() => _BookingScreenState();
@@ -63,14 +48,17 @@ class _BookingScreenState extends State<_BookingScreen> {
   Set<Polyline> _polyline = {};
 
   @override
-  void didChangeDependencies() {
+  void didChangeDependencies() async {
     super.didChangeDependencies();
     _cubit = context.read<BookingCubit>();
+    _cubit.Init();
   }
 
   @override
   void initState() {
-    latLngList = widget.calculationRes.coordinates.map<LatLng>((coordinate) {
+    _cubit = context.read<BookingCubit>();
+    _cubit.Init();
+    latLngList = _cubit.state.rideEntity!.calculationRes!.coordinates.map<LatLng>((coordinate) {
       return LatLng(coordinate.lat, coordinate.lng);
     }).toList();
     _polyline.add(
@@ -80,7 +68,6 @@ class _BookingScreenState extends State<_BookingScreen> {
         color: AppColor.primary,
       ),
     );
-    print(_polyline.first.points);
     super.initState();
   }
 
@@ -92,8 +79,8 @@ class _BookingScreenState extends State<_BookingScreen> {
           GoogleMap(
             mapType: MapType.normal,
             initialCameraPosition: CameraPosition(
-              target: LatLng(widget.calculationRes.coordinates.first.lat,
-                  widget.calculationRes.coordinates.first.lng),
+              target: LatLng(_cubit.state.rideEntity!.calculationRes!.coordinates.first.lat,
+                  _cubit.state.rideEntity!.calculationRes!.coordinates.first.lng),
               zoom: 14.0,
             ),
             polylines: _polyline,
@@ -105,8 +92,8 @@ class _BookingScreenState extends State<_BookingScreen> {
             circles: {
               Circle(
                 circleId: CircleId("currentLocationCircle"),
-                center: LatLng(widget.calculationRes.pickupLocation.lat,
-                    widget.calculationRes.pickupLocation.lng),
+                center: LatLng(_cubit.state.rideEntity!.calculationRes!.pickupLocation.lat,
+                    _cubit.state.rideEntity!.calculationRes!.pickupLocation.lng),
                 radius: 1000, // Radius in meters
                 fillColor:
                     Colors.blue.withOpacity(0.2), // Blue color with opacity 0.2
@@ -117,8 +104,8 @@ class _BookingScreenState extends State<_BookingScreen> {
             markers: {
               Marker(
                 markerId: MarkerId("startPosition"),
-                position: LatLng(widget.calculationRes.pickupLocation.lat,
-                    widget.calculationRes.pickupLocation.lng),
+                position: LatLng(_cubit.state.rideEntity!.calculationRes!.pickupLocation.lat,
+                    _cubit.state.rideEntity!.calculationRes!.pickupLocation.lng),
                 icon: BitmapDescriptor.defaultMarkerWithHue(
                     BitmapDescriptor.hueBlue),
                 infoWindow: InfoWindow(
@@ -127,8 +114,8 @@ class _BookingScreenState extends State<_BookingScreen> {
               ),
               Marker(
                 markerId: MarkerId("endPosition"),
-                position: LatLng(widget.calculationRes.dropoffLocation.lat,
-                    widget.calculationRes.dropoffLocation.lng),
+                position: LatLng(_cubit.state.rideEntity!.calculationRes!.dropoffLocation.lat,
+                    _cubit.state.rideEntity!.calculationRes!.dropoffLocation.lng),
                 icon: BitmapDescriptor.defaultMarker,
                 infoWindow: InfoWindow(
                   title: 'Destination',
@@ -181,7 +168,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                     Expanded(
                                       flex: 5,
                                       child: Text(
-                                        widget.pickupLocation,
+                                        _cubit.state.rideEntity!.pickupLocation!,
                                         style: AppTextStyle.description,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -206,7 +193,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                     Expanded(
                                       flex: 5,
                                       child: Text(
-                                        widget.dropoffLocation,
+                                        _cubit.state.rideEntity!.dropoffLocation!,
                                         style: AppTextStyle.description,
                                         maxLines: 2,
                                         overflow: TextOverflow.ellipsis,
@@ -220,7 +207,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                             _buildSelectOption(
                               leadingIcon: AppImages.icBuyRates,
                               label: 'Tiền mặt',
-                              titleBottomSheet: "Chọn dịch vụ GTGT",
+                              titleBottomSheet: "Chọn phương thức thanh toán",
                               bodyBottomSheet: Container(),
                             ),
                             SizedBox(height: 10,),
@@ -228,7 +215,61 @@ class _BookingScreenState extends State<_BookingScreen> {
                               leadingIcon: AppImages.icCoupon2,
                               label: 'Giảm giá',
                               titleBottomSheet: "Chọn mã giảm giá",
-                              bodyBottomSheet: Container(),
+                              bodyBottomSheet: BlocBuilder<BookingCubit, BookingState>(
+                                builder: (context, state) {
+                                  if (state.listCoupon == null) {
+                                    return Center(child: CircularProgressIndicator());
+                                  } else if (state.listCoupon!.coupons.isEmpty) {
+                                    return Center(child: Text('Không có mã giảm giá'));
+                                  }
+                                  return Padding(
+                                    padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 20),
+                                    child: Column(
+                                      children: [
+                                        Expanded(
+                                          child: ListView.separated(
+                                            itemBuilder: (context, index) {
+                                              return Container(
+                                                child: InkWell(
+                                                  onTap: (){
+                                                    if(index == state.couponChooseIndex){
+                                                      _cubit.setCouponChooseIndex(-1);
+                                                    }
+                                                    else _cubit.setCouponChooseIndex(index);
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                                    children: [
+                                                      Image.asset(AppImages.icAvatar, height: 50,),
+                                                      Column(
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Text(state.listCoupon!.coupons[index].code.toString(), style: AppTextStyle.blackS16Bold,),
+                                                          Text(state.listCoupon!.coupons[index].description),
+                                                          Text("Hết hạn: ${state.listCoupon!.coupons[index].expiredDate.toString()}"),
+                                                        ],
+                                                      ),
+                                                      Container(height: 20, width: 20, decoration: BoxDecoration(color: state.couponChooseIndex == index ? AppColors.primary : AppColors.textLight,borderRadius: BorderRadius.circular(50), border: Border.all(color: AppColors.gray)),)
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                            separatorBuilder: (context, index) {
+                                              return Divider();
+                                            },
+                                            itemCount: state.listCoupon!.coupons.length,
+                                          ),
+                                        ),
+                                        Mainbutton(text: 'Xác nhận', type: 1, onTap: (){
+                                          Get.back();
+                                          _cubit.getBookingCalculation();
+                                        })
+                                      ],
+                                    ),
+                                  );
+                                },
+                              ),
                             ),
                             SolidAppDivider(),
                             Row(
@@ -240,7 +281,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                       .copyWith(fontSize: 20),
                                 ),
                                 Text(
-                                  '${formatCurrency(widget.calculationRes.finalPrice.toDouble())}đ',
+                                  '${formatCurrency(_cubit.state.rideEntity!.calculationRes!.finalPrice.toDouble())}đ',
                                   style: AppTextStyle.blackS16Bold.copyWith(
                                       fontSize: 20, color: AppColor.primary),
                                 )
@@ -254,7 +295,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                   style: AppTextStyle.blackS16,
                                 ),
                                 Text(
-                                  '${widget.calculationRes.distance / 1000} km',
+                                  '${_cubit.state.rideEntity!.calculationRes!.distance / 1000} km',
                                   style: AppTextStyle.blackS16,
                                 )
                               ],
@@ -267,7 +308,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                   style: AppTextStyle.blackS16,
                                 ),
                                 Text(
-                                  '${widget.calculationRes.duration} phút',
+                                  '${_cubit.state.rideEntity!.calculationRes!.duration} phút',
                                   style: AppTextStyle.blackS16,
                                 )
                               ],
@@ -294,7 +335,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                             // ),
                             // SolidAppDivider(),
                             Mainbutton(text: 'Đặt xe', type: 1, onTap: (){
-                              _cubit.requestRide(widget.calculationRes, 'cash');
+                              _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash');
                             })
                           ],
                         ),
@@ -334,12 +375,12 @@ class _BookingScreenState extends State<_BookingScreen> {
             borderRadius: BorderRadius.circular(10)),
         child: Row(
           children: [
-            Image.asset(
-              leadingIcon,
-              height: 24,
-              width: 24,
-              color: AppColors.gray,
-            ),
+            // Image.asset(
+            //   leadingIcon,
+            //   height: 24,
+            //   width: 24,
+            //   color: AppColors.gray,
+            // ),
             SizedBox(width: 10),
             Expanded(
               child: labelWidget ??
@@ -366,3 +407,4 @@ class _BookingScreenState extends State<_BookingScreen> {
     );
   }
 }
+

@@ -30,6 +30,7 @@ RequestedRide _$RequestedRideFromJson(Map<String, dynamic> json) =>
           .map((e) => Location.fromJson(e as Map<String, dynamic>))
           .toList(),
       paymentMethod: json['payment_method'] as String,
+      vehicleType: json['vehicle_type'] as String,
     );
 
 Map<String, dynamic> _$RequestedRideToJson(RequestedRide instance) =>
@@ -41,4 +42,5 @@ Map<String, dynamic> _$RequestedRideToJson(RequestedRide instance) =>
       'dropoff_location': instance.dropoffLocation,
       'coordinates': instance.coordinates,
       'payment_method': instance.paymentMethod,
+      'vehicle_type': instance.vehicleType,
     };

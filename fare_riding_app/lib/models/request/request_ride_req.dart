@@ -34,6 +34,8 @@ class RequestedRide {
   final List<Location> coordinates;
   @JsonKey(name: 'payment_method')
   final String paymentMethod;
+  @JsonKey(name: 'vehicle_type')
+  final String vehicleType;
 
   RequestedRide({
     required this.finalPrice,
@@ -43,6 +45,7 @@ class RequestedRide {
     required this.dropoffLocation,
     required this.coordinates,
     required this.paymentMethod,
+    required this.vehicleType,
   });
 
   factory RequestedRide.fromJson(Map<String, dynamic> json) => _$RequestedRideFromJson(json);

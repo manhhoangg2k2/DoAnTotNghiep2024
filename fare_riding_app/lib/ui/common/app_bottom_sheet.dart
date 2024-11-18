@@ -1,4 +1,6 @@
 import 'package:fare_riding_app/constant/AppColor.dart';
+import 'package:fare_riding_app/ui/common/app_images.dart';
+import 'package:fare_riding_app/ui/common/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -43,7 +45,7 @@ class AppBottomSheet {
                     child: Text(
                       title,
                       textAlign: TextAlign.center,
-                      style: TextStyle(),
+                      style: AppTextStyle.blackS16Bold,
                     ),
                   ),
                   InkWell(
@@ -51,7 +53,7 @@ class AppBottomSheet {
                       Get.back();
                     },
                     child: Image.asset(
-                      'assets/svg/down_arrow.svg',
+                      AppImages.icDown,
                       width: 24,
                     ),
                   )
