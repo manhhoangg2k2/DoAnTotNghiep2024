@@ -1,6 +1,6 @@
+import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/constant/AppFont.dart';
 import 'package:fare_riding_app/constant/AppSize.dart';
 import 'TextBase.dart';
@@ -26,7 +26,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColor.white,
+      backgroundColor: AppColor.primary,
       elevation: AppSizes.size_0,
       leadingWidth: leadingWidth,
       leading: context != null
@@ -36,7 +36,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
           onTap: () => Navigator.pop(context),
           child: SvgPicture.asset(
             'assets/svg/arrow_left.svg',
-            color: AppColor.black,
+            color: AppColor.white,
           ),
         ),
       )
@@ -50,6 +50,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
               fontSize: fontSize,
               fontWeight: AppFonts.medium,
               text: text,
+              color: AppColor.white,
             ),
           ],
         ),

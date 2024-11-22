@@ -8,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 
+import 'configs/mqtt_manager.dart';
 import 'di/repository_module.dart';
 import 'firebase_options.dart';
 
@@ -18,6 +19,13 @@ void main() async {
     await repoConfigDI(); // Cấu hình DI
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
+    );
+    await MQTTManager().initialize(
+      server: 'broker.hivemq.com',
+      port: 1883,
+      clientId: 'flutter_client',
+      username: '',
+      password: '',
     );
     runApp(const MyApp());
   } catch (e) {

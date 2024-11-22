@@ -1,6 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:fare_riding_app/models/entities/location.dart';
 import 'package:fare_riding_app/models/response/authen/login_res.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
+import 'package:fare_riding_app/models/response/fare/request_rides_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_res.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/response/api_response.dart';
@@ -22,6 +25,9 @@ abstract class ApiClient{
   @GET("/api/driver/getDriverInfo")
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
+  @GET("/api/driver/getListRequestRide")
+  Future<APIResponse<RequestRidesRes>> getListRequestRides();
+
   @POST("/api/driver/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
 
@@ -30,4 +36,10 @@ abstract class ApiClient{
 
   @POST("/api/booking/requestRide")
   Future<APIResponse> requestRide(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/startRide")
+  Future<APIResponse<RideRes>> startRide(@Body() Map<String, dynamic> body);
+
+  @GET("/api/app/getDirection")
+  Future<APIResponse<List<Location>>> getDirection(@Body() Map<String, dynamic> body);
 }

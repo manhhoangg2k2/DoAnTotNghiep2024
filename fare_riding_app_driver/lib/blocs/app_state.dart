@@ -7,6 +7,8 @@ class AppState extends Equatable {
   final bool hasUnReadNotify;
   final String appVersion;
   final UserInfoRes? userInfo;
+  final bool isActive;
+  final Location? currentLocation;
 
   const AppState({
     this.needReloadData = false,
@@ -15,6 +17,8 @@ class AppState extends Equatable {
     this.hasUnReadNotify = false,
     this.appVersion = '',
     this.userInfo,
+    this.isActive = false,
+    this.currentLocation
   });
 
   @override
@@ -24,7 +28,9 @@ class AppState extends Equatable {
         totalProductFavorite,
         hasUnReadNotify,
         appVersion,
-    userInfo
+    userInfo,
+    isActive,
+    currentLocation,
       ];
 
   AppState copyWith({
@@ -33,7 +39,9 @@ class AppState extends Equatable {
     int? totalProductFavorite,
     bool? hasUnReadNotify,
     String? appVersion,
-    UserInfoRes? userInfo
+    UserInfoRes? userInfo,
+    bool? isActive,
+    Location? currentLocation,
   }) {
     return AppState(
       needReloadData: needReloadData ?? this.needReloadData,
@@ -42,6 +50,8 @@ class AppState extends Equatable {
       hasUnReadNotify: hasUnReadNotify ?? this.hasUnReadNotify,
       appVersion: appVersion ?? this.appVersion,
       userInfo: userInfo ?? this.userInfo,
+      isActive: isActive ?? this.isActive,
+      currentLocation: currentLocation ?? this.currentLocation
     );
   }
 }

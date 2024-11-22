@@ -335,7 +335,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                             // ),
                             // SolidAppDivider(),
                             Mainbutton(text: 'Đặt xe', type: 1, onTap: (){
-                              _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash');
+                              _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash',);
                             })
                           ],
                         ),

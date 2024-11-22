@@ -12,7 +12,12 @@ class Location {
     required this.lng,
   });
 
-  factory Location.fromJson(Map<String, dynamic> json) => _$LocationFromJson(json);
+  factory Location.fromJson(Map<String, dynamic> json) {
+    return Location(
+      lat: json['lat'],
+      lng: json['lng'],
+    );
+  }
 
   Map<String, dynamic> toJson() => _$LocationToJson(this);
 }

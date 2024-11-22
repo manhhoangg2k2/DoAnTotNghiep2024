@@ -9,8 +9,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
+import '../configs/mqtt_manager.dart';
 import '../di/app_module.dart';
+import '../models/entities/location.dart';
 import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
 import '../router/route_config.dart';
@@ -31,6 +34,7 @@ class AppCubit extends Cubit<AppState> {
   bool isStoreReview = true;
 
   init() {
+    emit(state.copyWith(currentLocation: Location(lat: 21.00615, lng: 105.88687)));
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
@@ -77,6 +81,10 @@ class AppCubit extends Cubit<AppState> {
     await getUserInfo();
   }
 
+  void switchActive(bool value){
+    emit(state.copyWith(isActive: !state.isActive));
+  }
+
   getUserInfo() async {
     if (!state.isLoggedIn) return;
     try {
@@ -91,6 +99,20 @@ class AppCubit extends Cubit<AppState> {
       Get.offAllNamed(RouteConfig.signIn);
       logger.e(error);
     }
+  }
+
+  void subscribeToTopic(String topic) {
+    MQTTManager().mqttService.subscribe(topic);
+    MQTTManager().mqttService.handleUpdates((messages) {
+      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+      final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      print('Received message: $pt from topic: ${messages[0].topic}>');
+    });
+  }
+
+  void publishMessage(String topic, String message) {
+    MQTTManager().mqttService.publish(topic, message);
   }
 
   void reloadData() {

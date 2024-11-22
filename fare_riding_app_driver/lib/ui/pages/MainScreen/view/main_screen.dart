@@ -1,4 +1,5 @@
 
+import 'package:fare_riding_app/ui/pages/Home/view/home_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -18,7 +19,7 @@ class MainScreen extends StatelessWidget {
     int _selectedIndex = AppTabs.home;
     // var context =
     const List<Widget> _pages = <Widget>[
-      HomeScreen(),
+      HomeScreen1(),
       HistoryScreen(),
       WalletScreen(),
       AccountScreen(),

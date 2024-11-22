@@ -116,6 +116,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "charcode",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/charcode-1.4.0",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "checked_yaml",
       "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/checked_yaml-2.0.3",
       "packageUri": "lib/",
@@ -190,6 +196,12 @@
     {
       "name": "equatable",
       "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/equatable-2.0.5",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
+      "name": "event_bus",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/event_bus-2.0.1",
       "packageUri": "lib/",
       "languageVersion": "2.12"
     },
@@ -620,6 +632,12 @@
       "languageVersion": "3.3"
     },
     {
+      "name": "mqtt_client",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/mqtt_client-10.5.1",
+      "packageUri": "lib/",
+      "languageVersion": "3.0"
+    },
+    {
       "name": "nested",
       "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/nested-1.0.0",
       "packageUri": "lib/",
@@ -884,6 +902,18 @@
       "languageVersion": "2.17"
     },
     {
+      "name": "universal_html",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/universal_html-2.2.4",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
+      "name": "universal_io",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/universal_io-2.2.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "uuid",
       "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/uuid-4.5.0",
       "packageUri": "lib/",
@@ -915,7 +945,7 @@
     },
     {
       "name": "vm_service",
-      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/vm_service-14.2.4",
+      "rootUri": "file:///Users/macbook/.pub-cache/hosted/pub.dev/vm_service-14.2.5",
       "packageUri": "lib/",
       "languageVersion": "3.3"
     },
@@ -974,10 +1004,10 @@
       "languageVersion": "3.5"
     }
   ],
-  "generated": "2024-11-18T14:26:28.464702Z",
+  "generated": "2024-11-22T07:20:30.054246Z",
   "generator": "pub",
-  "generatorVersion": "3.5.0",
+  "generatorVersion": "3.5.2",
   "flutterRoot": "file:///Users/macbook/Downloads/flutter_3_24",
-  "flutterVersion": "3.24.0",
+  "flutterVersion": "3.24.2",
   "pubCache": "file:///Users/macbook/.pub-cache"
 }

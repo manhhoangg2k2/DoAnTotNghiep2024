@@ -1,6 +1,9 @@
-import 'package:fare_riding_app/models/request/request_ride_req.dart';
+import 'package:fare_riding_app/models/entities/location.dart';
+import 'package:fare_riding_app/models/response/fare/request_rides_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_res.dart';
 
 import '../database/secure_storage_helper.dart';
+import '../models/request/request_ride_req.dart';
 import '../models/response/api_response.dart';
 import '../models/response/authen/login_res.dart';
 import '../models/response/authen/sign_up_res.dart';
@@ -35,10 +38,24 @@ abstract class MainRepository {
     required String coupon,
     required String vehicleType,
   });
+
   Future<APIResponse<UserInfoRes>> getUserInfo();
+
+  Future<APIResponse<RequestRidesRes>> getListRequestRides();
 
   Future<APIResponse> requestRide({
     required RequestRideReq requestRideReq,
+  });
+
+  Future<APIResponse<RideRes>> startRide({
+    required RequestRide requestRide,
+  });
+
+  Future<APIResponse<List<Location>>> getDirection({
+    required double startLocationLat,
+    required double startLocationLng,
+    required double endLocationLat,
+    required double endLocationLng,
   });
 }
 
@@ -117,5 +134,34 @@ class MainRepositoryImpl extends MainRepository {
 
   Future<APIResponse<UserInfoRes>> getUserInfo(){
     return apiClient.getUserInfo();
+  }
+
+  Future<APIResponse<RequestRidesRes>> getListRequestRides(){
+    return apiClient.getListRequestRides();
+  }
+
+  Future<APIResponse<RideRes>> startRide({
+    required RequestRide requestRide,
+  }){
+    final body = {
+      "ride": requestRide.toJson()
+    };
+    var x = body;
+    return apiClient.startRide(body);
+  }
+
+  Future<APIResponse<List<Location>>> getDirection({
+    required double startLocationLat,
+    required double startLocationLng,
+    required double endLocationLat,
+    required double endLocationLng,
+  }){
+    final body = {
+      "start_location_lat": startLocationLat,
+      "start_location_lng": startLocationLng,
+      "end_location_lat": endLocationLat,
+      "end_location_lng": endLocationLng
+    };
+    return apiClient.getDirection(body);
   }
 }

@@ -44,7 +44,10 @@ class BookingCubit extends Cubit<BookingState> {
               dropoffLocation: calculationRes.dropoffLocation,
               coordinates: calculationRes.coordinates,
               paymentMethod: paymentMethod,
-              vehicleType: calculationRes.vehicleType
+              vehicleType: calculationRes.vehicleType,
+            pickupAddress: state.rideEntity!.pickupLocation!,
+            dropoffAddress: state.rideEntity!.dropoffLocation!
+
           )
       ));
       if (result.code == 200) {
