@@ -2,10 +2,12 @@ class AppImages {
   /// Common
   static const bgImagePlaceholder = 'assets/images/bg_image_placeholder.png';
   static const icLogo = 'assets/images/ic_logo.png';
+  static const icCurrentLocation = 'assets/images/current-location.png';
   static const icAvatar = 'assets/images/ic_avatar.png';
   static const icAvatar1 = 'assets/images/ic_avatar1.png';
   static const icCustomerCare = 'assets/images/ic_customer_care.png';
   static const icHeart = 'assets/images/ic_heart.png';
+  static const icRefresh = 'assets/images/refresh.svg';
   static const icNotification = 'assets/images/ic_notification.png';
   static const icSearch = 'assets/images/ic_search.png';
   static const icSetting = 'assets/images/ic_setting.png';

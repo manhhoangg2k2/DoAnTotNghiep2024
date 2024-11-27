@@ -23,7 +23,7 @@ void main() async {
     await MQTTManager().initialize(
       server: 'broker.hivemq.com',
       port: 1883,
-      clientId: 'flutter_client',
+      clientId: 'customer_123@@#@#1112312312',
       username: '',
       password: '',
     );
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
           create: (context) => AuthenticationCubit(),
         ),
         BlocProvider<AppCubit>(
-          create: (context) => AppCubit(),
+          create: (context) => AppCubit()..init(),
         ),
       ],
       child: ScreenUtilInit(

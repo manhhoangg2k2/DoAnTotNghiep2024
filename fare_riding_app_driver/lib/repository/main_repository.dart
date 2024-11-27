@@ -8,6 +8,7 @@ import '../models/response/api_response.dart';
 import '../models/response/authen/login_res.dart';
 import '../models/response/authen/sign_up_res.dart';
 import '../models/response/fare/calculation_res.dart';
+import '../models/response/fare/coordinates_res.dart';
 import '../models/response/user/user_info_res.dart';
 import '../network/api_client.dart';
 import '../network/api_util.dart';
@@ -51,7 +52,7 @@ abstract class MainRepository {
     required RequestRide requestRide,
   });
 
-  Future<APIResponse<List<Location>>> getDirection({
+  Future<APIResponse<CoordinatesRes>> getDirection({
     required double startLocationLat,
     required double startLocationLng,
     required double endLocationLat,
@@ -150,7 +151,7 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.startRide(body);
   }
 
-  Future<APIResponse<List<Location>>> getDirection({
+  Future<APIResponse<CoordinatesRes>> getDirection({
     required double startLocationLat,
     required double startLocationLng,
     required double endLocationLat,

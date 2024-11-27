@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fare_riding_app/models/entities/location.dart';
 import 'package:fare_riding_app/models/response/authen/login_res.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
+import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
 import 'package:fare_riding_app/models/response/fare/request_rides_res.dart';
 import 'package:fare_riding_app/models/response/fare/ride_res.dart';
 import 'package:retrofit/retrofit.dart';
@@ -41,5 +42,5 @@ abstract class ApiClient{
   Future<APIResponse<RideRes>> startRide(@Body() Map<String, dynamic> body);
 
   @GET("/api/app/getDirection")
-  Future<APIResponse<List<Location>>> getDirection(@Body() Map<String, dynamic> body);
+  Future<APIResponse<CoordinatesRes>> getDirection(@Body() Map<String, dynamic> body);
 }

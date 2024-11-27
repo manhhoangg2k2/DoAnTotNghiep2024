@@ -7,7 +7,7 @@ import '../models/response/authen/login_res.dart';
 
 
 class SecureStorageHelper {
-  static const _apiTokenKey = '_apiTokenKey';
+  static const _apiTokenKey = '_apiCustomerTokenKey';
 
   final FlutterSecureStorage _storage;
 

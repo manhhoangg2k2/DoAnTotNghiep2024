@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 import '../configs/mqtt_manager.dart';
@@ -18,6 +20,7 @@ import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
 import '../router/route_config.dart';
 import '../ui/common/app_colors.dart';
+import '../ui/common/app_images.dart';
 import '../utlis/logger.dart';
 
 part 'app_state.dart';
@@ -28,13 +31,14 @@ class AppCubit extends Cubit<AppState> {
   FirebaseMessaging? _messaging;
   // final flutterLocalNotificationPlugin = FlutterLocalNotificationsPlugin();
   String fcmToken = '';
+  Timer? timer;
 
   AppCubit() : super(const AppState());
 
   bool isStoreReview = true;
-
   init() {
-    emit(state.copyWith(currentLocation: Location(lat: 21.00615, lng: 105.88687)));
+    emit(state.copyWith(currentLocation: Location(lat: 21.01363170241855, lng: 105.83465691117729)));
+    _loadCurrentLocationIcon();
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
@@ -82,7 +86,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   void switchActive(bool value){
-    emit(state.copyWith(isActive: !state.isActive));
+    emit(state.copyWith(isActive: value));
   }
 
   getUserInfo() async {
@@ -115,8 +119,36 @@ class AppCubit extends Cubit<AppState> {
     MQTTManager().mqttService.publish(topic, message);
   }
 
+  void publishLocation(String topic, String message) {
+    // Nếu timer đang chạy, hủy nó trước khi tạo một cái mới
+    timer?.cancel();
+
+    // Tạo một Timer mới để gửi tin nhắn mỗi 1 giây
+    timer = Timer.periodic(Duration(seconds: 1), (timer) {
+      MQTTManager().mqttService.publish(topic, message);
+    });
+  }
+
+  void stopPublishing() {
+    timer?.cancel();
+    timer = null;
+  }
+
   void reloadData() {
     emit(state.copyWith(needReloadData: true));
+  }
+
+  Future<void> _loadCurrentLocationIcon() async {
+    try{
+      BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(16, 16)),
+        AppImages.icCurrentLocation,
+      );
+      emit(state.copyWith(currentLocationIcon: bitmapDescriptor));
+    }
+    catch(e){
+      print(e);
+    }
   }
 
   // logout() async {

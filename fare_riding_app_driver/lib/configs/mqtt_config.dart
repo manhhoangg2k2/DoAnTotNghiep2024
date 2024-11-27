@@ -30,6 +30,8 @@ class MQTTConfig {
     _client!.onSubscribeFail = onSubscribeFail;
     _client!.onUnsubscribed = onUnsubscribed;
     _client!.pongCallback = pong;
+    // _client!.keepAlivePeriod = 200;
+    // _client!.connectTimeoutPeriod = 50000;
 
     final connMessage = MqttConnectMessage()
         .withClientIdentifier(clientId)

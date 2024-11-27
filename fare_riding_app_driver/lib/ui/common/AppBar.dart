@@ -47,7 +47,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             TextBase(
-              fontSize: fontSize,
+              fontSize: 20,
               fontWeight: AppFonts.medium,
               text: text,
               color: AppColor.white,

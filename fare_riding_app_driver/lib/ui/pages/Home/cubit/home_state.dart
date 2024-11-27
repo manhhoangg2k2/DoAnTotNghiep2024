@@ -12,6 +12,13 @@ class HomeState {
     this.requestRidesRes
   });
 
+  @override
+  List<Object?> get props => [
+    isActive,
+    index,
+    requestRidesRes
+  ];
+
   HomeState copyWith({int? index, bool? isActive, RequestRidesRes? requestRidesRes}) {
     return HomeState(
       index: index ?? this.index,

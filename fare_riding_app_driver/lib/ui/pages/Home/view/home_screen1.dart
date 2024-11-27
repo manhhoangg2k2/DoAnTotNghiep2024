@@ -1,9 +1,13 @@
+import 'dart:async';
+
 import 'package:fare_riding_app/blocs/app_cubit.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
 import 'package:fare_riding_app/ui/common/AppBar.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_divider.dart';
 import 'package:fare_riding_app/ui/common/app_function.dart';
+import 'package:fare_riding_app/ui/common/app_images.dart';
+import 'package:fare_riding_app/ui/common/app_loading.dart';
 import 'package:fare_riding_app/ui/pages/Home/cubit/home_cubit.dart';
 import 'package:fare_riding_app/ui/pages/Home/widget/request_ride/request_ride_detail.dart';
 import 'package:flutter/material.dart';
@@ -35,69 +39,125 @@ class _HomeScreen1 extends StatefulWidget {
 class _HomeScreen1State extends State<_HomeScreen1> {
   late HomeCubit _cubit;
   late UserInfoRes userInfo;
+  late Timer? _timer;
 
   @override
   void initState() {
     super.initState();
     _cubit = context.read<HomeCubit>();
     userInfo = context.read<AppCubit>().state.userInfo!;
-    context.read<AppCubit>().subscribeToTopic('driver/123123');
+    // context.read<AppCubit>().subscribeToTopic('driver/123123');
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.textLight.withOpacity(0.96),
-      appBar: AppBarBase(text: "Màn hình chính",),
-      body: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
-        // if (state.requestRidesRes == null || state.requestRidesRes!.listRequestRide.isEmpty) {
-        //   return Center(
-        //     child: CircularProgressIndicator(),
-        //   );
-        // } else {
-        return Container(
-          padding: EdgeInsets.all(10),
-          child: Column(
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    void _stopPublishing() {
+      _timer?.cancel();
+    }
+
+    void _startPublishing(String message) {
+      _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        context.read<AppCubit>().publishMessage(
+            'driver_location/${context.read<AppCubit>().state.userInfo!.id}',
+            message);
+      });
+    }
+
+    return BlocBuilder<AppCubit, AppState>(
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.textLight.withOpacity(0.96),
+          appBar: AppBarBase(
+            text: "Màn hình chính",
+          ),
+          body: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
+            // if (state.requestRidesRes == null || state.requestRidesRes!.listRequestRide.isEmpty) {
+            //   return Center(
+            //     child: CircularProgressIndicator(),
+            //   );
+            // } else {
+            return Container(
+              padding: EdgeInsets.all(10),
+              child: Column(
                 children: [
-                  Text("${userInfo.name}"),
-                  Switch(
-                    value: context.read<AppCubit>().state.isActive,
-                    onChanged: (value) {
-                      context.read<AppCubit>().switchActive(value);
-                    },
-                    activeColor: AppColors.primary,
-                  ),
-                ],
-              ),
-              SizedBox(height: 20,),
-              if (state.requestRidesRes != null) ...[
-                Expanded(
-                  child: ListView.separated(
-                    itemBuilder: (context, index) {
-                      return InkWell(
-                        onTap: (){
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => RequestRideDetail(requestRide: _cubit.state.requestRidesRes!.listRequestRide[index]),
-                          ));
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text("${userInfo.name}"),
+                      Switch(
+                        value: context.read<AppCubit>().state.isActive,
+                        onChanged: (value) {
+                          context.read<AppCubit>().switchActive(value);
+                          setState(() {
+                            if (value) {
+                              _startPublishing(context
+                                  .read<AppCubit>()
+                                  .state
+                                  .currentLocation!
+                                  .toJson()
+                                  .toString());
+                              _cubit.getListRequestRides(context);
+                            } else {
+                              _cubit.clearListRide();
+                              _stopPublishing();
+                            }
+                          });
                         },
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(8.0),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.5),
-                                spreadRadius: 1,
-                                blurRadius: 5,
-                                offset: Offset(0, 3), // changes position of shadow
-                              ),
-                            ],
-                            color: AppColor.white
-                          ),
-                            padding: EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                        activeColor: AppColors.primary,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 15,
+                  ),
+                  // if (state.requestRidesRes != null)...[
+                  if (context.read<AppCubit>().state.isActive) ...[
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: InkWell(
+                        onTap: () => _cubit.getListRequestRides(context),
+                        child: Text(
+                          "Làm mới",
+                          style: AppTextStyle.blackS16Bold
+                              .copyWith(color: AppColors.primary),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 15,
+                    ),
+                  ],
+                  if (state.requestRidesRes != null) ...[
+                    Expanded(
+                      child: ListView.separated(
+                        itemBuilder: (context, index) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => RequestRideDetail(
+                                        requestRide: _cubit
+                                            .state
+                                            .requestRidesRes!
+                                            .listRequestRide[index]),
+                                  ));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(8.0),
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.grey.withOpacity(0.5),
+                                      spreadRadius: 1,
+                                      blurRadius: 5,
+                                      offset: Offset(
+                                          0, 3), // changes position of shadow
+                                    ),
+                                  ],
+                                  color: AppColor.white),
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: 10, vertical: 10),
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -107,7 +167,8 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                                         child: Column(
                                           children: [
                                             Row(
-                                              mainAxisAlignment: MainAxisAlignment.start,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.start,
                                               children: [
                                                 SvgPicture.asset(
                                                   'assets/svg/map_red.svg',
@@ -116,15 +177,23 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                                                 SizedBox(width: 8),
                                                 Expanded(
                                                   child: Text(
-                                                    _cubit.state.requestRidesRes!.listRequestRide[index].pickupAddress,
-                                                    style: AppTextStyle.description,
+                                                    _cubit
+                                                        .state
+                                                        .requestRidesRes!
+                                                        .listRequestRide[index]
+                                                        .pickupAddress,
+                                                    style: AppTextStyle
+                                                        .description,
                                                     maxLines: 2,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
                                             ),
-                                            SizedBox(height: 10,),
+                                            SizedBox(
+                                              height: 10,
+                                            ),
                                             // Padding(padding: EdgeInsets.symmetric(horizontal: 20, vertical: 5), child: SolidAppDivider(),),
                                             Row(
                                               children: [
@@ -136,10 +205,16 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                                                 SizedBox(width: 8),
                                                 Expanded(
                                                   child: Text(
-                                                    _cubit.state.requestRidesRes!.listRequestRide[index].dropoffAddress,
-                                                    style: AppTextStyle.description,
+                                                    _cubit
+                                                        .state
+                                                        .requestRidesRes!
+                                                        .listRequestRide[index]
+                                                        .dropoffAddress,
+                                                    style: AppTextStyle
+                                                        .description,
                                                     maxLines: 2,
-                                                    overflow: TextOverflow.ellipsis,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
                                                   ),
                                                 ),
                                               ],
@@ -147,7 +222,9 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                                           ],
                                         ),
                                       ),
-                                      SizedBox(width: 15), // Thêm khoảng cách ngang giữa Column và SvgPicture
+                                      SizedBox(
+                                          width:
+                                              15), // Thêm khoảng cách ngang giữa Column và SvgPicture
                                       SvgPicture.asset(
                                         'assets/svg/right_arrow.svg',
                                         height: 25,
@@ -155,30 +232,46 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                                       ),
                                     ],
                                   ),
-                                  Padding(padding: EdgeInsets.symmetric(vertical: 10), child: DashedAppDivider(),),
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(vertical: 10),
+                                    child: DashedAppDivider(),
+                                  ),
                                   Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text("Tổng tiền", style: AppTextStyle.blackS16Bold,),
-                                      Text("${formatCurrency(double.parse(_cubit.state.requestRidesRes!.listRequestRide[index].finalPrice)) }đ", style: AppTextStyle.blackS18Bold.copyWith(color: AppColors.primary),)
+                                      Text(
+                                        "Tổng tiền",
+                                        style: AppTextStyle.blackS16Bold,
+                                      ),
+                                      Text(
+                                        "${formatCurrency(double.parse(_cubit.state.requestRidesRes!.listRequestRide[index].finalPrice))}đ",
+                                        style: AppTextStyle.blackS18Bold
+                                            .copyWith(color: AppColors.primary),
+                                      )
                                     ],
                                   )
                                 ],
-                              ),),
-                      );
-                    },
-                    separatorBuilder: (context, index) => SizedBox(height: 10,),
-                    itemCount:
-                        _cubit.state.requestRidesRes!.listRequestRide.length,
-                  ),
-                )
-              ]
-            ],
-          ),
+                              ),
+                            ),
+                          );
+                        },
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: 10,
+                        ),
+                        itemCount: _cubit
+                            .state.requestRidesRes!.listRequestRide.length,
+                      ),
+                    )
+                  ]
+                ],
+              ),
+            );
+          }
+              // },
+              ),
         );
-      }
-          // },
-          ),
+      },
     );
   }
 }

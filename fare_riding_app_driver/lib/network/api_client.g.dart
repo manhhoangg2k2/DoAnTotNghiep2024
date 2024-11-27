@@ -319,14 +319,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<APIResponse<List<Location>>> getDirection(
+  Future<APIResponse<CoordinatesRes>> getDirection(
       Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(body);
-    final _options = _setStreamType<APIResponse<List<Location>>>(Options(
+    final _options = _setStreamType<APIResponse<CoordinatesRes>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -343,16 +343,11 @@ class _ApiClient implements ApiClient {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late APIResponse<List<Location>> _value;
+    late APIResponse<CoordinatesRes> _value;
     try {
-      _value = APIResponse<List<Location>>.fromJson(
+      _value = APIResponse<CoordinatesRes>.fromJson(
         _result.data!,
-        (json) => json is List<dynamic>
-            ? json
-                .map<Location>(
-                    (i) => Location.fromJson(i as Map<String, dynamic>))
-                .toList()
-            : List.empty(),
+        (json) => CoordinatesRes.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

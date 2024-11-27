@@ -1,5 +1,6 @@
 import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/constant/AppFont.dart';
+import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:flutter/cupertino.dart';
 
 class Mainbutton extends StatelessWidget {
@@ -61,5 +62,42 @@ class Mainbutton extends StatelessWidget {
               ),
             ),
           );
+  }
+}
+
+class ErrorButton extends StatelessWidget {
+  final String text;
+  final VoidCallback onTap;
+
+  const ErrorButton({
+    Key? key,
+    required this.text,
+    required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 10),
+        child: Container(
+          width: double.infinity,
+          padding:
+          const EdgeInsets.symmetric(vertical: 12.0, horizontal: 24.0),
+          decoration: BoxDecoration(
+            color: AppColors.red,
+            border: Border.all(color: AppColors.red),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              text,
+              style: TextStyle(color: AppColor.white, fontSize: 16.0, fontWeight: AppFonts.medium),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

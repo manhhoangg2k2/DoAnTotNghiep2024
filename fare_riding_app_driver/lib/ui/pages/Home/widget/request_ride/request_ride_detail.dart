@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:fare_riding_app/blocs/app_cubit.dart';
@@ -30,8 +31,10 @@ class RequestRideDetail extends StatefulWidget {
 
 class _RequestRideDetailState extends State<RequestRideDetail> {
   late List<LatLng> latLngList;
+  // late Timer? _timerRequestRide;
 
   Set<Polyline> _polyline = {};
+
 
   @override
   void initState() {
@@ -57,6 +60,16 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
 
   @override
   Widget build(BuildContext context) {
+    // void _stopPublishing() {
+    //   _timerRequestRide?.cancel();
+    // }
+    //
+    // void _startPublishing(String message) {
+    //   _timerRequestRide = Timer.periodic(Duration(seconds: 1), (timer) {
+    //     context.read<AppCubit>().publishMessage('driver/${context.read<AppCubit>().state.userInfo!.id}/rideProcess', message);
+    //   });
+    // }
+
     final MainRepository mainRepo = getIt.get<MainRepository>();
     return Scaffold(
       body: Stack(
@@ -256,6 +269,9 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
                                 final result = await mainRepo.startRide(requestRide: widget.requestRide);
                                 final response = await mainRepo.getDirection(startLocationLat: context.read<AppCubit>().state.currentLocation!.lat, startLocationLng: context.read<AppCubit>().state.currentLocation!.lng, endLocationLat: double.parse(widget.requestRide.pickupLat) , endLocationLng: double.parse(widget.requestRide.pickupLng));
                                 if(result.code == 200 || response.code == 200){
+                                  final Map<String, dynamic> jsonMap = response.data!.toJson();
+                                  final String jsonString = jsonEncode(jsonMap);
+                                  context.read<AppCubit>().publishLocation('driver/${context.read<AppCubit>().state.userInfo!.id}/rideProcess', jsonString);
                                   Get.offAndToNamed(RouteConfig.rideProcess,
                                                     arguments: RideProcessArgument(coordinates: response.data!, customer_id: result.data!.customer.id, customer_name: result.data!.customer.name, customer_phone_num: result.data!.customer.phoneNumber, requestRide: widget.requestRide));
                                 }

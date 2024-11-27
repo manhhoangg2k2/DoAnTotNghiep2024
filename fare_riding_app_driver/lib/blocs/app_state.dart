@@ -9,6 +9,7 @@ class AppState extends Equatable {
   final UserInfoRes? userInfo;
   final bool isActive;
   final Location? currentLocation;
+  final BitmapDescriptor? currentLocationIcon;
 
   const AppState({
     this.needReloadData = false,
@@ -18,7 +19,8 @@ class AppState extends Equatable {
     this.appVersion = '',
     this.userInfo,
     this.isActive = false,
-    this.currentLocation
+    this.currentLocation,
+    this.currentLocationIcon,
   });
 
   @override
@@ -31,6 +33,7 @@ class AppState extends Equatable {
     userInfo,
     isActive,
     currentLocation,
+    currentLocationIcon,
       ];
 
   AppState copyWith({
@@ -42,6 +45,8 @@ class AppState extends Equatable {
     UserInfoRes? userInfo,
     bool? isActive,
     Location? currentLocation,
+    BitmapDescriptor? currentLocationIcon,
+    Timer? timer,
   }) {
     return AppState(
       needReloadData: needReloadData ?? this.needReloadData,
@@ -51,7 +56,8 @@ class AppState extends Equatable {
       appVersion: appVersion ?? this.appVersion,
       userInfo: userInfo ?? this.userInfo,
       isActive: isActive ?? this.isActive,
-      currentLocation: currentLocation ?? this.currentLocation
+      currentLocation: currentLocation ?? this.currentLocation,
+      currentLocationIcon: currentLocationIcon ?? this.currentLocationIcon,
     );
   }
 }

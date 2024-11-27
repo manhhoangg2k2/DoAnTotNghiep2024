@@ -2,21 +2,31 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:fare_riding_app/models/enums/app_status.dart';
+import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
+import 'package:fare_riding_app/models/response/notification/notification_res.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
+import 'package:fare_riding_app/ui/common/app_loading.dart';
+import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 import '../configs/mqtt_manager.dart';
+import '../constant/AppColor.dart';
 import '../di/app_module.dart';
+import '../models/entities/location.dart';
+import '../models/response/fare/ride_res.dart';
 import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
 import '../router/route_config.dart';
 import '../ui/common/app_colors.dart';
+import '../ui/common/app_images.dart';
 import '../utlis/logger.dart';
 
 part 'app_state.dart';
@@ -33,6 +43,7 @@ class AppCubit extends Cubit<AppState> {
   bool isStoreReview = true;
 
   init() {
+    _loadCurrentLocationIcon();
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
@@ -98,6 +109,12 @@ class AppCubit extends Cubit<AppState> {
   void reloadData() {
     emit(state.copyWith(needReloadData: true));
   }
+
+  void updateAppStatus(AppStatus status){
+    emit(state.copyWith(appStatus: status));
+  }
+
+
 
   // logout() async {
   //   try {
@@ -426,8 +443,99 @@ class AppCubit extends Cubit<AppState> {
       final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
       final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-      print('Received message: $pt from topic: ${messages[0].topic}>');
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+        final NotificationRes notificationRes = NotificationRes.fromJson(jsonMap);
+        // AppSnackbar.showInfo(title: notificationRes.title ?? "No title", message: notificationRes.message ?? "No message");
+        print('Received message: ${notificationRes.message} from topic: ${messages[0].topic}>');
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
     });
+  }
+
+  void subscribeToNotificationTopic(String topic) {
+    MQTTManager().mqttService.subscribe(topic);
+    MQTTManager().mqttService.handleUpdates((messages) {
+      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+      final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+        final NotificationRes notificationRes = NotificationRes.fromJson(jsonMap);
+        // AppSnackbar.showInfo(title: notificationRes.title ?? "No title", message: notificationRes.message ?? "No message");
+        print('Received message: ${notificationRes.message} from topic: ${messages[0].topic}>');
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
+    });
+
+
+  }
+
+  void updatePolylines(List<LatLng> latLngList){
+    Set<Polyline> _polyline = {};
+    _polyline.add(
+      Polyline(
+        polylineId: PolylineId('Route'),
+        points: latLngList,
+        color: AppColor.primary,
+      ),
+    );
+    emit(state.copyWith(polyline: _polyline));
+  }
+
+  void subscribeToRequestRideTopic(String id) async {
+    MQTTManager().mqttService.subscribe('customer/${id}/requestRide');
+    MQTTManager().mqttService.handleUpdates((messages) {
+      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+      final List<int> payload = recMess.payload.message;
+
+      final String pt = utf8.decode(payload);
+
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+        final RideRes rideRes = RideRes.fromJson(jsonMap);
+        subscribeToRideTopic(rideRes.driver!.id.toString());
+        Get.offAllNamed(RouteConfig.rideProcess, arguments: rideRes);
+        // AppSnackbar.showInfo(title: rideRes.driver!.name);
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
+    });
+  }
+
+  Future<void> subscribeToRideTopic(String id) async {
+    MQTTManager().mqttService.subscribe('driver/${id}/rideProcess');
+    MQTTManager().mqttService.handleUpdates((messages) {
+      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+      final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+      try {
+        final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+        final CoordinatesRes coordinatesRes = CoordinatesRes.fromJson(jsonMap);
+        List<LatLng> latLngList = coordinatesRes.coordinates
+            .map((location) => LatLng(location.lat, location.lng))
+            .toList();
+        updatePolylines(latLngList);
+        emit(state.copyWith(driverLocation: Location(lat: latLngList[0].latitude, lng: latLngList[0].longitude), driverDuration: (extractNumberFromString(coordinatesRes.duration).toDouble()/60).ceil().toDouble()));
+      } catch (e) {
+        print('Error decoding JSON: $e');
+      }
+    });
+  }
+
+  int extractNumberFromString(String input) {
+    RegExp regex = RegExp(r'(\d+)s');
+    Match? match = regex.firstMatch(input);
+
+    if (match != null) {
+      String numberString = match.group(1)!;
+
+      return int.parse(numberString);
+    } else {
+      throw FormatException("Chuỗi không hợp lệ");
+    }
   }
 
   void publishMessage(String topic, String message) {
@@ -443,10 +551,23 @@ class AppCubit extends Cubit<AppState> {
           const SnackBar(
             content: Text("Đã sao chép"),
             behavior: SnackBarBehavior.floating,
-            backgroundColor: AppColors.primary,
+            backgroundColor: AppColors.yellow,
             duration: Duration(milliseconds: 500),
           ),
         );
+    }
+  }
+
+  Future<void> _loadCurrentLocationIcon() async {
+    try{
+      BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(16, 16)),
+        AppImages.icCurrentLocation,
+      );
+      emit(state.copyWith(currentLocationIcon: bitmapDescriptor));
+    }
+    catch(e){
+      print(e);
     }
   }
 

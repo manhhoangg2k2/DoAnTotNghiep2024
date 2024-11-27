@@ -1,17 +1,23 @@
+import 'dart:convert';
+
 import 'package:bloc/bloc.dart';
 import 'package:fare_riding_app/models/entities/ride_entity.dart';
 import 'package:fare_riding_app/models/request/request_ride_req.dart';
 import 'package:fare_riding_app/models/response/coupon/coupon_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_res.dart';
 import 'package:fare_riding_app/ui/common/app_bottom_sheet.dart';
 import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:meta/meta.dart';
+import 'package:mqtt_client/mqtt_client.dart';
 
+import '../../../configs/mqtt_manager.dart';
 import '../../../di/app_module.dart';
 import '../../../models/response/fare/calculation_res.dart';
 import '../../../repository/main_repository.dart';
+import '../../../router/route_config.dart';
 import '../../common/app_loading.dart';
 
 part 'booking_state.dart';
@@ -47,7 +53,6 @@ class BookingCubit extends Cubit<BookingState> {
               vehicleType: calculationRes.vehicleType,
             pickupAddress: state.rideEntity!.pickupLocation!,
             dropoffAddress: state.rideEntity!.dropoffLocation!
-
           )
       ));
       if (result.code == 200) {
