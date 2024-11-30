@@ -23,7 +23,7 @@ void main() async {
     await MQTTManager().initialize(
       server: 'broker.hivemq.com',
       port: 1883,
-      clientId: 'customer_123@@#@#1112312312',
+      clientId: 'dinhmaaqol',
       username: '',
       password: '',
     );

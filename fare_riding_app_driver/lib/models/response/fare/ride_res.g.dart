@@ -7,12 +7,12 @@ part of 'ride_res.dart';
 // **************************************************************************
 
 RideRes _$RideResFromJson(Map<String, dynamic> json) => RideRes(
-      listRequestRide: json['id'] as String,
+      id: json['id'] as String,
       customer: Customer.fromJson(json['customer'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RideResToJson(RideRes instance) => <String, dynamic>{
-      'id': instance.listRequestRide,
+      'id': instance.id,
       'customer': instance.customer,
     };
 

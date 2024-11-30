@@ -34,4 +34,16 @@ abstract class ApiClient{
 
   @POST("/api/booking/requestRide")
   Future<APIResponse> requestRide(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/cancelRequestRide")
+  Future<APIResponse> cancelRequestRide(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updateRideStatus")
+  Future<APIResponse> updateRideStatus(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updateDropOffTime")
+  Future<APIResponse> updateDropOffTime(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updatePickUpTime")
+  Future<APIResponse> updatePickUpTime(@Body() Map<String, dynamic> body);
 }

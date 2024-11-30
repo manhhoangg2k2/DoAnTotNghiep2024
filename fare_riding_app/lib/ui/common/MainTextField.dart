@@ -5,19 +5,32 @@ class MainTextField extends StatelessWidget {
   final TextEditingController controller;
   final String? hint;
   final String? initial;
+  final ValueChanged<String>? onChanged;
+  final FocusNode? focusNode;
+  final InputDecoration? inputDecoration;
 
   const MainTextField({
     Key? key,
     required this.controller,
     this.hint,
-    required this.initial,
+    this.initial,
+    this.onChanged,
+    this.focusNode,
+    this.inputDecoration,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    // Chỉ thiết lập initial value nếu nó chưa được thiết lập trước đó
+    if (initial != null && controller.text.isEmpty) {
+      controller.text = initial!;
+    }
+
     return TextField(
-      controller: controller..text = initial!,
-      decoration: InputDecoration(
+      onChanged: onChanged,
+      focusNode: focusNode,
+      controller: controller,
+      decoration: inputDecoration ?? InputDecoration(
         hintText: hint,
         hintStyle: TextStyle(color: Colors.grey),
         enabledBorder: OutlineInputBorder(

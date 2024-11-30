@@ -56,7 +56,7 @@ class BookingCubit extends Cubit<BookingState> {
           )
       ));
       if (result.code == 200) {
-        AppSnackbar.showInfo(title: "Đặt xe thành công", message: "Bạn đã đặt xe thành công");
+        await AppSnackbar.showInfo(title: "Đặt xe thành công", message: "Bạn đã đặt xe thành công");
       } else {
         AppSnackbar.showError(title: "Đặt xe không thành công");
       }
@@ -98,6 +98,17 @@ class BookingCubit extends Cubit<BookingState> {
       print(e);
     } finally {
       AppLoadingIndicator.hide();
+    }
+  }
+
+  Future<void> cancelRequestRide(String id) async {
+    try{
+      final result = await mainRepo.cancelRequestRide(id: id);
+      if(result.code == 200){
+        AppSnackbar.showInfo(title: "Thông báo", message: "Huỷ đặt xe thành công");
+      }
+    }catch(e){
+      print(e);
     }
   }
 }

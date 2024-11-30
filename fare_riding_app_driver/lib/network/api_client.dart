@@ -43,4 +43,16 @@ abstract class ApiClient{
 
   @GET("/api/app/getDirection")
   Future<APIResponse<CoordinatesRes>> getDirection(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/cancelRequesRide")
+  Future<APIResponse> cancelRequestRide(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updateRideStatus")
+  Future<APIResponse> updateRideStatus(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updateDropOffTime")
+  Future<APIResponse> updateDropOffTime(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updatePickUpTime")
+  Future<APIResponse> updatePickUpTime(@Body() Map<String, dynamic> body);
 }

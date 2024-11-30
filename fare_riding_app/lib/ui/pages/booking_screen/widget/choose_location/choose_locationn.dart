@@ -1,6 +1,7 @@
 import 'package:fare_riding_app/constant/AppText.dart';
 import 'package:fare_riding_app/ui/common/AppBar.dart';
 import 'package:fare_riding_app/ui/common/MainButton.dart';
+import 'package:fare_riding_app/ui/common/MainTextField.dart';
 import 'package:fare_riding_app/ui/common/TextFieldWithLabel.dart';
 import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location/choose_location_cubit.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,7 @@ class _ChooseLocationState extends State<_ChooseLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarBase(text: "Đặt xe"),
+      appBar: AppBarBase(text: "Chọn địa điểm"),
       body: Container(
         padding: EdgeInsets.all(20),
         child: Column(
@@ -132,10 +133,22 @@ class _TextFieldWithSuggestionsState extends State<TextFieldWithSuggestions> {
       children: [
         Column(
           children: [
-            TextField(
-              controller: widget.controller,
+            // TextFormField(
+            //   controller: widget.controller,
+            //   focusNode: _focusNode, // Gán focus node vào TextField
+            //   decoration: InputDecoration(hintText: widget.hint),
+            //   onChanged: (value) {
+            //     widget.onChange(value);
+            //     setState(() {
+            //       _showSuggestions = value.isNotEmpty && widget.suggestions!.isNotEmpty;
+            //     });
+            //   },
+            // ),
+
+            MainTextField(
+                controller: widget.controller, initial: '',
+              hint: widget.hint,
               focusNode: _focusNode, // Gán focus node vào TextField
-              decoration: InputDecoration(hintText: widget.hint),
               onChanged: (value) {
                 widget.onChange(value);
                 setState(() {
@@ -143,6 +156,23 @@ class _TextFieldWithSuggestionsState extends State<TextFieldWithSuggestions> {
                 });
               },
             ),
+
+            // MainTextField(
+            //     controller: controller,
+            //     initial: initial,
+            // )
+
+            // TextField(
+            //   controller: widget.controller,
+            //   focusNode: _focusNode, // Gán focus node vào TextField
+            //   decoration: InputDecoration(hintText: widget.hint),
+            //   onChanged: (value) {
+            //     widget.onChange(value);
+            //     setState(() {
+            //       _showSuggestions = value.isNotEmpty && widget.suggestions!.isNotEmpty;
+            //     });
+            //   },
+            // ),
             // Hiển thị gợi ý nếu có và khi showSuggestions là true
             if (_showSuggestions && widget.suggestions != null && widget.suggestions!.isNotEmpty)
               Container(

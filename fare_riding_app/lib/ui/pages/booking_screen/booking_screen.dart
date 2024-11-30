@@ -7,6 +7,7 @@ import 'package:fare_riding_app/ui/common/app_divider.dart';
 import 'package:fare_riding_app/ui/common/app_function.dart';
 import 'package:fare_riding_app/ui/common/app_images.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
+import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:fare_riding_app/ui/common/app_text_styles.dart';
 import 'package:fare_riding_app/ui/pages/booking_screen/booking_cubit.dart';
 import 'package:flutter/material.dart';
@@ -62,7 +63,7 @@ class _BookingScreenState extends State<_BookingScreen> {
   void initState() {
     _cubit = context.read<BookingCubit>();
     _cubit.Init();
-    latLngList = _cubit.state.rideEntity!.calculationRes!.coordinates
+    latLngList = _cubit.rideEntity!.calculationRes!.coordinates
         .map<LatLng>((coordinate) {
       return LatLng(coordinate.lat, coordinate.lng);
     }).toList();
@@ -87,9 +88,9 @@ class _BookingScreenState extends State<_BookingScreen> {
                 mapType: MapType.normal,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(
-                      _cubit.state.rideEntity!.calculationRes!.coordinates.first
+                      _cubit.rideEntity!.calculationRes!.coordinates.first
                           .lat,
-                      _cubit.state.rideEntity!.calculationRes!.coordinates.first
+                      _cubit.rideEntity!.calculationRes!.coordinates.first
                           .lng),
                   zoom: 14.0,
                 ),
@@ -103,9 +104,9 @@ class _BookingScreenState extends State<_BookingScreen> {
                   Circle(
                     circleId: CircleId("currentLocationCircle"),
                     center: LatLng(
-                        _cubit.state.rideEntity!.calculationRes!.pickupLocation
+                        _cubit.rideEntity!.calculationRes!.pickupLocation
                             .lat,
-                        _cubit.state.rideEntity!.calculationRes!.pickupLocation
+                        _cubit.rideEntity!.calculationRes!.pickupLocation
                             .lng),
                     radius: 1000, // Radius in meters
                     fillColor: Colors.blue
@@ -118,9 +119,9 @@ class _BookingScreenState extends State<_BookingScreen> {
                   Marker(
                     markerId: MarkerId("startPosition"),
                     position: LatLng(
-                        _cubit.state.rideEntity!.calculationRes!.pickupLocation
+                        _cubit.rideEntity!.calculationRes!.pickupLocation
                             .lat,
-                        _cubit.state.rideEntity!.calculationRes!.pickupLocation
+                        _cubit.rideEntity!.calculationRes!.pickupLocation
                             .lng),
                     icon: BitmapDescriptor.defaultMarkerWithHue(
                         BitmapDescriptor.hueBlue),
@@ -131,9 +132,9 @@ class _BookingScreenState extends State<_BookingScreen> {
                   Marker(
                     markerId: MarkerId("endPosition"),
                     position: LatLng(
-                        _cubit.state.rideEntity!.calculationRes!.dropoffLocation
+                        _cubit.rideEntity!.calculationRes!.dropoffLocation
                             .lat,
-                        _cubit.state.rideEntity!.calculationRes!.dropoffLocation
+                        _cubit.rideEntity!.calculationRes!.dropoffLocation
                             .lng),
                     icon: BitmapDescriptor.defaultMarker,
                     infoWindow: InfoWindow(
@@ -143,9 +144,9 @@ class _BookingScreenState extends State<_BookingScreen> {
                 },
               ),
               DraggableScrollableSheet(
-                initialChildSize: 0.53, // 50% của màn hình
-                minChildSize: 0.4, // Chiều cao nhỏ nhất là 50%
-                maxChildSize: 0.8, // Chiều cao lớn nhất là 80%
+                initialChildSize: 0.5,
+                minChildSize: 0.2,
+                maxChildSize: 0.8,
                 builder:
                     (BuildContext context, ScrollController scrollController) {
                   return Container(
@@ -170,6 +171,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                             ),
                           ),
                           SingleChildScrollView(
+                            controller: scrollController,
                             child: Column(
                               children: [
                                 Column(
@@ -189,7 +191,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                         Expanded(
                                           flex: 5,
                                           child: Text(
-                                            _cubit.state.rideEntity!
+                                            _cubit.rideEntity!
                                                 .pickupLocation!,
                                             style: AppTextStyle.description,
                                             maxLines: 2,
@@ -215,7 +217,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                         Expanded(
                                           flex: 5,
                                           child: Text(
-                                            _cubit.state.rideEntity!
+                                            _cubit.rideEntity!
                                                 .dropoffLocation!,
                                             style: AppTextStyle.description,
                                             maxLines: 2,
@@ -364,7 +366,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                           .copyWith(fontSize: 20),
                                     ),
                                     Text(
-                                      '${formatCurrency(_cubit.state.rideEntity!.calculationRes!.finalPrice.toDouble())}đ',
+                                      '${formatCurrency(_cubit.rideEntity!.calculationRes!.finalPrice.toDouble())}đ',
                                       style: AppTextStyle.blackS16Bold.copyWith(
                                           fontSize: 20,
                                           color: AppColor.primary),
@@ -380,7 +382,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                       style: AppTextStyle.blackS16,
                                     ),
                                     Text(
-                                      '${_cubit.state.rideEntity!.calculationRes!.distance / 1000} km',
+                                      '${_cubit.rideEntity!.calculationRes!.distance / 1000} km',
                                       style: AppTextStyle.blackS16,
                                     )
                                   ],
@@ -394,37 +396,20 @@ class _BookingScreenState extends State<_BookingScreen> {
                                       style: AppTextStyle.blackS16,
                                     ),
                                     Text(
-                                      '${_cubit.state.rideEntity!.calculationRes!.duration} phút',
+                                      '${_cubit.rideEntity!.calculationRes!.duration} phút',
                                       style: AppTextStyle.blackS16,
                                     )
                                   ],
                                 ),
                                 SolidAppDivider(),
-                                // Row(
-                                //   children: [
-                                //     Expanded(child: Text("Tiền mặt")),
-                                //     Container(
-                                //       width: 1.0, // Đặt chiều rộng của đường viền
-                                //       height: 30.0, // Đặt chiều cao cho đường viền
-                                //       decoration: BoxDecoration(
-                                //         border: Border(
-                                //           left: BorderSide(
-                                //             color: Color(0xFFD3D3D3), // Màu xám nhạt giống Divider
-                                //             width: 1.0, // Độ dày của đường viền
-                                //           ),
-                                //         ),
-                                //       ),
-                                //     ),
-                                //     SizedBox(width: 5,),
-                                //     Expanded(child: Text("Giảm giá")),
-                                //   ],
-                                // ),
-                                // SolidAppDivider(),
+
                                 context.read<AppCubit>().state.appStatus == AppStatus.inRequest ? ErrorButton(text: "Huỷ", onTap: (){
                                   AppLoadingIndicator.show(context);
                                   context
                                       .read<AppCubit>()
                                       .updateAppStatus(AppStatus.free);
+                                  _cubit.cancelRequestRide(context
+                                      .read<AppCubit>().state.userInfo!.id.toString());
                                   AppLoadingIndicator.hide();
                                 }) :
                                 Mainbutton(
@@ -449,6 +434,7 @@ class _BookingScreenState extends State<_BookingScreen> {
                                           .read<AppCubit>()
                                           .updateAppStatus(AppStatus.inRequest);
                                       AppLoadingIndicator.hide();
+                                      // AppSnackbar.showInfo(message: "Đặt xe ")
                                     })
                               ],
                             ),

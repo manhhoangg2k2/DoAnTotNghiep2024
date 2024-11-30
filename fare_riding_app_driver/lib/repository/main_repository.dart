@@ -58,6 +58,24 @@ abstract class MainRepository {
     required double endLocationLat,
     required double endLocationLng,
   });
+
+  Future<APIResponse> updateRideStatus({
+    required String id,
+    required String status,
+  });
+
+  Future<APIResponse> updatePickUpTime({
+    required String id,
+    required DateTime pickUpTime,
+  });
+
+  Future<APIResponse> updateDropOffTime({
+    required String id,
+    required DateTime dropOffTime,
+  });
+
+  Future<APIResponse> cancelRequestRide({required String id});
+
 }
 
 class MainRepositoryImpl extends MainRepository {
@@ -164,5 +182,45 @@ class MainRepositoryImpl extends MainRepository {
       "end_location_lng": endLocationLng
     };
     return apiClient.getDirection(body);
+  }
+
+  Future<APIResponse> cancelRequestRide({required String id}) {
+    final body = {
+      "id": id,
+    };
+    return apiClient.cancelRequestRide(body);
+  }
+
+  Future<APIResponse> updateRideStatus({
+    required String id,
+    required String status,
+  }){
+    final body = {
+      "id": id,
+      "status": status,
+    };
+    return apiClient.updateRideStatus(body);
+  }
+
+  Future<APIResponse> updatePickUpTime({
+    required String id,
+    required DateTime pickUpTime,
+  }){
+    final body = {
+      "id": id,
+      "pickup_time": pickUpTime,
+    };
+    return apiClient.updatePickUpTime(body);
+  }
+
+  Future<APIResponse> updateDropOffTime({
+    required String id,
+    required DateTime dropOffTime,
+  }){
+    final body = {
+      "id": id,
+      "dropoff_time": dropOffTime,
+    };
+    return apiClient.updateDropOffTime(body);
   }
 }

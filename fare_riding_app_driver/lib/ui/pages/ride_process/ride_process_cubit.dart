@@ -11,6 +11,7 @@ import '../../../constant/AppColor.dart';
 import '../../../di/app_module.dart';
 import '../../../models/entities/location.dart';
 import '../../../repository/main_repository.dart';
+import '../../../router/route_config.dart';
 part 'ride_process_state.dart';
 
 class RideProcessCubit extends Cubit<RideProcessState> {
@@ -26,7 +27,6 @@ class RideProcessCubit extends Cubit<RideProcessState> {
     updatePolylines(latLngList);
     emit(state.copyWith(endLocation: Location(lat: double.parse(rideProcessArgument.requestRide.pickupLat), lng: double.parse(rideProcessArgument.requestRide.pickupLng))));
   }
-
 
   Future<void> getDirection(double startLocationLat,double startLocationLng,double endLocationLat,double endLocationLng) async {
     try{
@@ -47,5 +47,19 @@ class RideProcessCubit extends Cubit<RideProcessState> {
       ),
     );
     emit(state.copyWith(polyline: _polyline));
+  }
+
+  Future<void> cancelRide() async{
+    try{
+      final result = await mainRepo.updateRideStatus(id: rideProcessArgument.ride_id, status: 'Huỷ');
+      if(result.code == 200){
+        Get.offAllNamed(RouteConfig.home);
+      }
+      else{
+
+      }
+    }catch(e){
+      print(e);
+    }
   }
 }

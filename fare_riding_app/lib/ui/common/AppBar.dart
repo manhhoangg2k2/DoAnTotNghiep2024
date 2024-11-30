@@ -1,3 +1,4 @@
+import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:fare_riding_app/constant/AppColor.dart';
@@ -26,7 +27,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: AppColor.white,
+      backgroundColor: AppColor.primary,
       elevation: AppSizes.size_0,
       leadingWidth: leadingWidth,
       leading: context != null
@@ -50,6 +51,7 @@ class AppBarBase extends StatelessWidget implements PreferredSizeWidget {
               fontSize: fontSize,
               fontWeight: AppFonts.medium,
               text: text,
+              color: AppColors.textLight,
             ),
           ],
         ),

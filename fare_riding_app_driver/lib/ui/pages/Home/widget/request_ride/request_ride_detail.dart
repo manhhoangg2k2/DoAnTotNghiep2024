@@ -2,10 +2,13 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:fare_riding_app/blocs/app_cubit.dart';
+import 'package:fare_riding_app/main.dart';
+import 'package:fare_riding_app/models/enums/app_status.dart';
 import 'package:fare_riding_app/models/response/fare/request_rides_res.dart';
 import 'package:fare_riding_app/ui/pages/ride_process/argument/ride_process_argument.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
@@ -60,16 +63,6 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
 
   @override
   Widget build(BuildContext context) {
-    // void _stopPublishing() {
-    //   _timerRequestRide?.cancel();
-    // }
-    //
-    // void _startPublishing(String message) {
-    //   _timerRequestRide = Timer.periodic(Duration(seconds: 1), (timer) {
-    //     context.read<AppCubit>().publishMessage('driver/${context.read<AppCubit>().state.userInfo!.id}/rideProcess', message);
-    //   });
-    // }
-
     final MainRepository mainRepo = getIt.get<MainRepository>();
     return Scaffold(
       body: Stack(
@@ -87,18 +80,6 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
             onMapCreated: (GoogleMapController controller) {
               // _controller = controller;
             },
-            // circles: {
-            //   Circle(
-            //     circleId: CircleId("currentLocationCircle"),
-            //     center: LatLng(double.parse(widget.requestRide.dropoffLat),
-            //         double.parse(widget.requestRide.dropoffLng)),
-            //     radius: 1000, // Radius in meters
-            //     fillColor:
-            //     Colors.blue.withOpacity(0.2), // Blue color with opacity 0.2
-            //     strokeColor: Colors.blue, // Blue stroke color
-            //     strokeWidth: 2, // Stroke width
-            //   ),
-            // },
             markers: {
               Marker(
                 markerId: MarkerId("startPosition"),
@@ -122,8 +103,8 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
             },
           ),
           DraggableScrollableSheet(
-            initialChildSize: 0.35, // 50% của màn hình
-            minChildSize: 0.3, // Chiều cao nhỏ nhất là 50%
+            initialChildSize: 0.4.h, // 50% của màn hình
+            minChildSize: 0.2, // Chiều cao nhỏ nhất là 50%
             maxChildSize: 0.8, // Chiều cao lớn nhất là 80%
             builder: (BuildContext context, ScrollController scrollController) {
               return Container(
@@ -148,6 +129,7 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
                         ),
                       ),
                       SingleChildScrollView(
+                        controller: scrollController,
                         child: Column(
                           children: [
                             Column(
@@ -269,14 +251,23 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
                                 final result = await mainRepo.startRide(requestRide: widget.requestRide);
                                 final response = await mainRepo.getDirection(startLocationLat: context.read<AppCubit>().state.currentLocation!.lat, startLocationLng: context.read<AppCubit>().state.currentLocation!.lng, endLocationLat: double.parse(widget.requestRide.pickupLat) , endLocationLng: double.parse(widget.requestRide.pickupLng));
                                 if(result.code == 200 || response.code == 200){
-                                  final Map<String, dynamic> jsonMap = response.data!.toJson();
-                                  final String jsonString = jsonEncode(jsonMap);
-                                  context.read<AppCubit>().publishLocation('driver/${context.read<AppCubit>().state.userInfo!.id}/rideProcess', jsonString);
+                                  List<LatLng> latLngList = response.data!.coordinates
+                                      .map((location) => LatLng(location.lat, location.lng))
+                                      .toList();
+                                  Set<Polyline> _polyline = {};
+                                  _polyline.add(
+                                    Polyline(
+                                      polylineId: PolylineId('Route'),
+                                      points: latLngList,
+                                      color: AppColor.primary,
+                                    ),
+                                  );
+                                  context.read<AppCubit>().updateAppStatus(AppStatus.inProcess);
+                                  context.read<AppCubit>().updateRideInfo(lat: double.parse(widget.requestRide.pickupLat) , lng: double.parse(widget.requestRide.pickupLng), address:  widget.requestRide.pickupAddress, polyline: _polyline, finalAddress: widget.requestRide.dropoffAddress, finalLat: double.parse(widget.requestRide.dropoffLat),finalLng: double.parse(widget.requestRide.dropoffLng));
+                                  context.read<AppCubit>().subscribeToRideAction(result.data!.id);
+                                  context.read<AppCubit>().publishLocation('driver/${context.read<AppCubit>().state.userInfo!.id}/rideProcess');
                                   Get.offAndToNamed(RouteConfig.rideProcess,
-                                                    arguments: RideProcessArgument(coordinates: response.data!, customer_id: result.data!.customer.id, customer_name: result.data!.customer.name, customer_phone_num: result.data!.customer.phoneNumber, requestRide: widget.requestRide));
-                                }
-                                else{
-
+                                                    arguments: RideProcessArgument(ride_id: result.data!.id,coordinates: response.data!, customer_id: result.data!.customer.id, customer_name: result.data!.customer.name, customer_phone_num: result.data!.customer.phoneNumber, requestRide: widget.requestRide));
                                 }
                               }catch(e){
                                 print(e);

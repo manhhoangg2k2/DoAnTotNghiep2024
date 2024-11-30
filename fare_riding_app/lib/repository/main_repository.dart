@@ -31,6 +31,23 @@ abstract class MainRepository {
     required String passcode,
   });
 
+  Future<APIResponse> updateRideStatus({
+    required String id,
+    required String status,
+  });
+
+  Future<APIResponse> updatePickUpTime({
+    required String id,
+    required DateTime pickUpTime,
+  });
+
+  Future<APIResponse> updateDropOffTime({
+    required String id,
+    required DateTime dropOffTime,
+  });
+
+  Future<APIResponse> cancelRequestRide({required String id});
+
   Future<APIResponse<CalculationRes>> getBookingCalculation({
     required String pickupLocation,
     required String dropoffLocation,
@@ -62,8 +79,15 @@ class MainRepositoryImpl extends MainRepository {
     return SecureStorageHelper.instance.saveToken(loginRes);
   }
 
-  Future<APIResponse<CouponRes>> getListCoupon(){
+  Future<APIResponse<CouponRes>> getListCoupon() {
     return apiClient.getListCoupon();
+  }
+
+  Future<APIResponse> cancelRequestRide({required String id}) {
+    final body = {
+      "id": id,
+    };
+    return apiClient.cancelRequestRide(body);
   }
 
   @override
@@ -100,28 +124,60 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.setPasscode(body);
   }
 
-  Future<APIResponse<CalculationRes>> getBookingCalculation({
-    required String pickupLocation,
-    required String dropoffLocation,
-    required String coupon,
-    required String vehicleType
+  Future<APIResponse> updateRideStatus({
+    required String id,
+    required String status,
   }){
+    final body = {
+      "id": id,
+      "status": status,
+    };
+    return apiClient.updateRideStatus(body);
+  }
+
+  Future<APIResponse> updatePickUpTime({
+    required String id,
+    required DateTime pickUpTime,
+  }){
+    final body = {
+      "id": id,
+      "pickup_time": pickUpTime,
+    };
+    return apiClient.updatePickUpTime(body);
+  }
+
+  Future<APIResponse> updateDropOffTime({
+    required String id,
+    required DateTime dropOffTime,
+  }){
+    final body = {
+      "id": id,
+      "dropoff_time": dropOffTime,
+    };
+    return apiClient.updateDropOffTime(body);
+  }
+
+  Future<APIResponse<CalculationRes>> getBookingCalculation(
+      {required String pickupLocation,
+      required String dropoffLocation,
+      required String coupon,
+      required String vehicleType}) {
     final body = {
       "pickup_location": pickupLocation,
       "dropoff_location": dropoffLocation,
-      "coupon" : coupon,
-      "vehicle_type" : vehicleType
+      "coupon": coupon,
+      "vehicle_type": vehicleType
     };
     return apiClient.getBookingCalculation(body);
   }
 
   Future<APIResponse> requestRide({
     required RequestRideReq requestRideReq,
-  }){
+  }) {
     return apiClient.requestRide(requestRideReq.toJson());
   }
 
-  Future<APIResponse<UserInfoRes>> getUserInfo(){
+  Future<APIResponse<UserInfoRes>> getUserInfo() {
     return apiClient.getUserInfo();
   }
 }

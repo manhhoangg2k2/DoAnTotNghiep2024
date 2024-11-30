@@ -4,8 +4,10 @@ import 'dart:io';
 import 'package:equatable/equatable.dart';
 import 'package:fare_riding_app/models/enums/app_status.dart';
 import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_action_res.dart';
 import 'package:fare_riding_app/models/response/notification/notification_res.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
+import 'package:fare_riding_app/ui/common/app_dialog.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
 import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -454,6 +456,10 @@ class AppCubit extends Cubit<AppState> {
     });
   }
 
+  void unsubscribeFromTopic(String topic) {
+    MQTTManager().mqttService.unsubcribe(topic);
+  }
+
   void subscribeToNotificationTopic(String topic) {
     MQTTManager().mqttService.subscribe(topic);
     MQTTManager().mqttService.handleUpdates((messages) {
@@ -469,8 +475,6 @@ class AppCubit extends Cubit<AppState> {
         print('Error decoding JSON: $e');
       }
     });
-
-
   }
 
   void updatePolylines(List<LatLng> latLngList){
@@ -497,8 +501,11 @@ class AppCubit extends Cubit<AppState> {
         final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
         final RideRes rideRes = RideRes.fromJson(jsonMap);
         subscribeToRideTopic(rideRes.driver!.id.toString());
+        subscribeToRideAction(rideRes.ride!.id.toString());
+        emit(state.copyWith(appStatus: AppStatus.inProcess));
+        unsubscribeFromTopic('customer/${id}/requestRide');
         Get.offAllNamed(RouteConfig.rideProcess, arguments: rideRes);
-        // AppSnackbar.showInfo(title: rideRes.driver!.name);
+        AppSnackbar.showInfo(title: "Thông báo",message: "Tài xế đã nhận chuyến xe của bạn");
       } catch (e) {
         print('Error decoding JSON: $e');
       }
@@ -508,21 +515,78 @@ class AppCubit extends Cubit<AppState> {
   Future<void> subscribeToRideTopic(String id) async {
     MQTTManager().mqttService.subscribe('driver/${id}/rideProcess');
     MQTTManager().mqttService.handleUpdates((messages) {
-      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
-      final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      if(messages[0].topic == 'driver/${id}/rideProcess'){
+        final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+        final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
-      try {
-        final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
-        final CoordinatesRes coordinatesRes = CoordinatesRes.fromJson(jsonMap);
-        List<LatLng> latLngList = coordinatesRes.coordinates
-            .map((location) => LatLng(location.lat, location.lng))
-            .toList();
-        updatePolylines(latLngList);
-        emit(state.copyWith(driverLocation: Location(lat: latLngList[0].latitude, lng: latLngList[0].longitude), driverDuration: (extractNumberFromString(coordinatesRes.duration).toDouble()/60).ceil().toDouble()));
-      } catch (e) {
-        print('Error decoding JSON: $e');
+        try {
+          final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+          final CoordinatesRes coordinatesRes = CoordinatesRes.fromJson(jsonMap);
+          List<LatLng> latLngList = coordinatesRes.coordinates
+              .map((location) => LatLng(location.lat, location.lng))
+              .toList();
+          updatePolylines(latLngList);
+          emit(state.copyWith(driverLocation: Location(lat: latLngList[0].latitude, lng: latLngList[0].longitude), driverDuration: (extractNumberFromString(coordinatesRes.duration).toDouble()/60).ceil().toDouble()));
+        } catch (e) {
+          print('Error decoding JSON: $e');
+        }
       }
     });
+  }
+
+  Future<void> subscribeToRideAction(String id) async {
+    MQTTManager().mqttService.subscribe('ride/${id}/action');
+    MQTTManager().mqttService.handleUpdates((messages) {
+      if(messages[0].topic == 'ride/${id}/action'){
+        final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
+        final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+        try {
+          final Map<String, dynamic> jsonMap = jsonDecode(pt) as Map<String, dynamic>;
+          final RideActionRes rideAction = RideActionRes.fromJson(jsonMap);
+          if(rideAction.publisher == 'driver' || rideAction.publisher == 'admin'){
+            if(rideAction.action == 'arrived'){
+              AppDialog.showConfirmDialog(text: "Tài xế đã đến nơi đón?",onConfirm: (){
+                emit(state.copyWith(appStatus: AppStatus.pickuped));
+                publishMessage('ride/${id}/action', jsonEncode(RideActionRes(id: id, publisher: 'customer', action: 'arrived')));
+                updateRideStatus(id, 'inProcess');
+              },
+                  onCancel: () =>
+                      publishMessage('ride/${id}/action', jsonEncode(RideActionRes(id: id, publisher: 'customer', action: 'not_arrived'))));
+            }
+            else if(rideAction.action == 'cancel'){
+              unsubscribeFromTopic('ride/${id}/action');
+              unsubscribeFromTopic('driver/${id}/rideProcess');
+              Get.offAllNamed(RouteConfig.home);
+              emit(state.copyWith(appStatus: AppStatus.free));
+              AppDialog.showInformDialog(widget: Text("Tài xế đã huỷ chuyến xe"));
+            }
+            else if(rideAction.action == 'completed'){
+              AppDialog.showConfirmDialog(text: "Xác nhận tài xế đã đưa bạn tới điểm đến", onConfirm: (){
+                publishMessage('ride/${id}/action', jsonEncode(RideActionRes(id: id, publisher: 'customer', action: 'completed')));
+                unsubscribeFromTopic('ride/${id}/action');
+                unsubscribeFromTopic('driver/${id}/rideProcess');
+                updateAppStatus(AppStatus.free);
+                updateRideStatus(id, 'completed');
+                Get.offAllNamed(RouteConfig.home);
+              });
+            }
+          }
+        } catch (e) {
+          print('Error decoding JSON: $e');
+        }
+      }
+    });
+  }
+
+  Future<void> updateRideStatus(String id, String status) async{
+    try{
+      final result = await mainRepo.updateRideStatus(id: id, status: status);
+      if(result.code == 200){
+      }
+    }catch(e){
+      AppSnackbar.showInfo(title: 'Lỗi');
+    }
   }
 
   int extractNumberFromString(String input) {

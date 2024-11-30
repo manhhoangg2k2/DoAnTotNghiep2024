@@ -9,7 +9,13 @@ class AppState extends Equatable {
   final UserInfoRes? userInfo;
   final bool isActive;
   final Location? currentLocation;
+  final Location? destination;
+  final Location? finalDestination;
+  final String destinationAdress;
+  final String finalDestinationAdress;
   final BitmapDescriptor? currentLocationIcon;
+  final AppStatus appStatus;
+  final Set<Polyline> polyline;
 
   const AppState({
     this.needReloadData = false,
@@ -21,6 +27,12 @@ class AppState extends Equatable {
     this.isActive = false,
     this.currentLocation,
     this.currentLocationIcon,
+    this.appStatus = AppStatus.free,
+    this.polyline = const {},
+    this.destination,
+    this.destinationAdress = '',
+    this.finalDestinationAdress = '',
+    this.finalDestination
   });
 
   @override
@@ -34,6 +46,12 @@ class AppState extends Equatable {
     isActive,
     currentLocation,
     currentLocationIcon,
+    appStatus,
+    polyline,
+    destination,
+    destinationAdress,
+    finalDestinationAdress,
+    finalDestination
       ];
 
   AppState copyWith({
@@ -47,6 +65,12 @@ class AppState extends Equatable {
     Location? currentLocation,
     BitmapDescriptor? currentLocationIcon,
     Timer? timer,
+    AppStatus? appStatus,
+    Set<Polyline>? polyline,
+    Location? destination,
+    Location? finalDestination,
+    String? destinationAdress,
+    String? finalDestinationAdress,
   }) {
     return AppState(
       needReloadData: needReloadData ?? this.needReloadData,
@@ -58,6 +82,12 @@ class AppState extends Equatable {
       isActive: isActive ?? this.isActive,
       currentLocation: currentLocation ?? this.currentLocation,
       currentLocationIcon: currentLocationIcon ?? this.currentLocationIcon,
+      appStatus: appStatus  ?? this.appStatus,
+      polyline: polyline ?? this.polyline,
+      destination: destination ?? this.destination,
+        destinationAdress: destinationAdress ?? this.destinationAdress,
+        finalDestination: finalDestination ?? this.finalDestination,
+        finalDestinationAdress: finalDestinationAdress ?? this.finalDestinationAdress
     );
   }
 }

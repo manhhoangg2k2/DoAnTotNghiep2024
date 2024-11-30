@@ -5,32 +5,34 @@ import 'package:fare_riding_app/ui/common/app_colors.dart';
 enum AppStatus {
   free,
   inRequest,
+  inProcess,
+  pickuped,
 }
 
-// extension AppStatusExt on AppStatus {
-//   String get getLabel {
-//     switch (this) {
-//       case RideStatus.coming:
-//         return "Tài xế đang đến... ";
-//       case RideStatus.inProcess:
-//         return "Đang trên chuyến xe";
-//       case RideStatus.failure:
-//         return "Chuyến xe bị huỷ";
-//       case RideStatus.success:
-//         return "Chuyến xe hoàn thành";
-//     }
-//   }
-//
-//   Color get getColor {
-//     switch (this) {
-//       case RideStatus.coming:
-//         return AppColors.green;
-//       case RideStatus.inProcess:
-//         return AppColors.yellow;
-//       case RideStatus.failure:
-//         return AppColors.red;
-//       case RideStatus.success:
-//         return AppColors.primary;
-//     }
-//   }
-// }
+extension AppStatusExt on AppStatus {
+  String get getLabel {
+    switch (this) {
+      case AppStatus.free:
+        return "";
+      case AppStatus.inProcess:
+        return "Tài xế đang đến...";
+      case AppStatus.inRequest:
+        return "Đang chờ tài xế nhận chuyến...";
+      case AppStatus.pickuped:
+        return "Đang trên chuyến đi";
+    }
+  }
+
+  Color get getColor {
+    switch (this) {
+      case AppStatus.free:
+        return AppColors.green;
+      case AppStatus.inProcess:
+        return AppColors.green;
+      case AppStatus.inRequest:
+        return AppColors.yellow;
+      case AppStatus.pickuped:
+        return AppColors.primary;
+    }
+  }
+}

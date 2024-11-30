@@ -61,6 +61,10 @@ class MQTTConfig {
     _client!.subscribe(topic, MqttQos.atMostOnce);
   }
 
+  void unsubcribe(String topic) {
+    _client!.unsubscribe(topic);
+  }
+
   void publish(String topic, String message) {
     final builder = MqttClientPayloadBuilder();
     builder.addString(message);

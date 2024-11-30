@@ -22,7 +22,9 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final UserInfoRes? userInfor = context.read<AppCubit>().state.userInfo!;
+    late UserInfoRes userInfor = UserInfoRes(id: 1, name: 'name', phoneNumber: 'phoneNumber', gender: 'gender', passcode: 'passcode', balance: 0, email: 'email');
+    if(context.read<AppCubit>().state.userInfo!=null)
+    userInfor = context.read<AppCubit>().state.userInfo!;
     // PageController _pageController = new PageController();
     return BlocProvider(
       create: (_) => HomeCubit(),

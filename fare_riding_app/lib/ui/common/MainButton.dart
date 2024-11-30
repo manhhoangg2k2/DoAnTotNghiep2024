@@ -93,7 +93,7 @@ class ErrorButton extends StatelessWidget {
           child: Center(
             child: Text(
               text,
-              style: TextStyle(color: AppColor.white, fontSize: 16.0, fontWeight: AppFonts.medium),
+              style: TextStyle(color: AppColor.white, fontSize: 16.0, fontWeight: AppFonts.bold),
             ),
           ),
         ),

@@ -3,9 +3,10 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:equatable/equatable.dart';
+import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
+import 'package:fare_riding_app/ui/common/app_loading.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -14,12 +15,16 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 import '../configs/mqtt_manager.dart';
+import '../constant/AppColor.dart';
 import '../di/app_module.dart';
 import '../models/entities/location.dart';
+import '../models/enums/app_status.dart';
+import '../models/response/fare/ride_action_res.dart';
 import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
 import '../router/route_config.dart';
 import '../ui/common/app_colors.dart';
+import '../ui/common/app_dialog.dart';
 import '../ui/common/app_images.dart';
 import '../utlis/logger.dart';
 
@@ -37,18 +42,14 @@ class AppCubit extends Cubit<AppState> {
 
   bool isStoreReview = true;
   init() {
-    emit(state.copyWith(currentLocation: Location(lat: 21.01363170241855, lng: 105.83465691117729)));
+    emit(state.copyWith(
+        currentLocation:
+            Location(lat: 21.01363170241855, lng: 105.83465691117729)));
     _loadCurrentLocationIcon();
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
   }
-
-  // int get exchangeRateJPToVND =>
-  //     state.listCurrencyExchangeRes
-  //         .firstWhereOrNull((element) => element.currencyCode == "JPY")
-  //         ?.transfer ??
-  //     0;
 
 //   Future<void> getAppVersion() async{
 //     try {
@@ -79,13 +80,12 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(isLoggedIn: isLoggedIn));
   }
 
-
   /// Call when login success
   getUserSession() async {
     await getUserInfo();
   }
 
-  void switchActive(bool value){
+  void switchActive(bool value) {
     emit(state.copyWith(isActive: value));
   }
 
@@ -95,8 +95,7 @@ class AppCubit extends Cubit<AppState> {
       final result = await mainRepo.getUserInfo();
       if (result.code == 200) {
         emit(state.copyWith(userInfo: result.data));
-      }
-      else{
+      } else {
         Get.offAllNamed(RouteConfig.signIn);
       }
     } catch (error) {
@@ -108,8 +107,10 @@ class AppCubit extends Cubit<AppState> {
   void subscribeToTopic(String topic) {
     MQTTManager().mqttService.subscribe(topic);
     MQTTManager().mqttService.handleUpdates((messages) {
-      final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
-      final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+      final MqttPublishMessage recMess =
+          messages[0].payload as MqttPublishMessage;
+      final String pt =
+          MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
 
       print('Received message: $pt from topic: ${messages[0].topic}>');
     });
@@ -119,14 +120,44 @@ class AppCubit extends Cubit<AppState> {
     MQTTManager().mqttService.publish(topic, message);
   }
 
-  void publishLocation(String topic, String message) {
+  void unsubscribeFromTopic(String topic) {
+    MQTTManager().mqttService.unsubcribe(topic);
+  }
+
+  void publishLocation(String topic) async {
     // Nếu timer đang chạy, hủy nó trước khi tạo một cái mới
     timer?.cancel();
 
     // Tạo một Timer mới để gửi tin nhắn mỗi 1 giây
-    timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      MQTTManager().mqttService.publish(topic, message);
+    timer = Timer.periodic(Duration(seconds: 1), (timer) async {
+      final direction = await getDirection();
+      List<LatLng> latLngList = direction!.coordinates
+          .map((location) => LatLng(location.lat, location.lng))
+          .toList();
+      Set<Polyline> _polyline = {};
+      _polyline.add(
+        Polyline(
+          polylineId: PolylineId('Route'),
+          points: latLngList,
+          color: AppColor.primary,
+        ),
+      );
+
+      emit(state.copyWith(polyline: _polyline));
+      final Map<String, dynamic> jsonMap = direction!.toJson();
+      final String jsonString = jsonEncode(jsonMap);
+
+      MQTTManager().mqttService.publish(topic, jsonString);
     });
+  }
+
+  Future<CoordinatesRes?> getDirection() async {
+    try{
+      final response = await mainRepo.getDirection(startLocationLat: state.currentLocation!.lat, startLocationLng: state.currentLocation!.lng, endLocationLat: state.destination!.lat , endLocationLng: state.destination!.lng);
+      return response.data!;
+    }catch(e){
+      return null;
+    }
   }
 
   void stopPublishing() {
@@ -134,21 +165,82 @@ class AppCubit extends Cubit<AppState> {
     timer = null;
   }
 
+  void updateAppStatus(AppStatus appStatus){
+    emit(state.copyWith(appStatus: appStatus));
+  }
+
   void reloadData() {
     emit(state.copyWith(needReloadData: true));
   }
 
   Future<void> _loadCurrentLocationIcon() async {
-    try{
+    try {
       BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(16, 16)),
         AppImages.icCurrentLocation,
       );
       emit(state.copyWith(currentLocationIcon: bitmapDescriptor));
-    }
-    catch(e){
+    } catch (e) {
       print(e);
     }
+  }
+
+  void updateDestination(Location location){
+    emit(state.copyWith(destination: location));
+  }
+
+  void updateRideInfo({
+    required double lat,
+    required double lng,
+    required double finalLat,
+    required double finalLng,
+    required String address,
+    required String finalAddress,
+    required Set<Polyline> polyline,
+  }) {
+    emit(state.copyWith(finalDestination: Location(lat: finalLat, lng: finalLng),destinationAdress: address,finalDestinationAdress: finalAddress, destination: Location(lat: lat, lng: lng),polyline: polyline));
+  }
+
+  Future<void> subscribeToRideAction(String id) async {
+    MQTTManager().mqttService.subscribe('ride/${id}/action');
+    MQTTManager().mqttService.handleUpdates((messages) {
+      if(messages[0].topic == 'ride/${id}/action'){
+        final MqttPublishMessage recMess =
+        messages[0].payload as MqttPublishMessage;
+        final String pt =
+        MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
+
+        try {
+          final Map<String, dynamic> jsonMap =
+          jsonDecode(pt) as Map<String, dynamic>;
+          final RideActionRes rideAction = RideActionRes.fromJson(jsonMap);
+          if (rideAction.publisher == 'customer' ||
+              rideAction.publisher == 'admin') {
+            if (rideAction.action == 'arrived') {
+              updateDestination(Location(lat: state.finalDestination!.lat, lng: state.finalDestination!.lng));
+              emit(state.copyWith(appStatus: AppStatus.pickuped, destinationAdress: state.finalDestinationAdress ));
+            }
+            else if(rideAction.action == 'not_arrived'){
+              AppDialog.showInformDialog(widget: Text("Khách hàng không xác nhận bạn đã đón, vui lòng liên hệ lại khách hàng để xác nhận lại", maxLines: 2,), onConfirm: ()=> Get.offAllNamed(RouteConfig.home));
+            }
+            else if(rideAction.action == 'completed'){
+              Get.offAllNamed(RouteConfig.home);
+              unsubscribeFromTopic('ride/${id}/action');
+              timer?.cancel();
+              AppDialog.showInformDialog(widget: Text("Chuyến xe đã hoàn thành", maxLines: 2,));
+            }
+            else {
+              unsubscribeFromTopic('ride/${id}/action');
+              AppDialog.showDialog(
+                  onConfirm: () => Get.offAllNamed(RouteConfig.home));
+            }
+          }
+        } catch (e) {
+          print('Error decoding JSON: $e');
+        }
+      }
+
+    });
   }
 
   // logout() async {

@@ -7,12 +7,12 @@ part 'ride_res.g.dart';
 @JsonSerializable()
 class RideRes {
   @JsonKey(name: 'id')
-  final String listRequestRide;
+  final String id;
   @JsonKey(name: 'customer')
   final Customer customer;
 
   RideRes({
-    required this.listRequestRide,
+    required this.id,
     required this.customer,
   });
 

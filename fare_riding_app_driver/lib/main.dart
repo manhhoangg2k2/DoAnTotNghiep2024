@@ -23,7 +23,7 @@ void main() async {
     await MQTTManager().initialize(
       server: 'broker.hivemq.com',
       port: 1883,
-      clientId: 'driver_fare_riding_app',
+      clientId: 'driver_fare_riding213121',
       username: '',
       password: '',
     );
