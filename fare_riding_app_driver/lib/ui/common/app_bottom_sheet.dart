@@ -46,15 +46,15 @@ class AppBottomSheet {
                       style: TextStyle(),
                     ),
                   ),
-                  InkWell(
-                    onTap: () {
-                      Get.back();
-                    },
-                    child: Image.asset(
-                      'assets/svg/down_arrow.svg',
-                      width: 24,
-                    ),
-                  )
+                  // InkWell(
+                  //   onTap: () {
+                  //     Get.back();
+                  //   },
+                  //   child: Image.asset(
+                  //     'assets/svg/down_arrow.svg',
+                  //     width: 24,
+                  //   ),
+                  // )
                 ],
               ),
             ),

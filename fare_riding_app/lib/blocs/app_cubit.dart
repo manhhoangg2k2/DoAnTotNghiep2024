@@ -489,6 +489,14 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(polyline: _polyline));
   }
 
+  Future<void> getRideById(String id)async{
+    try{
+      final result = await mainRepo.getRideById(id: id);
+    }catch(e){
+
+    }
+  }
+
   void subscribeToRequestRideTopic(String id) async {
     MQTTManager().mqttService.subscribe('customer/${id}/requestRide');
     MQTTManager().mqttService.handleUpdates((messages) {

@@ -357,6 +357,42 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<APIResponse<RideHistoryRes>> getRideHistory() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<APIResponse<RideHistoryRes>>(Options(
+      method: 'GET',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/driver/getRideHistory',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late APIResponse<RideHistoryRes> _value;
+    try {
+      _value = APIResponse<RideHistoryRes>.fromJson(
+        _result.data!,
+        (json) => RideHistoryRes.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<APIResponse<dynamic>> cancelRequestRide(
       Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
@@ -486,6 +522,43 @@ class _ApiClient implements ApiClient {
         .compose(
           _dio.options,
           '/api/ride/updatePickUpTime',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late APIResponse<dynamic> _value;
+    try {
+      _value = APIResponse<dynamic>.fromJson(
+        _result.data!,
+        (json) => json as dynamic,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<APIResponse<dynamic>> updateRideNote(Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<APIResponse<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/ride/updateRideNote',
           queryParameters: queryParameters,
           data: _data,
         )

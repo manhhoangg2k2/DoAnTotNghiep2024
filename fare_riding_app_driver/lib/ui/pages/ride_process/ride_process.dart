@@ -5,6 +5,8 @@ import 'package:fare_riding_app/blocs/app_cubit.dart';
 import 'package:fare_riding_app/constant/AppColor.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
 import 'package:fare_riding_app/ui/common/MainButton.dart';
+import 'package:fare_riding_app/ui/common/MainTextField.dart';
+import 'package:fare_riding_app/ui/common/app_bottom_sheet.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_dialog.dart';
 import 'package:fare_riding_app/ui/common/app_images.dart';
@@ -13,6 +15,7 @@ import 'package:fare_riding_app/ui/pages/ride_process/ride_process_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../models/entities/location.dart';
 import '../../../models/enums/app_status.dart';
@@ -254,11 +257,14 @@ class _RideProcessScreenState extends State<RideProcessScreen> {
                                               ),
                                             ],
                                           ),
-                                          Image.asset(
-                                            AppImages.icPhone,
-                                            height: 30,
-                                            color: AppColor.primary,
-                                          ),
+                                          InkWell(
+                                            onTap: ()=> launchUrlString("tel://${_cubit.rideProcessArgument.customer_phone_num}"),
+                                            child: Image.asset(
+                                              AppImages.icPhone,
+                                              height: 30,
+                                              color: AppColor.primary,
+                                            ),
+                                          )
                                         ],
                                       ),
                                     ),
@@ -291,24 +297,93 @@ class _RideProcessScreenState extends State<RideProcessScreen> {
                                             text: "Huỷ",
                                             type: 0,
                                             onTap: () {
-                                              AppDialog.showConfirmDialog(text: "Bạn có chắc chắn muốn huỷ chuyến xe",onConfirm: (){
-                                                context.read<AppCubit>().updateAppStatus(AppStatus.free);
-                                                _cubit.cancelRide();
-                                                context.read<AppCubit>().publishMessage(
-                                                  "ride/${_cubit.rideProcessArgument.ride_id}/action",
-                                                  jsonEncode(
-                                                    RideActionRes(
-                                                      id: generateRandomCode(),
-                                                      publisher: 'driver',
-                                                      action: 'cancel',
-                                                    ).toJson(),
-                                                  ),
-                                                );
-                                                context.read<AppCubit>().unsubscribeFromTopic(
-                                                  "ride/${_cubit.rideProcessArgument.ride_id}/action",
-                                                );
-                                                context.read<AppCubit>().timer!.cancel();
-                                              });
+                                              AppBottomSheet.showBottomSheet(
+                                                title: "Xác nhận huỷ chuyến xe",
+                                                body: StatefulBuilder(
+                                                  builder: (context, setState) {
+                                                    TextEditingController commentController = TextEditingController();
+                                                    bool isConfirm = true;
+                                                    return Padding(
+                                                      padding: const EdgeInsets.all(15),
+                                                      child: Column(
+                                                        children: [
+                                                          MainTextField(
+                                                            controller: commentController,
+                                                            initial: '',
+                                                            hint: 'Nhập vào lý do huỷ',
+                                                          ),
+                                                          Row(
+                                                            children: [
+                                                              Checkbox(
+                                                                value: isConfirm,
+                                                                onChanged: (value) {
+                                                                  setState(() {
+                                                                    isConfirm = value!;
+                                                                  });
+                                                                },
+                                                              ),
+                                                              Text("Xác nhận trước khi huỷ chuyến xe"),
+                                                            ],
+                                                          ),
+                                                          Padding(
+                                                            padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                            child: Column(
+                                                              children: [
+                                                                isConfirm
+                                                                    ? Mainbutton(
+                                                                  text: "Huỷ chuyến xe",
+                                                                  type: 1,
+                                                                  onTap: () {
+                                                                    context.read<AppCubit>().updateAppStatus(AppStatus.free);
+                                                                    _cubit.cancelRide(commentController.text);
+                                                                    context.read<AppCubit>().publishMessage(
+                                                                      "ride/${_cubit.rideProcessArgument.ride_id}/action",
+                                                                      jsonEncode(
+                                                                        RideActionRes(
+                                                                          id: generateRandomCode(),
+                                                                          publisher: 'driver',
+                                                                          action: 'cancel',
+                                                                        ).toJson(),
+                                                                      ),
+                                                                    );
+                                                                    context.read<AppCubit>().unsubscribeFromTopic(
+                                                                      "ride/${_cubit.rideProcessArgument.ride_id}/action",
+                                                                    );
+                                                                    context.read<AppCubit>().timer!.cancel();
+                                                                  },
+                                                                )
+                                                                    : MainbuttonDisable(
+                                                                  text: "Huỷ chuyến xe",
+                                                                  type: 1,
+                                                                  onTap: () {},
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    );
+                                                  },
+                                                ),
+                                              );
+                                              // AppDialog.showConfirmDialog(text: "Bạn có chắc chắn muốn huỷ chuyến xe",onConfirm: (){
+                                              //   context.read<AppCubit>().updateAppStatus(AppStatus.free);
+                                              //   _cubit.cancelRide();
+                                              //   context.read<AppCubit>().publishMessage(
+                                              //     "ride/${_cubit.rideProcessArgument.ride_id}/action",
+                                              //     jsonEncode(
+                                              //       RideActionRes(
+                                              //         id: generateRandomCode(),
+                                              //         publisher: 'driver',
+                                              //         action: 'cancel',
+                                              //       ).toJson(),
+                                              //     ),
+                                              //   );
+                                              //   context.read<AppCubit>().unsubscribeFromTopic(
+                                              //     "ride/${_cubit.rideProcessArgument.ride_id}/action",
+                                              //   );
+                                              //   context.read<AppCubit>().timer!.cancel();
+                                              // });
                                             },
                                           ),
                                         ),

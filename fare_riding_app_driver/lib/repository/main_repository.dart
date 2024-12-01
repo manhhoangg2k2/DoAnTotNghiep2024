@@ -1,5 +1,6 @@
 import 'package:fare_riding_app/models/entities/location.dart';
 import 'package:fare_riding_app/models/response/fare/request_rides_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_history_res.dart';
 import 'package:fare_riding_app/models/response/fare/ride_res.dart';
 
 import '../database/secure_storage_helper.dart';
@@ -42,6 +43,8 @@ abstract class MainRepository {
 
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
+  Future<APIResponse<RideHistoryRes>> getRideHistory();
+
   Future<APIResponse<RequestRidesRes>> getListRequestRides();
 
   Future<APIResponse> requestRide({
@@ -72,6 +75,11 @@ abstract class MainRepository {
   Future<APIResponse> updateDropOffTime({
     required String id,
     required DateTime dropOffTime,
+  });
+
+  Future<APIResponse> updateRideNote({
+    required String id,
+    required String note,
   });
 
   Future<APIResponse> cancelRequestRide({required String id});
@@ -155,6 +163,10 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.getUserInfo();
   }
 
+  Future<APIResponse<RideHistoryRes>> getRideHistory(){
+    return apiClient.getRideHistory();
+  }
+
   Future<APIResponse<RequestRidesRes>> getListRequestRides(){
     return apiClient.getListRequestRides();
   }
@@ -222,5 +234,16 @@ class MainRepositoryImpl extends MainRepository {
       "dropoff_time": dropOffTime,
     };
     return apiClient.updateDropOffTime(body);
+  }
+
+  Future<APIResponse> updateRideNote({
+    required String id,
+    required String note,
+  }){
+    final body = {
+      "id": id,
+      "note": note,
+    };
+    return apiClient.updateRideNote(body);
   }
 }

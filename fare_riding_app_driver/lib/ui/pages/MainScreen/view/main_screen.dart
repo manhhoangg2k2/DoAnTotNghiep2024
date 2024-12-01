@@ -24,7 +24,6 @@ class MainScreen extends StatelessWidget {
       WalletScreen(),
       AccountScreen(),
     ];
-
     return MultiBlocProvider(
         providers: [
           BlocProvider(create: (context) => HomeMenuCubit()),

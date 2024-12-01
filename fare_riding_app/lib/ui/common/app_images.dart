@@ -19,6 +19,7 @@ class AppImages {
   static const icBullhorn = 'assets/images/ic_bullhorn.png';
   static const icNext = 'assets/images/ic_next.png';
   static const icSuccess = 'assets/images/ic_success.png';
+  static const success = 'assets/images/success.svg';
   static const icError = 'assets/images/ic_error.png';
   static const icWarning = 'assets/images/ic_warning.png';
   static const icWarningBorder = 'assets/images/ic_warning_border.png';

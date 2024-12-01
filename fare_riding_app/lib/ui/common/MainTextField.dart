@@ -8,6 +8,7 @@ class MainTextField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final FocusNode? focusNode;
   final InputDecoration? inputDecoration;
+  final int? maxLines;
 
   const MainTextField({
     Key? key,
@@ -17,6 +18,7 @@ class MainTextField extends StatelessWidget {
     this.onChanged,
     this.focusNode,
     this.inputDecoration,
+    this.maxLines
   }) : super(key: key);
 
   @override
@@ -27,6 +29,7 @@ class MainTextField extends StatelessWidget {
     }
 
     return TextField(
+      maxLines: maxLines != null ? maxLines : 1,
       onChanged: onChanged,
       focusNode: focusNode,
       controller: controller,

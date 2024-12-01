@@ -6,6 +6,7 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/response/api_response.dart';
 import '../models/response/authen/sign_up_res.dart';
+import '../models/response/fare/ride_history_res.dart';
 import '../models/response/user/user_info_res.dart';
 
 part 'api_client.g.dart';
@@ -25,6 +26,9 @@ abstract class ApiClient{
 
   @GET("/api/account/getUserInfo")
   Future<APIResponse<UserInfoRes>> getUserInfo();
+
+  @GET("/api/account/getRideHistory")
+  Future<APIResponse<RideHistoryRes>> getRideHistory();
 
   @POST("/api/account/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
@@ -46,4 +50,10 @@ abstract class ApiClient{
 
   @POST("/api/ride/updatePickUpTime")
   Future<APIResponse> updatePickUpTime(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/updateRideNote")
+  Future<APIResponse> updateRideNote(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/getRideById")
+  Future<APIResponse<RideHistoryRes>> getRideById(@Body() Map<String, dynamic> body);
 }

@@ -8,6 +8,7 @@ import 'package:fare_riding_app/models/response/fare/ride_action_res.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_dialog.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
+import 'package:fare_riding_app/ui/pages/RideProcess/completed_ride/success_ride.dart';
 import 'package:fare_riding_app/ui/pages/RideProcess/ride_process_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,10 +17,13 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:loading_indicator/loading_indicator.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../constant/AppColor.dart';
 import '../../../router/route_config.dart';
 import '../../common/MainButton.dart';
+import '../../common/MainTextField.dart';
+import '../../common/app_bottom_sheet.dart';
 import '../../common/app_divider.dart';
 import '../../common/app_function.dart';
 import '../../common/app_images.dart';
@@ -293,10 +297,14 @@ class _RideProcessState extends State<_RideProcess> {
                                                   ),
                                                 ],
                                               ),
-                                              Image.asset(
-                                                AppImages.icPhone,
-                                                height: 30,
-                                                color: AppColor.primary,
+                                              InkWell(
+                                                onTap: ()=> launchUrlString("tel://${_cubit.rideRes.driver!
+                                                    .phoneNumber!}"),
+                                                child: Image.asset(
+                                                  AppImages.icPhone,
+                                                  height: 30,
+                                                  color: AppColor.primary,
+                                                ),
                                               )
                                             ],
                                           ),
@@ -417,6 +425,7 @@ class _RideProcessState extends State<_RideProcess> {
                                     ],
                                   ),
                                   SolidAppDivider(),
+                                  FloatingActionButton(onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context) => CompletedRideScreen(rideRes: _cubit.rideRes)))),
                                   if (context
                                           .read<AppCubit>()
                                           .state
@@ -425,35 +434,127 @@ class _RideProcessState extends State<_RideProcess> {
                                     ErrorButton(
                                         text: 'Huỷ',
                                         onTap: () {
-                                          AppDialog.showConfirmDialog(
-                                              text: "Bạn có chắn muốn huỷ?",
-                                              onConfirm: () async {
-                                                AppLoadingIndicator.show(
-                                                    context);
-                                                await _cubit.cancelRide();
-                                                context
-                                                    .read<AppCubit>()
-                                                    .updateAppStatus(
-                                                        AppStatus.free);
-                                                context.read<AppCubit>().publishMessage(
-                                                    "ride/${_cubit.rideRes.ride!.id}/action",
-                                                    jsonEncode(RideActionRes(
-                                                            id:
-                                                                generateRandomCode(),
-                                                            publisher:
-                                                                'customer',
-                                                            action: 'cancel')
-                                                        .toJson()));
-                                                context
-                                                    .read<AppCubit>()
-                                                    .unsubscribeFromTopic(
-                                                        "ride/${_cubit.rideRes.ride!.id}/action");
-                                                AppLoadingIndicator.hide();
-                                                Get.offAllNamed(
-                                                    RouteConfig.home);
-                                              });
-                                          // _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash',);
-                                          // context.read<AppCubit>().subscribeToRequestRideTopic(context.read<AppCubit>().state.userInfo!.id.toString());
+                                          AppBottomSheet.showBottomSheet(
+                                            title: "Xác nhận huỷ chuyến xe",
+                                            body: StatefulBuilder(
+                                              builder: (context, setState) {
+                                                TextEditingController commentController = TextEditingController();
+                                                bool isConfirm = true;
+                                                return Padding(
+                                                  padding: const EdgeInsets.all(15),
+                                                  child: Column(
+                                                    children: [
+                                                      MainTextField(
+                                                        controller: commentController,
+                                                        initial: '',
+                                                        hint: 'Nhập vào lý do huỷ',
+                                                      ),
+                                                      Row(
+                                                        children: [
+                                                          Checkbox(
+                                                            value: isConfirm,
+                                                            onChanged: (value) {
+                                                              setState(() {
+                                                                isConfirm = value!;
+                                                              });
+                                                            },
+                                                          ),
+                                                          Text("Xác nhận trước khi huỷ chuyến xe"),
+                                                        ],
+                                                      ),
+                                                      Padding(
+                                                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                                                        child: Column(
+                                                          children: [
+                                                            isConfirm
+                                                                ? Mainbutton(
+                                                              text: "Huỷ chuyến xe",
+                                                              type: 1,
+                                                              onTap: () async {
+                                                                // context.read<AppCubit>().updateAppStatus(AppStatus.free);
+                                                                // _cubit.cancelRide(commentController.text);
+                                                                // context.read<AppCubit>().publishMessage(
+                                                                //   "ride/${_cubit.rideRes.ride!.id}/action",
+                                                                //   jsonEncode(
+                                                                //     RideActionRes(
+                                                                //       id: generateRandomCode(),
+                                                                //       publisher: 'driver',
+                                                                //       action: 'cancel',
+                                                                //     ).toJson(),
+                                                                //   ),
+                                                                // );
+                                                                // context.read<AppCubit>().unsubscribeFromTopic(
+                                                                //   "ride/${_cubit.rideProcessArgument.ride_id}/action",
+                                                                // );
+                                                                // context.read<AppCubit>().timer!.cancel();
+                                                                AppLoadingIndicator.show(
+                                                                              context);
+                                                                          await _cubit.cancelRide(commentController.text);
+                                                                          context
+                                                                              .read<AppCubit>()
+                                                                              .updateAppStatus(
+                                                                                  AppStatus.free);
+                                                                          context.read<AppCubit>().publishMessage(
+                                                                              "ride/${_cubit.rideRes.ride!.id}/action",
+                                                                              jsonEncode(RideActionRes(
+                                                                                      id:
+                                                                                          generateRandomCode(),
+                                                                                      publisher:
+                                                                                          'customer',
+                                                                                      action: 'cancel')
+                                                                                  .toJson()));
+                                                                          context
+                                                                              .read<AppCubit>()
+                                                                              .unsubscribeFromTopic(
+                                                                                  "ride/${_cubit.rideRes.ride!.id}/action");
+                                                                          AppLoadingIndicator.hide();
+                                                                          Get.offAllNamed(
+                                                                              RouteConfig.home);
+                                                              },
+                                                            )
+                                                                : MainbuttonDisable(
+                                                              text: "Huỷ chuyến xe",
+                                                              type: 1,
+                                                              onTap: () {},
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                );
+                                              },
+                                            ),
+                                          );
+                                          // AppDialog.showConfirmDialog(
+                                          //     text: "Bạn có chắn muốn huỷ?",
+                                          //     onConfirm: () async {
+                                          //       AppLoadingIndicator.show(
+                                          //           context);
+                                          //       await _cubit.cancelRide();
+                                          //       context
+                                          //           .read<AppCubit>()
+                                          //           .updateAppStatus(
+                                          //               AppStatus.free);
+                                          //       context.read<AppCubit>().publishMessage(
+                                          //           "ride/${_cubit.rideRes.ride!.id}/action",
+                                          //           jsonEncode(RideActionRes(
+                                          //                   id:
+                                          //                       generateRandomCode(),
+                                          //                   publisher:
+                                          //                       'customer',
+                                          //                   action: 'cancel')
+                                          //               .toJson()));
+                                          //       context
+                                          //           .read<AppCubit>()
+                                          //           .unsubscribeFromTopic(
+                                          //               "ride/${_cubit.rideRes.ride!.id}/action");
+                                          //       AppLoadingIndicator.hide();
+                                          //       Get.offAllNamed(
+                                          //           RouteConfig.home);
+                                          //     });
+                                          // // _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash',);
+                                          // // context.read<AppCubit>().subscribeToRequestRideTopic(context.read<AppCubit>().state.userInfo!.id.toString());
                                         })
                                   ]
                                 ],

@@ -6,6 +6,7 @@ import '../models/response/api_response.dart';
 import '../models/response/authen/login_res.dart';
 import '../models/response/authen/sign_up_res.dart';
 import '../models/response/fare/calculation_res.dart';
+import '../models/response/fare/ride_history_res.dart';
 import '../models/response/user/user_info_res.dart';
 import '../network/api_client.dart';
 import '../network/api_util.dart';
@@ -56,8 +57,19 @@ abstract class MainRepository {
   });
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
+  Future<APIResponse<RideHistoryRes>> getRideHistory();
+
   Future<APIResponse> requestRide({
     required RequestRideReq requestRideReq,
+  });
+
+  Future<APIResponse> updateRideNote({
+    required String id,
+    required String note,
+  });
+
+  Future<APIResponse<RideHistoryRes>> getRideById({
+    required String id,
   });
 }
 
@@ -179,5 +191,29 @@ class MainRepositoryImpl extends MainRepository {
 
   Future<APIResponse<UserInfoRes>> getUserInfo() {
     return apiClient.getUserInfo();
+  }
+
+  Future<APIResponse<RideHistoryRes>> getRideHistory(){
+    return apiClient.getRideHistory();
+  }
+
+  Future<APIResponse> updateRideNote({
+    required String id,
+    required String note,
+  }){
+    final body = {
+      "id": id,
+      "note": note,
+    };
+    return apiClient.updateRideNote(body);
+  }
+
+  Future<APIResponse<RideHistoryRes>> getRideById({
+    required String id,
+  }){
+    final body = {
+      "id": id,
+    };
+    return apiClient.getRideById(body);
   }
 }

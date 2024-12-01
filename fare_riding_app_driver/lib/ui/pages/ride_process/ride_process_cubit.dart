@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:fare_riding_app/ui/common/app_images.dart';
+import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:fare_riding_app/ui/pages/ride_process/argument/ride_process_argument.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -49,8 +50,9 @@ class RideProcessCubit extends Cubit<RideProcessState> {
     emit(state.copyWith(polyline: _polyline));
   }
 
-  Future<void> cancelRide() async{
+  Future<void> cancelRide(String note) async{
     try{
+      final response = await mainRepo.updateRideNote(id: rideProcessArgument.ride_id, note: note);
       final result = await mainRepo.updateRideStatus(id: rideProcessArgument.ride_id, status: 'Huỷ');
       if(result.code == 200){
         Get.offAllNamed(RouteConfig.home);
@@ -60,6 +62,14 @@ class RideProcessCubit extends Cubit<RideProcessState> {
       }
     }catch(e){
       print(e);
+    }
+  }
+
+  Future<void> updateRideNote(String note) async {
+    try{
+      final result = await mainRepo.updateRideNote(id: rideProcessArgument.ride_id, note: note);
+    }catch(e){
+      AppSnackbar.showError(title: "Xảy ra lỗi");
     }
   }
 }
