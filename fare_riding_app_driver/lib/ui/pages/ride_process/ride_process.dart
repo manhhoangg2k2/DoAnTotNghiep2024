@@ -14,12 +14,15 @@ import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:fare_riding_app/ui/pages/ride_process/ride_process_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
 import '../../../models/entities/location.dart';
 import '../../../models/enums/app_status.dart';
 import '../../../models/response/fare/ride_action_res.dart';
+import '../../../router/route_config.dart';
 import '../../common/app_text_styles.dart';
 
 class RideProcess extends StatefulWidget {
@@ -333,9 +336,9 @@ class _RideProcessScreenState extends State<RideProcessScreen> {
                                                                     ? Mainbutton(
                                                                   text: "Huỷ chuyến xe",
                                                                   type: 1,
-                                                                  onTap: () {
-                                                                    context.read<AppCubit>().updateAppStatus(AppStatus.free);
-                                                                    _cubit.cancelRide(commentController.text);
+                                                                  onTap: () async {
+                                                                     context.read<AppCubit>().updateAppStatus(AppStatus.free);
+                                                                     await _cubit.cancelRide(commentController.text);
                                                                     context.read<AppCubit>().publishMessage(
                                                                       "ride/${_cubit.rideProcessArgument.ride_id}/action",
                                                                       jsonEncode(
@@ -350,6 +353,8 @@ class _RideProcessScreenState extends State<RideProcessScreen> {
                                                                       "ride/${_cubit.rideProcessArgument.ride_id}/action",
                                                                     );
                                                                     context.read<AppCubit>().timer!.cancel();
+                                                                    final ride = await context.read<AppCubit>().getRideById(_cubit.rideProcessArgument.ride_id);
+                                                                     Get.toNamed(RouteConfig.cancelRide, arguments: ride);
                                                                   },
                                                                 )
                                                                     : MainbuttonDisable(

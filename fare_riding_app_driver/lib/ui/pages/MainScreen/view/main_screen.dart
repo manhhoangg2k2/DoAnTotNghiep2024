@@ -1,9 +1,8 @@
-
+import 'package:fare_riding_app/ui/pages/History/view/history_screen.dart';
 import 'package:fare_riding_app/ui/pages/Home/view/home_screen1.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../History/view/history_screen.dart';
 import '../../../../constant/AppTabs.dart';
 import '../../../home_menu/cubit/home_menu_cubit.dart';
 import '../../../home_menu/view/home_menu.dart';
@@ -19,7 +18,7 @@ class MainScreen extends StatelessWidget {
     int _selectedIndex = AppTabs.home;
     // var context =
     const List<Widget> _pages = <Widget>[
-      HomeScreen1(),
+      HomeScreen(),
       HistoryScreen(),
       WalletScreen(),
       AccountScreen(),

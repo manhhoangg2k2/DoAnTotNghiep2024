@@ -5,19 +5,24 @@ class BookingState {
   final CouponRes? listCoupon;
   final int couponChooseIndex;
   final RideEntity? rideEntity;
+  final int routeIndex;
+  final Set<Polyline>? polyline;
 
   const BookingState({
     this.listCoupon,
     this.couponChooseIndex = -1,
-    this.rideEntity
+    this.rideEntity,
+    this.routeIndex = 0,
+    this.polyline
   });
 
-  BookingState copyWith({CouponRes? listCoupon, int? couponChooseIndex, RideEntity? rideEntity}) {
+  BookingState copyWith({CouponRes? listCoupon, int? couponChooseIndex, RideEntity? rideEntity,int? routeIndex, Set<Polyline>? polyline}) {
     return BookingState(
       listCoupon: listCoupon ?? this.listCoupon,
       couponChooseIndex: couponChooseIndex ?? this.couponChooseIndex,
-      rideEntity: rideEntity ?? this.rideEntity
-
+      rideEntity: rideEntity ?? this.rideEntity,
+      routeIndex: routeIndex ?? this.routeIndex,
+      polyline: polyline ?? this.polyline
     );
   }
 }

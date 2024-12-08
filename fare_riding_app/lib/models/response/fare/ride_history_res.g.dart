@@ -19,6 +19,7 @@ RideHistoryRes _$RideHistoryResFromJson(Map<String, dynamic> json) =>
       fare: json['fare'] as String,
       note: json['note'] as String?,
       driver: Driver.fromJson(json['driver'] as Map<String, dynamic>),
+      createdTime: json['created_time'] as String?,
     );
 
 Map<String, dynamic> _$RideHistoryResToJson(RideHistoryRes instance) =>
@@ -30,6 +31,7 @@ Map<String, dynamic> _$RideHistoryResToJson(RideHistoryRes instance) =>
       'dropoff_location': instance.dropoffLocation,
       'pickup_time': instance.pickupTime,
       'dropoff_time': instance.dropoffTime,
+      'created_time': instance.createdTime,
       'status': instance.status,
       'fare': instance.fare,
       'note': instance.note,

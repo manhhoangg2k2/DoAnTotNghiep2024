@@ -55,7 +55,7 @@ class RideProcessCubit extends Cubit<RideProcessState> {
       final response = await mainRepo.updateRideNote(id: rideProcessArgument.ride_id, note: note);
       final result = await mainRepo.updateRideStatus(id: rideProcessArgument.ride_id, status: 'Huỷ');
       if(result.code == 200){
-        Get.offAllNamed(RouteConfig.home);
+        Get.toNamed(RouteConfig.main);
       }
       else{
 

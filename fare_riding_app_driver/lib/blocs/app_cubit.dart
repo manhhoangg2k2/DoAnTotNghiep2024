@@ -6,6 +6,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
+import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -20,6 +21,7 @@ import '../di/app_module.dart';
 import '../models/entities/location.dart';
 import '../models/enums/app_status.dart';
 import '../models/response/fare/ride_action_res.dart';
+import '../models/response/fare/ride_history_res.dart';
 import '../repository/auth_repository.dart';
 import '../repository/main_repository.dart';
 import '../router/route_config.dart';
@@ -96,11 +98,20 @@ class AppCubit extends Cubit<AppState> {
       if (result.code == 200) {
         emit(state.copyWith(userInfo: result.data));
       } else {
-        Get.offAllNamed(RouteConfig.signIn);
+        Get.toNamed(RouteConfig.signIn);
       }
     } catch (error) {
-      Get.offAllNamed(RouteConfig.signIn);
+      Get.toNamed(RouteConfig.signIn);
       logger.e(error);
+    }
+  }
+
+  Future<RideHistoryRes?> getRideById(String id)async{
+    try{
+      final result = await mainRepo.getRideById(id: id);
+      return result.data!;
+    }catch(e){
+      return null;
     }
   }
 
@@ -185,6 +196,39 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  Future<void> updateCreatedTime(String id) async {
+    try{
+      final result = await mainRepo.updateCreatedTime(id: id, createdTime: DateTime.now().toIso8601String());
+      if(result.code == 200){
+        // AppSnackbar.showInfo(title: "Thông ")
+      }
+    }catch(e){
+
+    }
+  }
+
+  Future<void> updatePickupTime(String id) async {
+    try{
+      final result = await mainRepo.updatePickUpTime(id: id, pickUpTime: DateTime.now().toIso8601String());
+      if(result.code == 200){
+        // AppSnackbar.showInfo(title: "Thông ")
+      }
+    }catch(e){
+
+    }
+  }
+
+  Future<void> updateDropOffTime(String id) async {
+    try{
+      final result = await mainRepo.updateDropOffTime(id: id, dropOffTime: DateTime.now().toIso8601String());
+      if(result.code == 200){
+        // AppSnackbar.showInfo(title: "Thông ")
+      }
+    }catch(e){
+
+    }
+  }
+
   void updateDestination(Location location){
     emit(state.copyWith(destination: location));
   }
@@ -203,7 +247,7 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> subscribeToRideAction(String id) async {
     MQTTManager().mqttService.subscribe('ride/${id}/action');
-    MQTTManager().mqttService.handleUpdates((messages) {
+    MQTTManager().mqttService.handleUpdates((messages) async {
       if(messages[0].topic == 'ride/${id}/action'){
         final MqttPublishMessage recMess =
         messages[0].payload as MqttPublishMessage;
@@ -217,22 +261,28 @@ class AppCubit extends Cubit<AppState> {
           if (rideAction.publisher == 'customer' ||
               rideAction.publisher == 'admin') {
             if (rideAction.action == 'arrived') {
+              updatePickupTime(id);
               updateDestination(Location(lat: state.finalDestination!.lat, lng: state.finalDestination!.lng));
               emit(state.copyWith(appStatus: AppStatus.pickuped, destinationAdress: state.finalDestinationAdress ));
             }
             else if(rideAction.action == 'not_arrived'){
-              AppDialog.showInformDialog(widget: Text("Khách hàng không xác nhận bạn đã đón, vui lòng liên hệ lại khách hàng để xác nhận lại", maxLines: 2,), onConfirm: ()=> Get.offAllNamed(RouteConfig.home));
+              AppDialog.showInformDialog(widget: Text("Khách hàng không xác nhận bạn đã đón, vui lòng liên hệ lại khách hàng để xác nhận lại", maxLines: 2,), onConfirm: ()=> Get.toNamed(RouteConfig.main));
             }
             else if(rideAction.action == 'completed'){
-              Get.offAllNamed(RouteConfig.home);
+              final ride = await getRideById(id);
+              await updateDropOffTime(id);
+              Get.toNamed(RouteConfig.completedRide, arguments: ride);
               unsubscribeFromTopic('ride/${id}/action');
               timer?.cancel();
               AppDialog.showInformDialog(widget: Text("Chuyến xe đã hoàn thành", maxLines: 2,));
             }
+            else if(rideAction.action == 'uncompleted'){
+              AppDialog.showInformDialog(widget: Text("Khách hàng xác nhận tài xế chưa hoàn thành chuyến xe, vui lòng liên hệ khách hàng để hoàn thành chuyến xe", maxLines: 2,), onConfirm: ()=>Get.back());
+            }
             else {
               unsubscribeFromTopic('ride/${id}/action');
-              AppDialog.showDialog(
-                  onConfirm: () => Get.offAllNamed(RouteConfig.home));
+              final ride = await getRideById(id);
+              Get.toNamed(RouteConfig.cancelRide, arguments: ride);
             }
           }
         } catch (e) {

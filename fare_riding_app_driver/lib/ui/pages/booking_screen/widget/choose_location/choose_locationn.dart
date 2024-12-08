@@ -37,7 +37,7 @@ class _ChooseLocationState extends State<_ChooseLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarBase(text: "Đặt xe"),
+      appBar: AppBarBase(title: "Đặt xe"),
       body: Container(
         padding: EdgeInsets.all(20),
         child: Column(

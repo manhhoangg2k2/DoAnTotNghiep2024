@@ -29,7 +29,7 @@ class HistoryCubit extends Cubit<HistoryState> {
     try {
       final result = await mainRepo.getRideHistory(historyFilter: state.historyFilter.getString);
       if (result.code == 200) {
-        emit(state.copyWith(listRideHistory: result.data!));
+        emit(state.copyWith(listRideHistory: result.data));
       }
     } catch (e) {}
   }

@@ -1,5 +1,6 @@
 import 'package:fare_riding_app/models/request/request_ride_req.dart';
 import 'package:fare_riding_app/models/response/coupon/coupon_res.dart';
+import 'package:fare_riding_app/models/response/transaction/transaction_res.dart';
 
 import '../database/secure_storage_helper.dart';
 import '../models/response/api_response.dart';
@@ -47,9 +48,15 @@ abstract class MainRepository {
     required DateTime dropOffTime,
   });
 
+  Future<APIResponse> addReview({
+    required String id,
+    required double rating,
+    required String comment,
+  });
+
   Future<APIResponse> cancelRequestRide({required String id});
 
-  Future<APIResponse<CalculationRes>> getBookingCalculation({
+  Future<APIResponse<List<CalculationRes>>> getBookingCalculation({
     required String pickupLocation,
     required String dropoffLocation,
     required String coupon,
@@ -57,7 +64,11 @@ abstract class MainRepository {
   });
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
-  Future<APIResponse<RideHistoryRes>> getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory(
+      {required String historyFilter});
+
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory(
+      {required String historyFilter});
 
   Future<APIResponse> requestRide({
     required RequestRideReq requestRideReq,
@@ -70,6 +81,12 @@ abstract class MainRepository {
 
   Future<APIResponse<RideHistoryRes>> getRideById({
     required String id,
+  });
+
+  Future<APIResponse> requestDeposit({
+    required double amount,
+    required String created_time,
+    required String description,
   });
 }
 
@@ -139,7 +156,7 @@ class MainRepositoryImpl extends MainRepository {
   Future<APIResponse> updateRideStatus({
     required String id,
     required String status,
-  }){
+  }) {
     final body = {
       "id": id,
       "status": status,
@@ -150,7 +167,7 @@ class MainRepositoryImpl extends MainRepository {
   Future<APIResponse> updatePickUpTime({
     required String id,
     required DateTime pickUpTime,
-  }){
+  }) {
     final body = {
       "id": id,
       "pickup_time": pickUpTime,
@@ -161,7 +178,7 @@ class MainRepositoryImpl extends MainRepository {
   Future<APIResponse> updateDropOffTime({
     required String id,
     required DateTime dropOffTime,
-  }){
+  }) {
     final body = {
       "id": id,
       "dropoff_time": dropOffTime,
@@ -169,7 +186,7 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.updateDropOffTime(body);
   }
 
-  Future<APIResponse<CalculationRes>> getBookingCalculation(
+  Future<APIResponse<List<CalculationRes>>> getBookingCalculation(
       {required String pickupLocation,
       required String dropoffLocation,
       required String coupon,
@@ -193,14 +210,20 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.getUserInfo();
   }
 
-  Future<APIResponse<RideHistoryRes>> getRideHistory(){
-    return apiClient.getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory(
+      {required String historyFilter}) {
+    return apiClient.getRideHistory(historyFilter: historyFilter);
+  }
+
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory(
+      {required String historyFilter}) {
+    return apiClient.getTransactionHistory(historyFilter: historyFilter);
   }
 
   Future<APIResponse> updateRideNote({
     required String id,
     required String note,
-  }){
+  }) {
     final body = {
       "id": id,
       "note": note,
@@ -210,10 +233,36 @@ class MainRepositoryImpl extends MainRepository {
 
   Future<APIResponse<RideHistoryRes>> getRideById({
     required String id,
-  }){
+  }) {
     final body = {
       "id": id,
     };
     return apiClient.getRideById(body);
+  }
+
+  Future<APIResponse> addReview({
+    required String id,
+    required double rating,
+    required String comment,
+  }) {
+    final body = {
+      "id": id,
+      "rating": rating,
+      "comment": comment,
+    };
+    return apiClient.addReview(body);
+  }
+
+  Future<APIResponse> requestDeposit({
+    required double amount,
+    required String created_time,
+    required String description,
+  }){
+    final body = {
+      "amount": amount,
+      "created_time": created_time,
+      "description": description,
+    };
+    return apiClient.requestDeposit(body);
   }
 }

@@ -1,4 +1,5 @@
 import 'package:fare_riding_app/constant/AppColor.dart';
+import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -30,7 +31,7 @@ class HomeMenu extends StatelessWidget {
           child: Container(
             padding: EdgeInsets.all(5),
             // height: 60,
-            color: AppColor.primary,
+            color: AppColors.primary,
             child: Row(
               children: [
                 navItem(

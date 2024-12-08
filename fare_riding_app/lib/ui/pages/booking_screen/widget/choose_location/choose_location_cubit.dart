@@ -25,7 +25,7 @@ class ChooseLocationCubit extends Cubit<ChooseLocationState> {
   void Init() {}
 
   void getAutofillLocation(String input) async {
-    String _key = "AIzaSyDNxoTUmJWGvTTHmnEw6pGo4i5cY5H14ic";
+    String _key = "AIzaSyCHZT7bBD4aEcYL9RUM8wR8SbFdGx7BkAA";
     String groundURL ='https://maps.googleapis.com/maps/api/place/autocomplete/json';
     String request = '$groundURL?input=$input&key=$_key&sessiontoken=${mainRepo.getToken()}';
     try {
@@ -54,7 +54,7 @@ class ChooseLocationCubit extends Cubit<ChooseLocationState> {
       );
 
       if (result.code == 200 && result.data != null) {
-        Get.offAllNamed(RouteConfig.booking, arguments: RideEntity(calculationRes: result.data, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation, vehicleType: vehicleType));
+        Get.toNamed(RouteConfig.booking, arguments: RideEntity(calculationRes: result.data, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation, vehicleType: vehicleType));
         // Navigator.push(
         //   context,
         //   MaterialPageRoute(builder: (context) => BookingScreen(calculationRes: result.data!, pickupLocation: pickupLocation, dropoffLocation: dropoffLocation,)),

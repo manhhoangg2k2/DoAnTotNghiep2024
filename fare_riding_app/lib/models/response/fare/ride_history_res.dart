@@ -18,6 +18,8 @@ class RideHistoryRes {
   final String? pickupTime;
   @JsonKey(name: 'dropoff_time')
   final String? dropoffTime;
+  @JsonKey(name: 'created_time')
+  final String? createdTime;
   @JsonKey(name: 'status')
   final String status;
   @JsonKey(name: 'fare')
@@ -39,6 +41,7 @@ class RideHistoryRes {
     required this.fare,
     this.note,
     required this.driver,
+    required this.createdTime,
   });
 
   factory RideHistoryRes.fromJson(Map<String, dynamic> json) =>

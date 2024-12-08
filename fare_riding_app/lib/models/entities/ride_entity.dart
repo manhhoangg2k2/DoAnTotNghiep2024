@@ -1,7 +1,7 @@
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
 
 class RideEntity {
-  final CalculationRes? calculationRes;
+  final List<CalculationRes>? calculationRes;
   final String? vehicleType;
   final String? pickupLocation;
   final String? dropoffLocation;

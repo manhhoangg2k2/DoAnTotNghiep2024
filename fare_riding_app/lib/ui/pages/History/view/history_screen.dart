@@ -1,5 +1,4 @@
 import 'package:fare_riding_app/constant/AppColor.dart';
-import 'package:fare_riding_app/models/enums/history_filter.dart';
 import 'package:fare_riding_app/ui/common/AppBar.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
@@ -12,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
+import '../../../../models/enums/history_filter.dart';
 import '../../../common/app_divider.dart';
 import '../../../common/app_function.dart';
 

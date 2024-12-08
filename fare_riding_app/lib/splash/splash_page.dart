@@ -51,7 +51,7 @@ class _SplashChildPageState extends State<SplashChildPage> {
           await context.read<AppCubit>().getUserSession();
           if(context.read<AppCubit>().state.userInfo != null){
             context.read<AppCubit>().subscribeToNotificationTopic("customer/${context.read<AppCubit>().state.userInfo!.id}/notification");
-            Get.offAllNamed(RouteConfig.home);
+            Get.toNamed(RouteConfig.main);
           }
         }
       },

@@ -23,6 +23,7 @@ import '../../../../common/MainButton.dart';
 import '../../../../common/app_divider.dart';
 import '../../../../common/app_function.dart';
 import '../../../../common/app_text_styles.dart';
+import '../../../../common/floating_action_button.dart';
 
 class RequestRideDetail extends StatefulWidget {
   const RequestRideDetail({super.key, required this.requestRide});
@@ -102,6 +103,7 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
               ),
             },
           ),
+          LeftBackButton(),
           DraggableScrollableSheet(
             initialChildSize: 0.4.h, // 50% của màn hình
             minChildSize: 0.2, // Chiều cao nhỏ nhất là 50%
@@ -250,6 +252,7 @@ class _RequestRideDetailState extends State<RequestRideDetail> {
                               try{
                                 final result = await mainRepo.startRide(requestRide: widget.requestRide);
                                 final response = await mainRepo.getDirection(startLocationLat: context.read<AppCubit>().state.currentLocation!.lat, startLocationLng: context.read<AppCubit>().state.currentLocation!.lng, endLocationLat: double.parse(widget.requestRide.pickupLat) , endLocationLng: double.parse(widget.requestRide.pickupLng));
+                                await context.read<AppCubit>().updateCreatedTime(result.data!.id);
                                 if(result.code == 200 || response.code == 200){
                                   List<LatLng> latLngList = response.data!.coordinates
                                       .map((location) => LatLng(location.lat, location.lng))

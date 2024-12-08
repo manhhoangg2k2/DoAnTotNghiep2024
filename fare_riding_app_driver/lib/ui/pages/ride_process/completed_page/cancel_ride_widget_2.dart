@@ -6,11 +6,11 @@ import 'package:get/get_core/src/get_main.dart';
 
 import '../../../../../constant/AppColor.dart';
 import '../../../../../router/route_config.dart';
-import '../../../../common/MainButton.dart';
-import '../../../../common/app_colors.dart';
-import '../../../../common/app_divider.dart';
-import '../../../../common/app_images.dart';
-import '../../../../common/app_text_styles.dart';
+import '../../../common/MainButton.dart';
+import '../../../common/app_colors.dart';
+import '../../../common/app_divider.dart';
+import '../../../common/app_images.dart';
+import '../../../common/app_text_styles.dart';
 
 class CancelRideWidget2 extends StatelessWidget {
   CancelRideWidget2({super.key});
@@ -26,7 +26,7 @@ class CancelRideWidget2 extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text("Chuyến xe đã bị huỷ", style: AppTextStyle.blackS20Bold.copyWith(color: AppColors.primary),),
+              Text("Chuyến xe đã bị huỷ", style: AppTextStyle.blackS20Bold.copyWith(color: AppColors.red),),
               Image.asset(AppImages.icError),
               Column(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -79,7 +79,7 @@ class CancelRideWidget2 extends StatelessWidget {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Tài xế",
+                    "Khách hàng",
                     style: AppTextStyle.blackS16Bold.copyWith(),
                   )),
               Padding(
@@ -115,11 +115,11 @@ class CancelRideWidget2 extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    rideHistoryRes.driver.name,
+                                    rideHistoryRes.customer.name,
                                     style: AppTextStyle.blackS16Bold,
                                   ),
                                   Text(
-                                    rideHistoryRes.driver.phoneNumber,
+                                    rideHistoryRes.customer.phoneNumber,
                                     style: AppTextStyle.blackS14
                                         .copyWith(color: AppColors.gray),
                                   ),
@@ -194,6 +194,7 @@ class CancelRideWidget2 extends StatelessWidget {
               //   ),
               // ),
               Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
                     "Người huỷ",
@@ -201,7 +202,7 @@ class CancelRideWidget2 extends StatelessWidget {
                   ),
                   Text(
                     "Tài xế",
-                    style: AppTextStyle.blackS16Bold.copyWith(),
+                    style: AppTextStyle.description,
                   ),
                 ],
               ),
@@ -223,7 +224,7 @@ class CancelRideWidget2 extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Mainbutton(text: "Trở về trang chủ", type: 1, onTap: (){
-                Get.toNamed(RouteConfig.home);
+                Get.toNamed(RouteConfig.main);
               })
             ],
           ),

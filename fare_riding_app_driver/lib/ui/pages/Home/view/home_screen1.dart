@@ -6,8 +6,6 @@ import 'package:fare_riding_app/ui/common/AppBar.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_divider.dart';
 import 'package:fare_riding_app/ui/common/app_function.dart';
-import 'package:fare_riding_app/ui/common/app_images.dart';
-import 'package:fare_riding_app/ui/common/app_loading.dart';
 import 'package:fare_riding_app/ui/pages/Home/cubit/home_cubit.dart';
 import 'package:fare_riding_app/ui/pages/Home/widget/request_ride/request_ride_detail.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +15,8 @@ import 'package:flutter_svg/svg.dart';
 import '../../../../constant/AppColor.dart';
 import '../../../common/app_text_styles.dart';
 
-class HomeScreen1 extends StatelessWidget {
-  const HomeScreen1({super.key});
+class HomeScreen extends StatelessWidget {
+  const HomeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +66,8 @@ class _HomeScreen1State extends State<_HomeScreen1> {
         return Scaffold(
           backgroundColor: AppColors.textLight.withOpacity(0.96),
           appBar: AppBarBase(
-            text: "Màn hình chính",
+            title: "Màn hình chính",
+            showBackButton: false,
           ),
           body: BlocBuilder<HomeCubit, HomeState>(builder: (context, state) {
             // if (state.requestRidesRes == null || state.requestRidesRes!.listRequestRide.isEmpty) {

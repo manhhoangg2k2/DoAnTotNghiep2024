@@ -194,11 +194,11 @@
 		</data>
 		<key>Modules/GoogleMapsUtils.swiftmodule/Project/arm64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		5F1Pdx9b+2fBa8IAQa9zhEPoTHs=
+		GAuYNsQc+2mVLxTtfq+zdvmFe9Q=
 		</data>
 		<key>Modules/GoogleMapsUtils.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<data>
-		K3d8Hjeki8KWMjtzp8KyhVqgU7c=
+		YPmhBt9ZKTcPlvzOl8wiPZMZSVA=
 		</data>
 		<key>Modules/GoogleMapsUtils.swiftmodule/arm64-apple-ios-simulator.abi.json</key>
 		<data>
@@ -741,22 +741,22 @@
 		<dict>
 			<key>hash</key>
 			<data>
-			5F1Pdx9b+2fBa8IAQa9zhEPoTHs=
+			GAuYNsQc+2mVLxTtfq+zdvmFe9Q=
 			</data>
 			<key>hash2</key>
 			<data>
-			1AHV9mHXVfouDsMXwqFQiUlUxBMmCgRZSlnbiRKFbOI=
+			AxKcRJNH67xUNw4RCBglN58Cn8vkOv35weQaeTtKASs=
 			</data>
 		</dict>
 		<key>Modules/GoogleMapsUtils.swiftmodule/Project/x86_64-apple-ios-simulator.swiftsourceinfo</key>
 		<dict>
 			<key>hash</key>
 			<data>
-			K3d8Hjeki8KWMjtzp8KyhVqgU7c=
+			YPmhBt9ZKTcPlvzOl8wiPZMZSVA=
 			</data>
 			<key>hash2</key>
 			<data>
-			bmQL1RosTIdCvHKA+46z6FP70zAs8szhQOWMxpBFtzs=
+			GHy0xSZl8ryWrsf/PH0ParxwgtcNhYvxtGuZqy0gXAY=
 			</data>
 		</dict>
 		<key>Modules/GoogleMapsUtils.swiftmodule/arm64-apple-ios-simulator.abi.json</key>

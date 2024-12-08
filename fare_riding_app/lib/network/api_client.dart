@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:fare_riding_app/models/response/authen/login_res.dart';
 import 'package:fare_riding_app/models/response/coupon/coupon_res.dart';
 import 'package:fare_riding_app/models/response/fare/calculation_res.dart';
+import 'package:fare_riding_app/models/response/transaction/transaction_res.dart';
 import 'package:retrofit/retrofit.dart';
 
 import '../models/response/api_response.dart';
@@ -12,7 +13,7 @@ import '../models/response/user/user_info_res.dart';
 part 'api_client.g.dart';
 
 @RestApi(baseUrl: 'http://localhost:3000')
-abstract class ApiClient{
+abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   @GET("/api/app/getListCoupon")
@@ -28,13 +29,21 @@ abstract class ApiClient{
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
   @GET("/api/account/getRideHistory")
-  Future<APIResponse<RideHistoryRes>> getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory({
+    @Header('history-filter') required String historyFilter,
+  });
+
+  @GET("/api/account/getTransactionHistory")
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory({
+    @Header('history-filter') required String historyFilter,
+  });
 
   @POST("/api/account/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
 
   @POST("/api/booking/getDirection")
-  Future<APIResponse<CalculationRes>> getBookingCalculation(@Body() Map<String, dynamic> body);
+  Future<APIResponse<List<CalculationRes>>> getBookingCalculation(
+      @Body() Map<String, dynamic> body);
 
   @POST("/api/booking/requestRide")
   Future<APIResponse> requestRide(@Body() Map<String, dynamic> body);
@@ -55,5 +64,14 @@ abstract class ApiClient{
   Future<APIResponse> updateRideNote(@Body() Map<String, dynamic> body);
 
   @POST("/api/ride/getRideById")
-  Future<APIResponse<RideHistoryRes>> getRideById(@Body() Map<String, dynamic> body);
+  Future<APIResponse<RideHistoryRes>> getRideById(
+      @Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/addReview")
+  Future<APIResponse<RideHistoryRes>> addReview(
+      @Body() Map<String, dynamic> body);
+
+  @POST("/api/account/requestDeposit")
+  Future<APIResponse> requestDeposit(
+      @Body() Map<String, dynamic> body);
 }

@@ -24,7 +24,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
       if(result.code == 200){
         await authRepo.saveToken(result.data!);
         context.read<AppCubit>().getUserSession();
-        Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen1()));
+        Navigator.push(context,MaterialPageRoute(builder: (context) => HomeScreen()));
       }
       else{
         

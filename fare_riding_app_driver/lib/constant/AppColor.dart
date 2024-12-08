@@ -6,7 +6,7 @@ class AppColor{
   static const Color transparent = Colors.transparent;
 
   static const Color main = Color(0xFF008955);
-  static const Color primary = Color(0xFF08B783);
+  static const Color primary = Color(0xFF008955);
   static const Color secondary = Color(0xFFB7083C);
   static const Color warning = Color(0xFFFB8A00);
   static const Color error = Color(0xFFF44336);

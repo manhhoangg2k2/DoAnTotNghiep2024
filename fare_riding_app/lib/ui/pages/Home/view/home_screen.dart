@@ -22,9 +22,16 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    late UserInfoRes userInfor = UserInfoRes(id: 1, name: 'name', phoneNumber: 'phoneNumber', gender: 'gender', passcode: 'passcode', balance: 0, email: 'email');
-    if(context.read<AppCubit>().state.userInfo!=null)
-    userInfor = context.read<AppCubit>().state.userInfo!;
+    late UserInfoRes userInfor = UserInfoRes(
+        id: 1,
+        name: 'name',
+        phoneNumber: 'phoneNumber',
+        gender: 'gender',
+        passcode: 'passcode',
+        balance: 0,
+        email: 'email');
+    if (context.read<AppCubit>().state.userInfo != null)
+      userInfor = context.read<AppCubit>().state.userInfo!;
     // PageController _pageController = new PageController();
     return BlocProvider(
       create: (_) => HomeCubit(),
@@ -118,7 +125,6 @@ class HomeScreen extends StatelessWidget {
                                         height: 25,
                                         color: AppColor.main,
                                       ),
-                                      // SizedBox(width: 5,),
                                       TextBase(
                                         text: "Thêm nhà",
                                         fontWeight: AppFonts.medium,
@@ -171,30 +177,29 @@ class HomeScreen extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          InkWell(
-                            onTap: (){
-                              Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'car-4');
-                            },
-                            child: iconWithLabel(
-                                () {}, "assets/svg/car_icon.svg", AppText.car),
-                          ),
                           iconWithLabel(() {
-                            Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'motorbike');
-                          }, "assets/svg/motorbike_icon.svg",
-                              AppText.motobike),
+                            Get.toNamed(RouteConfig.chooseLocation,
+                                arguments: 'car-4');
+                          }, "assets/svg/car_icon.svg", AppText.car),
+                          iconWithLabel(() {
+                            Get.toNamed(RouteConfig.chooseLocation,
+                                arguments: 'motorbike');
+                          }, "assets/svg/motorbike_icon.svg", AppText.motobike),
                           iconWithLabel(() {}, "assets/svg/delivery_icon.svg",
                               AppText.delivery),
                           iconWithLabel(
                               () {}, "assets/svg/car_icon.svg", AppText.car),
                         ],
                       ),
-                      SizedBox(height: 20,),
+                      SizedBox(
+                        height: 20,
+                      ),
                       CarouselSlider(
                         items: [
                           Container(
                             decoration: BoxDecoration(
-                              // borderRadius: BorderRadius.circular(20),
-                            ),
+                                // borderRadius: BorderRadius.circular(20),
+                                ),
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(20),
                               child: Image.asset(
@@ -213,7 +218,6 @@ class HomeScreen extends StatelessWidget {
                           initialPage: 0,
                         ),
                       ),
-
                     ],
                   ),
                 )
@@ -227,7 +231,7 @@ class HomeScreen extends StatelessWidget {
 
   Widget iconWithLabel(Function onTap, String path, String label) {
     return InkWell(
-      onTap: (){
+      onTap: () {
         onTap();
       },
       child: Column(

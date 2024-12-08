@@ -55,7 +55,7 @@ class _SignUpScreenState extends State<_SignUpScreen> {
       final _cubit = context.read<SignUpCubit>();
       return Scaffold(
         backgroundColor: AppColor.white,
-        appBar: AppBarBase(text: AppText.signUp),
+        appBar: AppBarBase(title: AppText.signUp),
         body: Container(
           padding: EdgeInsets.symmetric(
               horizontal: AppSizes.size_20, vertical: AppSizes.size_20),

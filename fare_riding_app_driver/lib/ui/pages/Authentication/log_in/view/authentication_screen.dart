@@ -19,7 +19,7 @@ class AuthenticationScreen extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: AppColor.white,
-      appBar: AppBarBase(text: "Nhập ${AppText.phoneNumber}" ),
+      appBar: AppBarBase(title: "Nhập ${AppText.phoneNumber}" ),
       body: Container(
         padding: EdgeInsets.symmetric(
             horizontal: AppSizes.size_20, vertical: AppSizes.size_20),

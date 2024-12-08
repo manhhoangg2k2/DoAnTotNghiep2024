@@ -49,6 +49,15 @@ class AppTextStyle {
   static final blackS20Bold = blackS20.copyWith(fontWeight: FontWeight.bold);
   static final blackS20W800 = blackS20.copyWith(fontWeight: FontWeight.w800);
 
+  //s35
+  static final blackS35 = black.copyWith(fontSize: 35);
+  static final blackS35Bold = blackS35.copyWith(fontWeight: FontWeight.bold);
+  static final blackS35W800 = blackS35.copyWith(fontWeight: FontWeight.w800);
+
+  //s40
+  static final blackS40 = black.copyWith(fontSize: 40);
+  static final blackS40Bold = blackS40.copyWith(fontWeight: FontWeight.bold);
+  static final blackS40W800 = blackS40.copyWith(fontWeight: FontWeight.w800);
   ///White
   static const white = TextStyle(color: Colors.white);
 

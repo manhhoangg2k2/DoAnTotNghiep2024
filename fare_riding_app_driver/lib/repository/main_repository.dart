@@ -43,7 +43,7 @@ abstract class MainRepository {
 
   Future<APIResponse<UserInfoRes>> getUserInfo();
 
-  Future<APIResponse<RideHistoryRes>> getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory( {required String historyFilter});
 
   Future<APIResponse<RequestRidesRes>> getListRequestRides();
 
@@ -53,6 +53,10 @@ abstract class MainRepository {
 
   Future<APIResponse<RideRes>> startRide({
     required RequestRide requestRide,
+  });
+
+  Future<APIResponse<RideHistoryRes>> getRideById({
+    required String id,
   });
 
   Future<APIResponse<CoordinatesRes>> getDirection({
@@ -69,12 +73,17 @@ abstract class MainRepository {
 
   Future<APIResponse> updatePickUpTime({
     required String id,
-    required DateTime pickUpTime,
+    required String pickUpTime,
   });
 
   Future<APIResponse> updateDropOffTime({
     required String id,
-    required DateTime dropOffTime,
+    required String dropOffTime
+  });
+
+  Future<APIResponse> updateCreatedTime({
+    required String id,
+    required String createdTime,
   });
 
   Future<APIResponse> updateRideNote({
@@ -83,7 +92,6 @@ abstract class MainRepository {
   });
 
   Future<APIResponse> cancelRequestRide({required String id});
-
 }
 
 class MainRepositoryImpl extends MainRepository {
@@ -138,45 +146,43 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.setPasscode(body);
   }
 
-  Future<APIResponse<CalculationRes>> getBookingCalculation({
-    required String pickupLocation,
-    required String dropoffLocation,
-    required String coupon,
-    required String vehicleType
-  }){
+  Future<APIResponse<CalculationRes>> getBookingCalculation(
+      {required String pickupLocation,
+      required String dropoffLocation,
+      required String coupon,
+      required String vehicleType}) {
     final body = {
       "pickup_location": pickupLocation,
       "dropoff_location": dropoffLocation,
-      "coupon" : coupon,
-      "vehicle_type" : vehicleType
+      "coupon": coupon,
+      "vehicle_type": vehicleType
     };
     return apiClient.getBookingCalculation(body);
   }
 
   Future<APIResponse> requestRide({
     required RequestRideReq requestRideReq,
-  }){
+  }) {
     return apiClient.requestRide(requestRideReq.toJson());
   }
 
-  Future<APIResponse<UserInfoRes>> getUserInfo(){
+  Future<APIResponse<UserInfoRes>> getUserInfo() {
     return apiClient.getUserInfo();
   }
 
-  Future<APIResponse<RideHistoryRes>> getRideHistory(){
-    return apiClient.getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory(
+      {required String historyFilter}) {
+    return apiClient.getRideHistory(historyFilter: historyFilter);
   }
 
-  Future<APIResponse<RequestRidesRes>> getListRequestRides(){
+  Future<APIResponse<RequestRidesRes>> getListRequestRides() {
     return apiClient.getListRequestRides();
   }
 
   Future<APIResponse<RideRes>> startRide({
     required RequestRide requestRide,
-  }){
-    final body = {
-      "ride": requestRide.toJson()
-    };
+  }) {
+    final body = {"ride": requestRide.toJson()};
     var x = body;
     return apiClient.startRide(body);
   }
@@ -186,7 +192,7 @@ class MainRepositoryImpl extends MainRepository {
     required double startLocationLng,
     required double endLocationLat,
     required double endLocationLng,
-  }){
+  }) {
     final body = {
       "start_location_lat": startLocationLat,
       "start_location_lng": startLocationLng,
@@ -206,7 +212,7 @@ class MainRepositoryImpl extends MainRepository {
   Future<APIResponse> updateRideStatus({
     required String id,
     required String status,
-  }){
+  }) {
     final body = {
       "id": id,
       "status": status,
@@ -216,8 +222,8 @@ class MainRepositoryImpl extends MainRepository {
 
   Future<APIResponse> updatePickUpTime({
     required String id,
-    required DateTime pickUpTime,
-  }){
+    required String pickUpTime,
+  }) {
     final body = {
       "id": id,
       "pickup_time": pickUpTime,
@@ -227,8 +233,8 @@ class MainRepositoryImpl extends MainRepository {
 
   Future<APIResponse> updateDropOffTime({
     required String id,
-    required DateTime dropOffTime,
-  }){
+    required String dropOffTime,
+  }) {
     final body = {
       "id": id,
       "dropoff_time": dropOffTime,
@@ -236,14 +242,34 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.updateDropOffTime(body);
   }
 
+  Future<APIResponse> updateCreatedTime({
+    required String id,
+    required String createdTime,
+  }) {
+    final body = {
+      "id": id,
+      "created_time": createdTime,
+    };
+    return apiClient.updateCreatedTime(body);
+  }
+
   Future<APIResponse> updateRideNote({
     required String id,
     required String note,
-  }){
+  }) {
     final body = {
       "id": id,
       "note": note,
     };
     return apiClient.updateRideNote(body);
+  }
+
+  Future<APIResponse<RideHistoryRes>> getRideById({
+    required String id,
+  }) {
+    final body = {
+      "id": id,
+    };
+    return apiClient.getRideById(body);
   }
 }

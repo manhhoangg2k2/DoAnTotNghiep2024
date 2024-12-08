@@ -8,6 +8,7 @@ import 'package:fare_riding_app/models/response/fare/ride_action_res.dart';
 import 'package:fare_riding_app/ui/common/app_colors.dart';
 import 'package:fare_riding_app/ui/common/app_dialog.dart';
 import 'package:fare_riding_app/ui/common/app_loading.dart';
+import 'package:fare_riding_app/ui/pages/RideProcess/completed_ride/cancel_ride_screen/cancel_ride_screen.dart';
 import 'package:fare_riding_app/ui/pages/RideProcess/completed_ride/success_ride.dart';
 import 'package:fare_riding_app/ui/pages/RideProcess/ride_process_cubit.dart';
 import 'package:flutter/material.dart';
@@ -425,7 +426,7 @@ class _RideProcessState extends State<_RideProcess> {
                                     ],
                                   ),
                                   SolidAppDivider(),
-                                  FloatingActionButton(onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context) => CompletedRideScreen(rideRes: _cubit.rideRes)))),
+                                  // FloatingActionButton(onPressed: ()=>Navigator.push(context,MaterialPageRoute(builder: (context) => CompletedRideScreen(rideRes: _cubit.rideRes)))),
                                   if (context
                                           .read<AppCubit>()
                                           .state
@@ -508,8 +509,10 @@ class _RideProcessState extends State<_RideProcess> {
                                                                               .unsubscribeFromTopic(
                                                                                   "ride/${_cubit.rideRes.ride!.id}/action");
                                                                           AppLoadingIndicator.hide();
-                                                                          Get.offAllNamed(
-                                                                              RouteConfig.home);
+
+                                                                          // Get.toNamed(
+                                                                          //     RouteConfig.home);
+                                                                Navigator.push(context,MaterialPageRoute(builder: (context) => CancelRideScreen(rideRes: _cubit.rideRes, actor: 'customer', reason: commentController.text)));
                                                               },
                                                             )
                                                                 : MainbuttonDisable(
@@ -550,7 +553,7 @@ class _RideProcessState extends State<_RideProcess> {
                                           //           .unsubscribeFromTopic(
                                           //               "ride/${_cubit.rideRes.ride!.id}/action");
                                           //       AppLoadingIndicator.hide();
-                                          //       Get.offAllNamed(
+                                          //       Get.toNamed(
                                           //           RouteConfig.home);
                                           //     });
                                           // // _cubit.requestRide(_cubit.state.rideEntity!.calculationRes!, 'cash',);

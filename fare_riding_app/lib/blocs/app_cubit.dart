@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:fare_riding_app/models/enums/app_status.dart';
 import 'package:fare_riding_app/models/response/fare/coordinates_res.dart';
 import 'package:fare_riding_app/models/response/fare/ride_action_res.dart';
+import 'package:fare_riding_app/models/response/fare/ride_history_res.dart';
 import 'package:fare_riding_app/models/response/notification/notification_res.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
 import 'package:fare_riding_app/ui/common/app_dialog.dart';
@@ -100,10 +101,10 @@ class AppCubit extends Cubit<AppState> {
         emit(state.copyWith(userInfo: result.data));
       }
       else{
-        Get.offAllNamed(RouteConfig.signIn);
+        Get.toNamed(RouteConfig.signIn);
       }
     } catch (error) {
-      Get.offAllNamed(RouteConfig.signIn);
+      Get.toNamed(RouteConfig.signIn);
       logger.e(error);
     }
   }
@@ -116,16 +117,10 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(appStatus: status));
   }
 
-
-
-  // logout() async {
-  //   try {
-  //     await authRepo.deleteFcmToken(fcmToken: fcmToken);
-  //   } catch (_) {}
-  //   authRepo.removeToken();
-  //   emit(state.removeUser());
-  //   checkNotificationUnRead();
-  // }
+  logout() async {
+    authRepo.removeToken();
+    Get.toNamed(RouteConfig.signIn);
+  }
 
   // Future<void> _setupFirebase() async {
   //   _messaging = FirebaseMessaging.instance;
@@ -439,6 +434,20 @@ class AppCubit extends Cubit<AppState> {
   //           ));
   // }
 
+  Future<bool> requestDeposit(double amount, String created_time, String description) async {
+    try{
+      final result = await mainRepo.requestDeposit(amount: amount, created_time: created_time, description: description);
+      if(result.code == 200){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }catch(e){
+      return false;
+    }
+  }
+
   void subscribeToTopic(String topic) {
     MQTTManager().mqttService.subscribe(topic);
     MQTTManager().mqttService.handleUpdates((messages) {
@@ -489,11 +498,12 @@ class AppCubit extends Cubit<AppState> {
     emit(state.copyWith(polyline: _polyline));
   }
 
-  Future<void> getRideById(String id)async{
+  Future<RideHistoryRes?> getRideById(String id)async{
     try{
       final result = await mainRepo.getRideById(id: id);
+      return result.data!;
     }catch(e){
-
+      return null;
     }
   }
 
@@ -512,7 +522,7 @@ class AppCubit extends Cubit<AppState> {
         subscribeToRideAction(rideRes.ride!.id.toString());
         emit(state.copyWith(appStatus: AppStatus.inProcess));
         unsubscribeFromTopic('customer/${id}/requestRide');
-        Get.offAllNamed(RouteConfig.rideProcess, arguments: rideRes);
+        Get.toNamed(RouteConfig.rideProcess, arguments: rideRes);
         AppSnackbar.showInfo(title: "Thông báo",message: "Tài xế đã nhận chuyến xe của bạn");
       } catch (e) {
         print('Error decoding JSON: $e');
@@ -544,7 +554,7 @@ class AppCubit extends Cubit<AppState> {
 
   Future<void> subscribeToRideAction(String id) async {
     MQTTManager().mqttService.subscribe('ride/${id}/action');
-    MQTTManager().mqttService.handleUpdates((messages) {
+    MQTTManager().mqttService.handleUpdates((messages) async {
       if(messages[0].topic == 'ride/${id}/action'){
         final MqttPublishMessage recMess = messages[0].payload as MqttPublishMessage;
         final String pt = MqttPublishPayload.bytesToStringAsString(recMess.payload.message);
@@ -565,18 +575,22 @@ class AppCubit extends Cubit<AppState> {
             else if(rideAction.action == 'cancel'){
               unsubscribeFromTopic('ride/${id}/action');
               unsubscribeFromTopic('driver/${id}/rideProcess');
-              Get.offAllNamed(RouteConfig.home);
+              final ride = await getRideById(id);
+              Get.toNamed(RouteConfig.cancelRideScreen2, arguments: ride);
               emit(state.copyWith(appStatus: AppStatus.free));
               AppDialog.showInformDialog(widget: Text("Tài xế đã huỷ chuyến xe"));
             }
-            else if(rideAction.action == 'completed'){
-              AppDialog.showConfirmDialog(text: "Xác nhận tài xế đã đưa bạn tới điểm đến", onConfirm: (){
+            else if(rideAction.action == 'completed') {
+              AppDialog.showConfirmDialog(text: "Xác nhận tài xế đã đưa bạn tới điểm đến", onConfirm: ()async{
                 publishMessage('ride/${id}/action', jsonEncode(RideActionRes(id: id, publisher: 'customer', action: 'completed')));
                 unsubscribeFromTopic('ride/${id}/action');
                 unsubscribeFromTopic('driver/${id}/rideProcess');
                 updateAppStatus(AppStatus.free);
                 updateRideStatus(id, 'completed');
-                Get.offAllNamed(RouteConfig.home);
+                final ride = await getRideById(id);
+                Get.toNamed(RouteConfig.ratingScreen, arguments: ride);
+              }, onCancel: (){
+                publishMessage('ride/${id}/action', jsonEncode(RideActionRes(id: id, publisher: 'customer', action: 'uncompleted')));
               });
             }
           }

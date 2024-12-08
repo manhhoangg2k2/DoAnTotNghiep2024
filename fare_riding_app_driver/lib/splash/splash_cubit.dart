@@ -25,7 +25,7 @@ class SplashCubit extends Cubit<SplashState> {
       emit(state.copyWith(isLoggedIn: true));
     } else {
       await authRepository.removeToken();
-      Get.offAllNamed(RouteConfig.signIn);
+      Get.toNamed(RouteConfig.signIn);
     }
   }
 

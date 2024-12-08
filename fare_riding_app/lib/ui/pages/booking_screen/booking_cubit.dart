@@ -10,10 +10,12 @@ import 'package:fare_riding_app/ui/common/app_snackbar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:meta/meta.dart';
 import 'package:mqtt_client/mqtt_client.dart';
 
 import '../../../configs/mqtt_manager.dart';
+import '../../../constant/AppColor.dart';
 import '../../../di/app_module.dart';
 import '../../../models/response/fare/calculation_res.dart';
 import '../../../repository/main_repository.dart';
@@ -36,6 +38,7 @@ class BookingCubit extends Cubit<BookingState> {
 
   void Init() async {
     await getListCoupon();
+    updatePolyline(0);
     emit(state.copyWith(rideEntity: rideEntity));
   }
 
@@ -80,6 +83,27 @@ class BookingCubit extends Cubit<BookingState> {
 
   void setCouponChooseIndex(int index) {
     emit(state.copyWith(couponChooseIndex: index));
+  }
+
+  void setRouteIndex(int index) {
+    emit(state.copyWith(routeIndex: index));
+  }
+
+  void updatePolyline(int index){
+    late List<LatLng> latLngList;
+    Set<Polyline> _polyline = {};
+    latLngList = rideEntity.calculationRes![index].coordinates
+        .map<LatLng>((coordinate) {
+      return LatLng(coordinate.lat, coordinate.lng);
+    }).toList();
+    _polyline.add(
+      Polyline(
+        polylineId: PolylineId('Route'),
+        points: latLngList,
+        color: AppColor.primary,
+      ),
+    );
+    emit(state.copyWith(polyline: _polyline));
   }
 
   Future<void> getBookingCalculation() async {

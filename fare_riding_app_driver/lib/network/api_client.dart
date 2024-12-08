@@ -15,7 +15,7 @@ import '../models/response/user/user_info_res.dart';
 part 'api_client.g.dart';
 
 @RestApi(baseUrl: 'http://localhost:3000')
-abstract class ApiClient{
+abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
   @POST("/api/driver/authentication")
@@ -34,7 +34,8 @@ abstract class ApiClient{
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
 
   @POST("/api/booking/getDirection")
-  Future<APIResponse<CalculationRes>> getBookingCalculation(@Body() Map<String, dynamic> body);
+  Future<APIResponse<CalculationRes>> getBookingCalculation(
+      @Body() Map<String, dynamic> body);
 
   @POST("/api/booking/requestRide")
   Future<APIResponse> requestRide(@Body() Map<String, dynamic> body);
@@ -43,10 +44,13 @@ abstract class ApiClient{
   Future<APIResponse<RideRes>> startRide(@Body() Map<String, dynamic> body);
 
   @GET("/api/app/getDirection")
-  Future<APIResponse<CoordinatesRes>> getDirection(@Body() Map<String, dynamic> body);
+  Future<APIResponse<CoordinatesRes>> getDirection(
+      @Body() Map<String, dynamic> body);
 
   @GET("/api/driver/getRideHistory")
-  Future<APIResponse<RideHistoryRes>> getRideHistory();
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory({
+    @Header('history-filter') required String historyFilter,
+  });
 
   @POST("/api/ride/cancelRequesRide")
   Future<APIResponse> cancelRequestRide(@Body() Map<String, dynamic> body);
@@ -60,6 +64,13 @@ abstract class ApiClient{
   @POST("/api/ride/updatePickUpTime")
   Future<APIResponse> updatePickUpTime(@Body() Map<String, dynamic> body);
 
+  @POST("/api/ride/updateCreatedTime")
+  Future<APIResponse> updateCreatedTime(@Body() Map<String, dynamic> body);
+
   @POST("/api/ride/updateRideNote")
   Future<APIResponse> updateRideNote(@Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/getRideById")
+  Future<APIResponse<RideHistoryRes>> getRideById(
+      @Body() Map<String, dynamic> body);
 }

@@ -357,12 +357,14 @@ class _ApiClient implements ApiClient {
   }
 
   @override
-  Future<APIResponse<RideHistoryRes>> getRideHistory() async {
+  Future<APIResponse<List<RideHistoryRes>>> getRideHistory(
+      {required String historyFilter}) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _headers = <String, dynamic>{};
+    final _headers = <String, dynamic>{r'history-filter': historyFilter};
+    _headers.removeWhere((k, v) => v == null);
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<APIResponse<RideHistoryRes>>(Options(
+    final _options = _setStreamType<APIResponse<List<RideHistoryRes>>>(Options(
       method: 'GET',
       headers: _headers,
       extra: _extra,
@@ -379,11 +381,16 @@ class _ApiClient implements ApiClient {
           baseUrl,
         )));
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late APIResponse<RideHistoryRes> _value;
+    late APIResponse<List<RideHistoryRes>> _value;
     try {
-      _value = APIResponse<RideHistoryRes>.fromJson(
+      _value = APIResponse<List<RideHistoryRes>>.fromJson(
         _result.data!,
-        (json) => RideHistoryRes.fromJson(json as Map<String, dynamic>),
+        (json) => json is List<dynamic>
+            ? json
+                .map<RideHistoryRes>(
+                    (i) => RideHistoryRes.fromJson(i as Map<String, dynamic>))
+                .toList()
+            : List.empty(),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
@@ -545,6 +552,44 @@ class _ApiClient implements ApiClient {
   }
 
   @override
+  Future<APIResponse<dynamic>> updateCreatedTime(
+      Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<APIResponse<dynamic>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/ride/updateCreatedTime',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late APIResponse<dynamic> _value;
+    try {
+      _value = APIResponse<dynamic>.fromJson(
+        _result.data!,
+        (json) => json as dynamic,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
   Future<APIResponse<dynamic>> updateRideNote(Map<String, dynamic> body) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
@@ -573,6 +618,44 @@ class _ApiClient implements ApiClient {
       _value = APIResponse<dynamic>.fromJson(
         _result.data!,
         (json) => json as dynamic,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<APIResponse<RideHistoryRes>> getRideById(
+      Map<String, dynamic> body) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(body);
+    final _options = _setStreamType<APIResponse<RideHistoryRes>>(Options(
+      method: 'POST',
+      headers: _headers,
+      extra: _extra,
+    )
+        .compose(
+          _dio.options,
+          '/api/ride/getRideById',
+          queryParameters: queryParameters,
+          data: _data,
+        )
+        .copyWith(
+            baseUrl: _combineBaseUrls(
+          _dio.options.baseUrl,
+          baseUrl,
+        )));
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late APIResponse<RideHistoryRes> _value;
+    try {
+      _value = APIResponse<RideHistoryRes>.fromJson(
+        _result.data!,
+        (json) => RideHistoryRes.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

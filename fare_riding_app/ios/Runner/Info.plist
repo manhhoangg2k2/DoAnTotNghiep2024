@@ -50,5 +50,11 @@
       <string>sms</string>
       <string>tel</string>
     </array>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>Ứng dụng cần quyền truy cập thư viện ảnh để lưu ảnh.</string>
+    <key>NSPhotoLibraryAddUsageDescription</key>
+    <string>Ứng dụng cần quyền thêm ảnh vào thư viện.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>Ứng dụng cần quyền sử dụng máy ảnh.</string>
 </dict>
 </plist>

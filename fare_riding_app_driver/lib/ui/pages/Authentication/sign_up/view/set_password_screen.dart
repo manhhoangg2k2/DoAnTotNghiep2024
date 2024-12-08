@@ -17,7 +17,7 @@ class SetPasswordScreen extends StatelessWidget {
     TextEditingController controller = new TextEditingController();
     return Scaffold(
       backgroundColor: AppColor.white,
-      appBar: AppBarBase(text: AppText.setPassword),
+      appBar: AppBarBase(title: AppText.setPassword),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(AppSizes.size_20),

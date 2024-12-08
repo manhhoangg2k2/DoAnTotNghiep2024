@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fare_riding_app/blocs/app_cubit.dart';
 import 'package:fare_riding_app/router/route_config.dart';
 import 'package:fare_riding_app/ui/pages/Authentication/log_in/cubit/authentication_cubit.dart';
@@ -13,6 +15,13 @@ import 'di/repository_module.dart';
 import 'firebase_options.dart';
 
 void main() async {
+
+  String generateRandomString(int length) {
+    const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&*()_+-=[]{}|;:,.<>?';
+    Random random = Random();
+
+    return List.generate(length, (index) => chars[random.nextInt(chars.length)]).join();
+  }
   Get.testMode = true;
   WidgetsFlutterBinding.ensureInitialized();
   try {
@@ -23,7 +32,7 @@ void main() async {
     await MQTTManager().initialize(
       server: 'broker.hivemq.com',
       port: 1883,
-      clientId: 'dinhmaaqol',
+      clientId: generateRandomString(20),
       username: '',
       password: '',
     );

@@ -183,13 +183,13 @@
 //                         children: [
 //                           InkWell(
 //                             onTap: (){
-//                               Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'car-4');
+//                               Get.toNamed(RouteConfig.chooseLocation, arguments: 'car-4');
 //                             },
 //                             child: iconWithLabel(
 //                                 () {}, "assets/svg/car_icon.svg", AppText.car),
 //                           ),
 //                           iconWithLabel(() {
-//                             Get.offAllNamed(RouteConfig.chooseLocation, arguments: 'motorbike');
+//                             Get.toNamed(RouteConfig.chooseLocation, arguments: 'motorbike');
 //                           }, "assets/svg/motorbike_icon.svg",
 //                               AppText.motobike),
 //                           iconWithLabel(() {}, "assets/svg/delivery_icon.svg",

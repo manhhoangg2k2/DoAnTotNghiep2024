@@ -186,11 +186,11 @@ class RideHistoryDetail extends StatelessWidget {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    rideHistoryRes.customer.name,
+                                    rideHistoryRes.driver.name,
                                     style: AppTextStyle.blackS16Bold,
                                   ),
                                   Text(
-                                    rideHistoryRes.customer.phoneNumber,
+                                    rideHistoryRes.driver.phoneNumber,
                                     style: AppTextStyle.blackS14
                                         .copyWith(color: AppColors.gray),
                                   ),

@@ -6,6 +6,8 @@ import 'package:fare_riding_app/ui/common/TextFieldWithLabel.dart';
 import 'package:fare_riding_app/ui/pages/booking_screen/widget/choose_location/choose_location_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 
 class ChooseLocation extends StatelessWidget {
   const ChooseLocation({super.key});
@@ -38,7 +40,7 @@ class _ChooseLocationState extends State<_ChooseLocation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBarBase(text: "Chọn địa điểm"),
+      appBar: AppBarBase(title: "Chọn địa điểm"),
       body: Container(
         padding: EdgeInsets.all(20),
         child: Column(

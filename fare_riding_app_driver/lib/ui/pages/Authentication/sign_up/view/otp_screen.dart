@@ -24,7 +24,7 @@ class OtpScreen extends StatelessWidget {
     final _formKey = GlobalKey<FormState>();
     return Scaffold(
       backgroundColor: AppColor.white,
-      appBar: AppBarBase(text: "Xác nhận " + AppText.phoneNumber.toLowerCase()),
+      appBar: AppBarBase(title: "Xác nhận " + AppText.phoneNumber.toLowerCase()),
       body: Center(
         child: Container(
           padding: EdgeInsets.all(AppSizes.size_20),

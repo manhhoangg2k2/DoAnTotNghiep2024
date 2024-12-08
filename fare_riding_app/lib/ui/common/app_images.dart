@@ -11,6 +11,7 @@ class AppImages {
   static const icSearch = 'assets/images/ic_search.png';
   static const icSetting = 'assets/images/ic_setting.png';
   static const icCar = 'assets/images/car.svg';
+  static const icDeposit = 'assets/svg/deposit.svg';
   static const icMotorbike = 'assets/images/motorbike.svg';
   static const icArrowLeft = 'assets/images/ic_arrow_left.png';
   static const icArrowRight = 'assets/images/ic_arrow_right.png';
