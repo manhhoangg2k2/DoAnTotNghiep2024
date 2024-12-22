@@ -119,4 +119,9 @@ class AppTextStyle {
   static final tintS18 = tint.copyWith(fontSize: 18);
   static final tintS18Bold = tintS18.copyWith(fontWeight: FontWeight.bold);
   static final tintS18W800 = tintS18.copyWith(fontWeight: FontWeight.w800);
+
+  //s40
+  static final blackS40 = black.copyWith(fontSize: 40);
+  static final blackS40Bold = blackS40.copyWith(fontWeight: FontWeight.bold);
+  static final blackS40W800 = blackS40.copyWith(fontWeight: FontWeight.w800);
 }

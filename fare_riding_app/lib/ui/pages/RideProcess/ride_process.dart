@@ -93,28 +93,30 @@ class _RideProcessState extends State<_RideProcess> {
                     // _controller = controller;
                   },
                   markers: {
-                    Marker(
-                      markerId: MarkerId("startPosition"),
-                      position: LatLng(
-                          context.read<AppCubit>().state.driverLocation!.lat,
-                          context.read<AppCubit>().state.driverLocation!.lng),
-                      // icon: context.read<AppCubit>().state.currentLocationIcon!,
-                      icon: BitmapDescriptor.defaultMarkerWithHue(
-                          BitmapDescriptor.hueBlue),
-                      infoWindow: InfoWindow(
-                        title: 'My Location',
-                      ),
-                    ),
                     // Marker(
                     //   markerId: MarkerId("startPosition"),
-                    //   position: LatLng(_cubit.state.rideEntity!.calculationRes!.pickupLocation.lat,
-                    //       _cubit.state.rideEntity!.calculationRes!.pickupLocation.lng),
+                    //   position: LatLng(
+                    //       context.read<AppCubit>().state.driverLocation!.lat,
+                    //       context.read<AppCubit>().state.driverLocation!.lng),
+                    //   // icon: context.read<AppCubit>().state.currentLocationIcon!,
                     //   icon: BitmapDescriptor.defaultMarkerWithHue(
                     //       BitmapDescriptor.hueBlue),
                     //   infoWindow: InfoWindow(
                     //     title: 'My Location',
                     //   ),
                     // ),
+                    Marker(
+                      markerId: MarkerId("startPosition"),
+                      position: LatLng(double.parse(_cubit.rideRes.driver!.lastestLocationLat!),
+                          double.parse(_cubit.rideRes.driver!.lastestLocationLng!)),
+                      icon: context
+                          .read<AppCubit>()
+                          .state
+                          .currentLocationIcon!,
+                      infoWindow: InfoWindow(
+                        title: 'My Location',
+                      ),
+                    ),
                     Marker(
                       markerId: MarkerId("endPosition"),
                       position: LatLng(

@@ -56,5 +56,9 @@
       <string>sms</string>
       <string>tel</string>
     </array>
+    <key>NSLocationWhenInUseUsageDescription</key>
+    <string>We need your location to provide location-based services.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>We need your location to provide location-based services.</string>
 </dict>
 </plist>

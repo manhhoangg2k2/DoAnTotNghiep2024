@@ -5,7 +5,9 @@ import Login from './components/login';
 import ForgotPassword from './components/forgotPassword';
 import AdminDashboard from './components/adminDashboard';
 import CustomerManager from './components/customerManager';
+import DriverManager from './components/driverManager';
 import TransactionManager from './components/transactionManager';
+import MapComponent from './components/driverLocationManager';
 
 const App = () => {
   return (
@@ -34,10 +36,28 @@ const App = () => {
         />
 
         <Route
+          path="/driverManager"
+          element={
+            <LayoutWithSidebar>
+              <DriverManager />
+            </LayoutWithSidebar>
+          }
+        />
+
+        <Route
           path="/transactionManager"
           element={
             <LayoutWithSidebar>
               <TransactionManager />
+            </LayoutWithSidebar>
+          }
+        />
+
+        <Route
+          path="/driverLocationManager"
+          element={
+            <LayoutWithSidebar>
+              <MapComponent />
             </LayoutWithSidebar>
           }
         />

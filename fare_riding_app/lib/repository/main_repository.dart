@@ -79,6 +79,10 @@ abstract class MainRepository {
     required String note,
   });
 
+  Future<APIResponse> finishRide({
+    required String id,
+  });
+
   Future<APIResponse<RideHistoryRes>> getRideById({
     required String id,
   });
@@ -229,6 +233,15 @@ class MainRepositoryImpl extends MainRepository {
       "note": note,
     };
     return apiClient.updateRideNote(body);
+  }
+
+  Future<APIResponse> finishRide({
+    required String id,
+  }){
+    final body = {
+      "id": id,
+    };
+    return apiClient.finishRide(body);
   }
 
   Future<APIResponse<RideHistoryRes>> getRideById({

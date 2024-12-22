@@ -10,6 +10,7 @@ import '../models/response/authen/login_res.dart';
 import '../models/response/authen/sign_up_res.dart';
 import '../models/response/fare/calculation_res.dart';
 import '../models/response/fare/coordinates_res.dart';
+import '../models/response/transaction/transaction_res.dart';
 import '../models/response/user/user_info_res.dart';
 import '../network/api_client.dart';
 import '../network/api_util.dart';
@@ -45,6 +46,9 @@ abstract class MainRepository {
 
   Future<APIResponse<List<RideHistoryRes>>> getRideHistory( {required String historyFilter});
 
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory(
+      {required String historyFilter});
+
   Future<APIResponse<RequestRidesRes>> getListRequestRides();
 
   Future<APIResponse> requestRide({
@@ -57,6 +61,21 @@ abstract class MainRepository {
 
   Future<APIResponse<RideHistoryRes>> getRideById({
     required String id,
+  });
+
+  Future<APIResponse> requestDeposit({
+    required double amount,
+    required String created_time,
+    required String description,
+  });
+
+  Future<APIResponse> requestWithdraw({
+    required double amount,
+    required String created_time,
+    required String number,
+    required String bank,
+    required String branch,
+    required String owner,
   });
 
   Future<APIResponse<CoordinatesRes>> getDirection({
@@ -175,6 +194,11 @@ class MainRepositoryImpl extends MainRepository {
     return apiClient.getRideHistory(historyFilter: historyFilter);
   }
 
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory(
+      {required String historyFilter}) {
+    return apiClient.getTransactionHistory(historyFilter: historyFilter);
+  }
+
   Future<APIResponse<RequestRidesRes>> getListRequestRides() {
     return apiClient.getListRequestRides();
   }
@@ -271,5 +295,37 @@ class MainRepositoryImpl extends MainRepository {
       "id": id,
     };
     return apiClient.getRideById(body);
+  }
+
+  Future<APIResponse> requestDeposit({
+    required double amount,
+    required String created_time,
+    required String description,
+  }){
+    final body = {
+      "amount": amount,
+      "created_time": created_time,
+      "description": description,
+    };
+    return apiClient.requestDeposit(body);
+  }
+
+  Future<APIResponse> requestWithdraw({
+    required double amount,
+    required String created_time,
+    required String number,
+    required String bank,
+    required String branch,
+    required String owner,
+  }){
+    final body = {
+      "amount": amount,
+      "created_time": created_time,
+      "number": number,
+      "bank": bank,
+      "branch": branch,
+      "owner": owner,
+    };
+    return apiClient.requestWithdraw(body);
   }
 }

@@ -7,6 +7,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:intl/date_symbol_data_file.dart';
@@ -24,6 +25,10 @@ void main() async {
   }
   Get.testMode = true;
   WidgetsFlutterBinding.ensureInitialized();
+  final hasPermission = await _handleLocationPermission();
+  if (!hasPermission) {
+    print("Permission denied. The app may not function as intended.");
+  }
   try {
     await repoConfigDI();
     await Firebase.initializeApp(
@@ -40,6 +45,33 @@ void main() async {
   } catch (e) {
     print('Error initializing Firebase or DI: $e');
   }
+}
+
+Future<bool> _handleLocationPermission() async {
+  bool serviceEnabled;
+  LocationPermission permission;
+
+  serviceEnabled = await Geolocator.isLocationServiceEnabled();
+  if (!serviceEnabled) {
+    print('Location services are disabled.');
+    return false;
+  }
+
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      print('Location permissions are denied.');
+      return false;
+    }
+  }
+
+  if (permission == LocationPermission.deniedForever) {
+    print('Location permissions are permanently denied.');
+    return false;
+  }
+
+  return true;
 }
 
 class MyApp extends StatelessWidget {
@@ -61,6 +93,7 @@ class MyApp extends StatelessWidget {
         designSize: const Size(393, 852),
         builder: (context, child){
           return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Fare Riding App',
             initialRoute: RouteConfig.splash,
             getPages: RouteConfig.getPages,

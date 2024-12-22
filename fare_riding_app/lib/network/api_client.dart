@@ -68,7 +68,11 @@ abstract class ApiClient {
       @Body() Map<String, dynamic> body);
 
   @POST("/api/ride/addReview")
-  Future<APIResponse<RideHistoryRes>> addReview(
+  Future<APIResponse> addReview(
+      @Body() Map<String, dynamic> body);
+
+  @POST("/api/ride/finishRide")
+  Future<APIResponse> finishRide(
       @Body() Map<String, dynamic> body);
 
   @POST("/api/account/requestDeposit")

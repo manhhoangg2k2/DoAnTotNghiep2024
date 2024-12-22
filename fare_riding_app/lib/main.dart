@@ -15,7 +15,6 @@ import 'di/repository_module.dart';
 import 'firebase_options.dart';
 
 void main() async {
-
   String generateRandomString(int length) {
     const String chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#\$%^&*()_+-=[]{}|;:,.<>?';
     Random random = Random();
@@ -61,6 +60,7 @@ class MyApp extends StatelessWidget {
         designSize: const Size(393, 852),
         builder: (context, child){
           return GetMaterialApp(
+            debugShowCheckedModeBanner: false,
             title: 'Fare Riding App',
             initialRoute: RouteConfig.splash,
             getPages: RouteConfig.getPages,

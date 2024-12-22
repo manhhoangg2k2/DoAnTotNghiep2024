@@ -27,6 +27,7 @@ class AppImages {
   static const icFavoriteOutLineOff =
       'assets/images/ic_favorite_outline_off.png';
   static const icFavoriteOn = 'assets/images/ic_favorite_on.png';
+  static const icDeposit = 'assets/svg/deposit.svg';
   static const icFavoriteOff = 'assets/images/ic_favorite_off.png';
   static const icReset = 'assets/images/ic_reset.png';
   static const icTimer = 'assets/images/ic_timer.png';

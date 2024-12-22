@@ -7,7 +7,7 @@ const Sidebar = () => {
       <h2 style={styles.header}>Quản lý</h2>
       <ul style={styles.menu}>
         <li style={styles.menuItem}>
-          <Link to="/" style={styles.link}>Home</Link>
+          <Link to="/dashboard" style={styles.link}>Tổng quát</Link>
         </li>
         <li style={styles.menuItem}>
           <Link to="/customerManager" style={styles.link}>Quản lý khách hàng</Link>
@@ -17,6 +17,9 @@ const Sidebar = () => {
         </li>
         <li style={styles.menuItem}>
           <Link to="/transactionManager" style={styles.link}>Quản lý giao dịch</Link>
+        </li>
+        <li style={styles.menuItem}>
+          <Link to="/driverLocationManager" style={styles.link}>Quản lý vị trí tài xế</Link>
         </li>
       </ul>
     </div>

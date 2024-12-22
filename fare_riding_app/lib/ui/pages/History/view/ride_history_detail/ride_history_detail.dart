@@ -150,7 +150,7 @@ class RideHistoryDetail extends StatelessWidget {
               Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Khách hàng",
+                    "Tài xế",
                     style: AppTextStyle.blackS16Bold.copyWith(),
                   )),
               Padding(

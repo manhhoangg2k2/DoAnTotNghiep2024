@@ -38,7 +38,7 @@ class BookingCubit extends Cubit<BookingState> {
 
   void Init() async {
     await getListCoupon();
-    updatePolyline(0);
+    await updatePolyline(0);
     emit(state.copyWith(rideEntity: rideEntity));
   }
 
@@ -89,14 +89,18 @@ class BookingCubit extends Cubit<BookingState> {
     emit(state.copyWith(routeIndex: index));
   }
 
-  void updatePolyline(int index){
+  void setPaymentMethodIndex(int index) {
+    emit(state.copyWith(paymentMethodIndex: index));
+  }
+
+  Future<void> updatePolyline(int index)async{
     late List<LatLng> latLngList;
     Set<Polyline> _polyline = {};
     latLngList = rideEntity.calculationRes![index].coordinates
         .map<LatLng>((coordinate) {
       return LatLng(coordinate.lat, coordinate.lng);
     }).toList();
-    _polyline.add(
+     _polyline.add(
       Polyline(
         polylineId: PolylineId('Route'),
         points: latLngList,

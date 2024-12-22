@@ -1,3 +1,4 @@
+import 'package:fare_riding_app/ui/widget/empty_dialog.dart';
 import 'package:fare_riding_app/ui/widget/inform_dialog_widget.dart';
 import 'package:flutter/material.dart' hide DatePickerTheme;
 import 'package:get/get.dart';
@@ -101,6 +102,18 @@ class AppDialog {
     }
     Get.dialog(
         InformDialogWidget(onConfirm: onConfirm, widget: widget,),
+        barrierDismissible: false);
+  }
+
+  static void showEmptyDialog({
+    required String title,
+    required Widget widget,
+  }) {
+    if (Get.isSnackbarOpen) {
+      Get.closeAllSnackbars();
+    }
+    Get.dialog(
+        EmptyDialog(title: title, widget: widget,),
         barrierDismissible: false);
   }
 

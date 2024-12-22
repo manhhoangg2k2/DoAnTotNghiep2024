@@ -53,11 +53,17 @@ class _HomeScreen1State extends State<_HomeScreen1> {
       _timer?.cancel();
     }
 
-    void _startPublishing(String message) {
+    void _startPublishing() {
       _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+        context.read<AppCubit>().getCurrentLocation();
         context.read<AppCubit>().publishMessage(
             'driver_location/${context.read<AppCubit>().state.userInfo!.id}',
-            message);
+            context
+                .read<AppCubit>()
+                .state
+                .currentLocation!
+                .toJson()
+                .toString());
       });
     }
 
@@ -82,19 +88,14 @@ class _HomeScreen1State extends State<_HomeScreen1> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text("${userInfo.name}"),
+                      Text("${userInfo.name}", style: AppTextStyle.blackS16Bold,),
                       Switch(
                         value: context.read<AppCubit>().state.isActive,
                         onChanged: (value) {
                           context.read<AppCubit>().switchActive(value);
                           setState(() {
                             if (value) {
-                              _startPublishing(context
-                                  .read<AppCubit>()
-                                  .state
-                                  .currentLocation!
-                                  .toJson()
-                                  .toString());
+                              _startPublishing();
                               _cubit.getListRequestRides(context);
                             } else {
                               _cubit.clearListRide();

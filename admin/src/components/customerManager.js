@@ -63,7 +63,9 @@ const CustomerTable = () => {
 
     try {
       if (customerIdToEdit) {
-        await api.put(`/editCustomer/${customerIdToEdit}`, {
+        const id = customerIdToEdit
+        await api.put(`/updateCustomerInfo`, {
+          id,
           name,
           email,
           phoneNumber,
@@ -110,6 +112,7 @@ const CustomerTable = () => {
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
     setCustomerIdToEdit(null);
+    setCanDelete(false);
     setCanDelete(false);
   };
 

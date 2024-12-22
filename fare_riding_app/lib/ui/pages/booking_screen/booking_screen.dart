@@ -86,7 +86,7 @@ class _BookingScreenState extends State<_BookingScreen> {
           body: Stack(
             children: [
               GoogleMap(
-                mapType: MapType.normal,
+                mapType: MapType.terrain,
                 initialCameraPosition: CameraPosition(
                   target: LatLng(
                       _cubit.rideEntity.calculationRes![_cubit.state.routeIndex].coordinates.first
@@ -236,7 +236,91 @@ class _BookingScreenState extends State<_BookingScreen> {
                                   label: 'Tiền mặt',
                                   titleBottomSheet:
                                       "Chọn phương thức thanh toán",
-                                  bodyBottomSheet: Container(),
+                                  bodyBottomSheet:
+                                  BlocBuilder<BookingCubit, BookingState>(
+                                    builder: (context, state) {
+                                      // Kiểm tra trạng thái nếu cần (trường hợp này không cần vì chỉ có 2 phần tử tĩnh)
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+                                        child: Column(
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            // Tùy chọn "Tiền mặt"
+                                            Column(
+                                              children: [
+                                                InkWell(
+                                                  onTap: () {
+                                                    _cubit.setPaymentMethodIndex(0); // Index cho "Tiền mặt"
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Tiền mặt',
+                                                        style: AppTextStyle.blackS16Bold,
+                                                      ),
+                                                      Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                          color: state.paymentMethodIndex == 0
+                                                              ? AppColors.primary
+                                                              : AppColors.textLight,
+                                                          borderRadius: BorderRadius.circular(50),
+                                                          border: Border.all(color: AppColors.gray),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                                const Divider(),
+
+                                                // Tùy chọn "Thanh toán qua tài khoản ví"
+                                                InkWell(
+                                                  onTap: () {
+                                                    if(context.read<AppCubit>().state.userInfo!.balance < _cubit.rideEntity.calculationRes![_cubit.state.routeIndex].finalPrice){
+                                                      AppSnackbar.showError(title: "Thông báo", message: "Bạn khng còn đủ tiền trong tài khoản");
+                                                    }
+                                                    else _cubit.setPaymentMethodIndex(1);
+                                                  },
+                                                  child: Row(
+                                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                    children: [
+                                                      Text(
+                                                        'Thanh toán qua tài khoản ví',
+                                                        style: AppTextStyle.blackS16Bold,
+                                                      ),
+                                                      Container(
+                                                        height: 20,
+                                                        width: 20,
+                                                        decoration: BoxDecoration(
+                                                          color: state.paymentMethodIndex == 1
+                                                              ? AppColors.primary
+                                                              : AppColors.textLight,
+                                                          borderRadius: BorderRadius.circular(50),
+                                                          border: Border.all(color: AppColors.gray),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                            // Nút xác nhận
+                                            Mainbutton(
+                                              text: 'Xác nhận',
+                                              type: 1,
+                                                onTap: () {
+                                                  Get.back();
+                                                  _cubit
+                                                      .getBookingCalculation();
+                                                }
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  )
                                 ),
                                 SizedBox(
                                   height: 10,
@@ -377,10 +461,15 @@ class _BookingScreenState extends State<_BookingScreen> {
                                                     child: InkWell(
                                                       onTap: () {
                                                         setState(() {
-                                                          _cubit
-                                                              .setRouteIndex(
-                                                              index);
-                                                          _cubit.updatePolyline(index);
+                                                          if(context.read<AppCubit>().state.userInfo!.balance < _cubit.rideEntity.calculationRes![index].finalPrice && _cubit.state.paymentMethodIndex == 1){
+                                                            AppSnackbar.showError(title: "Thông báo", message: "Bạn khng còn đủ tiền trong tài khoản");
+                                                          }
+                                                          else{
+                                                            _cubit
+                                                                .setRouteIndex(
+                                                                index);
+                                                            _cubit.updatePolyline(index);
+                                                          }
                                                         });
                                                       },
                                                       child: Row(
@@ -515,7 +604,8 @@ class _BookingScreenState extends State<_BookingScreen> {
                                       await _cubit.requestRide(
                                         _cubit
                                             .state.rideEntity!.calculationRes![_cubit.state.routeIndex],
-                                        'cash',
+                                        _cubit
+                                            .state.paymentMethodIndex ==0 ? 'cash' : 'wallet',
                                       );
                                       context
                                           .read<AppCubit>()

@@ -5,6 +5,7 @@ import 'package:fare_riding_app/constant/AppFont.dart';
 import 'package:fare_riding_app/constant/AppSize.dart';
 import 'package:fare_riding_app/constant/AppText.dart';
 import 'package:fare_riding_app/models/response/user/user_info_res.dart';
+import 'package:fare_riding_app/ui/common/app_dialog.dart';
 import 'package:fare_riding_app/ui/common/app_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -90,84 +91,101 @@ class HomeScreen extends StatelessWidget {
                         padding: EdgeInsets.all(AppSizes.size_5),
                         child: Column(
                           children: [
-                            Container(
-                              decoration: BoxDecoration(
-                                  color: AppColor.gray_8E8,
-                                  borderRadius: BorderRadius.circular(5)),
-                              padding: EdgeInsets.all(AppSizes.size_10),
-                              child: Row(
-                                children: [
-                                  SvgPicture.asset(
-                                    'assets/svg/to_location.svg',
-                                    color: AppColor.red_F2F,
-                                    height: 20,
-                                  ),
-                                  SizedBox(
-                                    width: AppSizes.size_10,
-                                  ),
-                                  TextBase(
-                                      text: "Bạn muốn đi đến đâu?",
-                                      fontSize: AppSizes.size_16,
-                                      fontWeight: AppFonts.medium)
-                                ],
+                            InkWell(
+                              onTap:(){
+                                AppDialog.showEmptyDialog(title: "Chọn phương tiện",widget: Row(
+                                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    iconWithLabel(() {
+                                      Get.toNamed(RouteConfig.chooseLocation,
+                                          arguments: 'car-4');
+                                    }, "assets/svg/car_icon.svg", AppText.car),
+                                    iconWithLabel(() {
+                                      Get.toNamed(RouteConfig.chooseLocation,
+                                          arguments: 'motorbike');
+                                    }, "assets/svg/motorbike_icon.svg", AppText.motobike),
+                                  ],
+                                ),);
+                              },
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: AppColor.gray_8E8,
+                                    borderRadius: BorderRadius.circular(5)),
+                                padding: EdgeInsets.all(AppSizes.size_10),
+                                child: Row(
+                                  children: [
+                                    SvgPicture.asset(
+                                      'assets/svg/to_location.svg',
+                                      color: AppColor.red_F2F,
+                                      height: 20,
+                                    ),
+                                    SizedBox(
+                                      width: AppSizes.size_10,
+                                    ),
+                                    TextBase(
+                                        text: "Bạn muốn đi đến đâu?",
+                                        fontSize: AppSizes.size_16,
+                                        fontWeight: AppFonts.medium)
+                                  ],
+                                ),
                               ),
                             ),
-                            Container(
-                              height: 40,
-                              padding: EdgeInsets.all(8),
-                              child: ListView(
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/svg/add_location.svg',
-                                        height: 25,
-                                        color: AppColor.main,
-                                      ),
-                                      TextBase(
-                                        text: "Thêm nhà",
-                                        fontWeight: AppFonts.medium,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/svg/add_location.svg',
-                                        height: 25,
-                                        color: AppColor.main,
-                                      ),
-                                      // SizedBox(width: 1,),
-                                      TextBase(
-                                        text: "Thêm Công ty",
-                                        fontWeight: AppFonts.medium,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    width: 20,
-                                  ),
-                                  Row(
-                                    children: [
-                                      SvgPicture.asset(
-                                        'assets/svg/add_location.svg',
-                                        height: 25,
-                                        color: AppColor.main,
-                                      ),
-                                      // SizedBox(width: 5,),
-                                      TextBase(
-                                        text: "Thêm địa chỉ",
-                                        fontWeight: AppFonts.medium,
-                                      )
-                                    ],
-                                  ),
-                                ],
-                              ),
-                            ),
+                            // Container(
+                            //   height: 40,
+                            //   padding: EdgeInsets.all(8),
+                            //   child: ListView(
+                            //     scrollDirection: Axis.horizontal,
+                            //     children: [
+                            //       Row(
+                            //         children: [
+                            //           SvgPicture.asset(
+                            //             'assets/svg/add_location.svg',
+                            //             height: 25,
+                            //             color: AppColor.main,
+                            //           ),
+                            //           TextBase(
+                            //             text: "Thêm nhà",
+                            //             fontWeight: AppFonts.medium,
+                            //           )
+                            //         ],
+                            //       ),
+                            //       SizedBox(
+                            //         width: 20,
+                            //       ),
+                            //       Row(
+                            //         children: [
+                            //           SvgPicture.asset(
+                            //             'assets/svg/add_location.svg',
+                            //             height: 25,
+                            //             color: AppColor.main,
+                            //           ),
+                            //           // SizedBox(width: 1,),
+                            //           TextBase(
+                            //             text: "Thêm Công ty",
+                            //             fontWeight: AppFonts.medium,
+                            //           )
+                            //         ],
+                            //       ),
+                            //       SizedBox(
+                            //         width: 20,
+                            //       ),
+                            //       Row(
+                            //         children: [
+                            //           SvgPicture.asset(
+                            //             'assets/svg/add_location.svg',
+                            //             height: 25,
+                            //             color: AppColor.main,
+                            //           ),
+                            //           // SizedBox(width: 5,),
+                            //           TextBase(
+                            //             text: "Thêm địa chỉ",
+                            //             fontWeight: AppFonts.medium,
+                            //           )
+                            //         ],
+                            //       ),
+                            //     ],
+                            //   ),
+                            // ),
                           ],
                         ),
                       ),
@@ -188,7 +206,10 @@ class HomeScreen extends StatelessWidget {
                           iconWithLabel(() {}, "assets/svg/delivery_icon.svg",
                               AppText.delivery),
                           iconWithLabel(
-                              () {}, "assets/svg/car_icon.svg", AppText.car),
+                              () {
+                                Get.toNamed(RouteConfig.chooseLocation,
+                                    arguments: 'car-7');
+                              }, "assets/svg/car_icon.svg", "Ô tô 7 chỗ"),
                         ],
                       ),
                       SizedBox(

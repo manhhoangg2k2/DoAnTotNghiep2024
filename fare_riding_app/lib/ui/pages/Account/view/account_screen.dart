@@ -6,6 +6,10 @@ import 'package:fare_riding_app/ui/common/app_images.dart';
 import 'package:fare_riding_app/ui/common/app_text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
+
+import '../../../../router/route_config.dart';
 
 class AccountScreen extends StatelessWidget {
   const AccountScreen({super.key});
@@ -26,7 +30,7 @@ class AccountScreen extends StatelessWidget {
               children: [
                 Column(
                   children: [
-                    _buildItem(title: "Thông tin cá nhân"),
+                    _buildItem(title: "Thông tin cá nhân", onTap: ()=> Get.toNamed(RouteConfig.userDetail)),
                     SizedBox(height: 10,),
                     _buildItem(title: "Điều khoản"),
                     SizedBox(height: 10,),

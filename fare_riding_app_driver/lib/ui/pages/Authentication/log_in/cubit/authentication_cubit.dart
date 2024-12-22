@@ -30,7 +30,7 @@ class AuthenticationCubit extends Cubit<AuthenticationState> {
         
       }
     }catch(e){
-
+      print(e);
     }
   }
 }

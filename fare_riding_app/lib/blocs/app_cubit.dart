@@ -611,6 +611,16 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  Future<void> finishRide(String id) async{
+    try{
+      final result = await mainRepo.finishRide(id: id);
+      if(result.code == 200){
+      }
+    }catch(e){
+      AppSnackbar.showInfo(title: 'Lỗi');
+    }
+  }
+
   int extractNumberFromString(String input) {
     RegExp regex = RegExp(r'(\d+)s');
     Match? match = regex.firstMatch(input);
@@ -648,7 +658,7 @@ class AppCubit extends Cubit<AppState> {
     try{
       BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
         ImageConfiguration(size: Size(16, 16)),
-        AppImages.icCurrentLocation,
+        AppImages.icCar,
       );
       emit(state.copyWith(currentLocationIcon: bitmapDescriptor));
     }

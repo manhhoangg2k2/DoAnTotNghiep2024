@@ -11,6 +11,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:mqtt_client/mqtt_client.dart';
@@ -43,14 +44,48 @@ class AppCubit extends Cubit<AppState> {
   AppCubit() : super(const AppState());
 
   bool isStoreReview = true;
-  init() {
-    emit(state.copyWith(
-        currentLocation:
-            Location(lat: 21.01363170241855, lng: 105.83465691117729)));
+  init() async {
+    await getCurrentLocation();
+    // emit(state.copyWith(
+    //     currentLocation:
+    //         Location(lat: 21.01363170241855, lng: 105.83465691117729)));
     _loadCurrentLocationIcon();
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
+  }
+
+  Future<void> getCurrentLocation() async {
+    try {
+      // Kiểm tra quyền và dịch vụ vị trí
+      bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+      if (!serviceEnabled) {
+        return;
+      }
+
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        return;
+      }
+
+      // Lấy vị trí hiện tại
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      // Cập nhật vị trí hiện tại
+      emit(state.copyWith(
+          currentLocation:
+          Location(lat: position.latitude, lng: position.longitude)));
+    } catch (e) {
+    }
   }
 
 //   Future<void> getAppVersion() async{
@@ -115,6 +150,43 @@ class AppCubit extends Cubit<AppState> {
     }
   }
 
+  Future<bool> requestDeposit(double amount, String created_time, String description) async {
+    try{
+      final result = await mainRepo.requestDeposit(amount: amount, created_time: created_time, description: description);
+      if(result.code == 200){
+
+        return true;
+      }
+      else{
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
+  }
+
+  Future<bool> requestWithdraw(double amount, String created_time, String number,String bank,String branch,String owner,) async {
+    try{
+      final result = await mainRepo.requestWithdraw(
+          amount: amount,
+          created_time: created_time,
+          number: number,
+          bank: bank,
+          branch: branch,
+          owner: owner);
+      if(result.code == 200){
+        return true;
+      }
+      else{
+        return false;
+      }
+    }catch(e){
+      print(e);
+      return false;
+    }
+  }
+
   void subscribeToTopic(String topic) {
     MQTTManager().mqttService.subscribe(topic);
     MQTTManager().mqttService.handleUpdates((messages) {
@@ -163,6 +235,7 @@ class AppCubit extends Cubit<AppState> {
   }
 
   Future<CoordinatesRes?> getDirection() async {
+    await getCurrentLocation();
     try{
       final response = await mainRepo.getDirection(startLocationLat: state.currentLocation!.lat, startLocationLng: state.currentLocation!.lng, endLocationLat: state.destination!.lat , endLocationLng: state.destination!.lng);
       return response.data!;

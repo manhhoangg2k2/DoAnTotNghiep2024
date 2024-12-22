@@ -10,11 +10,14 @@ import 'package:retrofit/retrofit.dart';
 
 import '../models/response/api_response.dart';
 import '../models/response/authen/sign_up_res.dart';
+import '../models/response/transaction/transaction_res.dart';
 import '../models/response/user/user_info_res.dart';
 
 part 'api_client.g.dart';
 
-@RestApi(baseUrl: 'http://localhost:3000')
+// @RestApi(baseUrl: 'http://localhost:3000')
+// @RestApi(baseUrl: 'http://192.168.10.115:3000')
+@RestApi(baseUrl: 'http://192.168.1.140:3000')
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 
@@ -29,6 +32,11 @@ abstract class ApiClient {
 
   @GET("/api/driver/getListRequestRide")
   Future<APIResponse<RequestRidesRes>> getListRequestRides();
+
+  @GET("/api/driver/getTransactionHistory")
+  Future<APIResponse<List<TransactionRes>>> getTransactionHistory({
+    @Header('history-filter') required String historyFilter,
+  });
 
   @POST("/api/driver/setPasscode")
   Future<APIResponse> setPasscode(@Body() Map<String, dynamic> body);
@@ -72,5 +80,13 @@ abstract class ApiClient {
 
   @POST("/api/ride/getRideById")
   Future<APIResponse<RideHistoryRes>> getRideById(
+      @Body() Map<String, dynamic> body);
+
+  @POST("/api/driver/requestDeposit")
+  Future<APIResponse> requestDeposit(
+      @Body() Map<String, dynamic> body);
+
+  @POST("/api/driver/requestWithdraw")
+  Future<APIResponse> requestWithdraw(
       @Body() Map<String, dynamic> body);
 }

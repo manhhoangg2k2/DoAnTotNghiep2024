@@ -7,6 +7,7 @@ class Textfieldwithlabel extends StatelessWidget {
   final String? initial;
   final String? svgIconPath;
   final String? Function(String?)? validator; // Thêm trường validator
+  final bool? enable;
 
   const Textfieldwithlabel({
     Key? key,
@@ -14,7 +15,8 @@ class Textfieldwithlabel extends StatelessWidget {
     required this.hint,
     this.initial,
     this.svgIconPath,
-    this.validator, // Thêm trường này vào constructor
+    this.validator,
+    this.enable,
   }) : super(key: key);
 
   @override
@@ -32,6 +34,7 @@ class Textfieldwithlabel extends StatelessWidget {
         ),
         const SizedBox(height: 5),
         TextFormField(
+          enabled: enable ?? true,
           controller: controller..text = initial ?? '',
           validator: validator, // Sử dụng validator
           decoration: InputDecoration(

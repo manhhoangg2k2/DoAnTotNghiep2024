@@ -1,4 +1,5 @@
 
+import 'package:fare_riding_app/ui/pages/Account/view/user_detail.dart';
 import 'package:fare_riding_app/ui/pages/Authentication/log_in/view/authentication_screen.dart';
 import 'package:fare_riding_app/ui/pages/Home/view/home_screen.dart';
 import 'package:fare_riding_app/ui/pages/MainScreen/view/main_screen.dart';
@@ -25,6 +26,7 @@ class RouteConfig {
   static const String rideProcess = "/rideProcess";
   static const String ratingScreen = "/ratingScreen";
   static const String cancelRideScreen2 = "/cancelRideScreen2";
+  static const String userDetail = "/userDetail";
 
   static final List<GetPage> getPages = [
     GetPage(name: splash, page: () => const SplashPage()),
@@ -35,5 +37,6 @@ class RouteConfig {
     GetPage(name: rideProcess, page: () => const RideProcess()),
     GetPage(name: ratingScreen, page: () => CompletedRideScreen()),
     GetPage(name: cancelRideScreen2, page: () => CancelRideWidget2()),
+    GetPage(name: userDetail, page: () => UserDetail()),
   ];
 }
