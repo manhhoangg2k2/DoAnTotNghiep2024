@@ -11,6 +11,7 @@ class AppState extends Equatable {
   final Location? driverLocation;
   final double driverDuration;
   final BitmapDescriptor? currentLocationIcon;
+  final BitmapDescriptor? motorbikeIcon;
   final AppStatus appStatus;
 
   const AppState(
@@ -24,6 +25,7 @@ class AppState extends Equatable {
       this.driverDuration = 0,
       this.driverLocation,
       this.currentLocationIcon,
+      this.motorbikeIcon,
       this.appStatus = AppStatus.free});
 
   @override
@@ -38,7 +40,8 @@ class AppState extends Equatable {
         polyline,
         driverDuration,
         driverLocation,
-        appStatus
+        appStatus,
+    motorbikeIcon
       ];
 
   AppState copyWith({
@@ -53,6 +56,7 @@ class AppState extends Equatable {
     double? driverDuration,
     BitmapDescriptor? currentLocationIcon,
     AppStatus? appStatus,
+    BitmapDescriptor? motorbikeIcon
   }) {
     return AppState(
       needReloadData: needReloadData ?? this.needReloadData,
@@ -66,6 +70,7 @@ class AppState extends Equatable {
       driverDuration: driverDuration ?? this.driverDuration,
       currentLocationIcon: currentLocationIcon ?? this.currentLocationIcon,
       appStatus: appStatus ?? this.appStatus,
+      motorbikeIcon: motorbikeIcon ?? this.motorbikeIcon
     );
   }
 }

@@ -47,6 +47,7 @@ class AppCubit extends Cubit<AppState> {
 
   init() {
     _loadCurrentLocationIcon();
+    _loadMotorbikeIcon();
     // _setupFirebase();
     // checkNotificationUnRead();
     // getAppVersion();
@@ -661,6 +662,19 @@ class AppCubit extends Cubit<AppState> {
         AppImages.icCar,
       );
       emit(state.copyWith(currentLocationIcon: bitmapDescriptor));
+    }
+    catch(e){
+      print(e);
+    }
+  }
+
+  Future<void> _loadMotorbikeIcon() async {
+    try{
+      BitmapDescriptor bitmapDescriptor = await BitmapDescriptor.fromAssetImage(
+        ImageConfiguration(size: Size(16, 16)),
+        AppImages.icMotorbike,
+      );
+      emit(state.copyWith(motorbikeIcon: bitmapDescriptor));
     }
     catch(e){
       print(e);

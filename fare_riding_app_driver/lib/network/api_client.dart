@@ -16,8 +16,8 @@ import '../models/response/user/user_info_res.dart';
 part 'api_client.g.dart';
 
 // @RestApi(baseUrl: 'http://localhost:3000')
-// @RestApi(baseUrl: 'http://192.168.10.115:3000')
-@RestApi(baseUrl: 'http://192.168.1.140:3000')
+@RestApi(baseUrl: 'http://192.168.10.115:3000')
+// @RestApi(baseUrl: 'http://192.168.1.140:3000')
 abstract class ApiClient {
   factory ApiClient(Dio dio, {String baseUrl}) = _ApiClient;
 

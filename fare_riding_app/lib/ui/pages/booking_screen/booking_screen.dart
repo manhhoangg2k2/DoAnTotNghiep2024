@@ -130,6 +130,21 @@ class _BookingScreenState extends State<_BookingScreen> {
                       title: 'My Location',
                     ),
                   ),
+                  // Marker(
+                  //   markerId: MarkerId("startPosition"),
+                  //   position: LatLng(
+                  //       _cubit.rideEntity!.calculationRes![_cubit.state.routeIndex].pickupLocation
+                  //           .lat,
+                  //       _cubit.rideEntity!.calculationRes![_cubit.state.routeIndex].pickupLocation
+                  //           .lng),
+                  //   icon: context
+                  //       .read<AppCubit>()
+                  //       .state
+                  //       .currentLocationIcon!,
+                  //   infoWindow: InfoWindow(
+                  //     title: 'My Location',
+                  //   ),
+                  // ),
                   Marker(
                     markerId: MarkerId("endPosition"),
                     position: LatLng(
@@ -142,6 +157,21 @@ class _BookingScreenState extends State<_BookingScreen> {
                       title: 'Destination',
                     ),
                   ),
+                  // Marker(
+                  //   markerId: MarkerId("endPosition"),
+                  //   position: LatLng(
+                  //       _cubit.rideEntity!.calculationRes![_cubit.state.routeIndex].dropoffLocation
+                  //           .lat,
+                  //       _cubit.rideEntity!.calculationRes![_cubit.state.routeIndex].dropoffLocation
+                  //           .lng),
+                  //   icon: context
+                  //       .read<AppCubit>()
+                  //       .state
+                  //       .motorbikeIcon!,
+                  //   infoWindow: InfoWindow(
+                  //     title: 'Destination',
+                  //   ),
+                  // ),
                 },
               ),
               LeftBackButton(),

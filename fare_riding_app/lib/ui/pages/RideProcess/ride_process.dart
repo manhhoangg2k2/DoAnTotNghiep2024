@@ -105,6 +105,19 @@ class _RideProcessState extends State<_RideProcess> {
                     //     title: 'My Location',
                     //   ),
                     // ),
+                    _cubit.rideRes.driver!.vehicle!.vehicleTypeId == 3 ?
+                    Marker(
+                      markerId: MarkerId("startPosition"),
+                      position: LatLng(double.parse(_cubit.rideRes.driver!.lastestLocationLat!),
+                          double.parse(_cubit.rideRes.driver!.lastestLocationLng!)),
+                      icon: context
+                          .read<AppCubit>()
+                          .state
+                          .motorbikeIcon!,
+                      infoWindow: InfoWindow(
+                        title: 'My Location',
+                      ),
+                    ):
                     Marker(
                       markerId: MarkerId("startPosition"),
                       position: LatLng(double.parse(_cubit.rideRes.driver!.lastestLocationLat!),
@@ -116,7 +129,8 @@ class _RideProcessState extends State<_RideProcess> {
                       infoWindow: InfoWindow(
                         title: 'My Location',
                       ),
-                    ),
+                    )
+                    ,
                     Marker(
                       markerId: MarkerId("endPosition"),
                       position: LatLng(
