@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import BarChart from '../components/chart/barchart';
 import PieChart from './chart/piechart';
 import GroupedBarChart from './chart/groupBarchart';
+import api from "../utils/api";
 
 const chartContainerLarge = {
-  flex: 6,
+  flex: 5,
   margin: '10px',
   padding: '10px',
   backgroundColor: '#f2f2f2',
@@ -23,7 +24,7 @@ const chartContainerSmall = {
 };
 
 const tableContainer = {
-  flex: 4,
+  flex: 5,
   margin: '10px',
   padding: '10px',
   backgroundColor: '#f2f2f2',
@@ -34,6 +35,8 @@ const tableContainer = {
 const AdminDashboard = () => {
   const [timeRange, setTimeRange] = useState('month'); 
   const [type, setType] = useState('vehicle_type'); 
+  const [drivers, setDrivers] = useState([]); 
+  const [loading, setLoading] = useState(true);
 
   const handleTimeRangeChange = (event) => {
     setTimeRange(event.target.value);
@@ -42,6 +45,22 @@ const AdminDashboard = () => {
   const handleTypeChange = (event) => {
     setType(event.target.value);
   };
+
+  const fetchDrivers = async () => {
+    setLoading(true);
+    try {
+      const response = await api.get("/getRankingDriver");
+      setDrivers(response.data.data.drivers || []);
+    } catch (error) {
+      console.error("Error fetching drivers:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchDrivers();
+  }, []);
 
   return (
     <div className="container mt-5">
@@ -84,40 +103,40 @@ const AdminDashboard = () => {
 
         <div style={tableContainer}>
           <h2 className="text-center text-info">Bảng xếp hạng</h2>
-          <table className="table table-bordered table-striped">
-            <thead>
-              <tr>
-                <th>Số thứ tự</th>
-                <th>Tên tài xế</th>
-                <th>Tích cực</th>
-                <th>Tiêu cực</th>
-                <th>Đánh giá</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>1</td>
-                <td>Đinh Mạnh Hoàng</td>
-                <td>20</td>
-                <td>2</td>
-                <td>4.9</td>
-              </tr>
-              <tr>
-                <td>2</td>
-                <td>Hoàng Đinh Mạnh</td>
-                <td>15</td>
-                <td>1</td>
-                <td>4.9</td>
-              </tr>
-              <tr>
-                <td>3</td>
-                <td>Nguyễn Văn Hào</td>
-                <td>7</td>
-                <td>3</td>
-                <td>3</td>
-              </tr>
-            </tbody>
-          </table>
+          {loading ? (
+            <div className="text-center">Đang tải...</div>
+          ) : (
+            <table className="table table-bordered table-striped">
+              <thead>
+                <tr>
+                  <th>Số thứ tự</th>
+                  <th>Tên tài xế</th>
+                  <th>Tích cực</th>
+                  <th>Tiêu cực</th>
+                  <th>Đánh giá</th>
+                </tr>
+              </thead>
+              <tbody>
+                {drivers.length > 0 ? (
+                  drivers.map((driver, index) => (
+                    <tr key={driver.id}>
+                      <td>{index + 1}</td>
+                      <td>{driver.name}</td>
+                      <td>{driver.posCount}</td>
+                      <td>{driver.negCount}</td>
+                      <td>{driver.rating} ⭐</td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">
+                      Không có dữ liệu
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          )}
         </div>
       </div>
 

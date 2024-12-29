@@ -18,7 +18,11 @@ const DriverTable = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [licenceNumber, setLicenceNumber] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
-  const [customerIdToEdit, setCustomerIdToEdit] = useState(null);
+  const [selectedVehicleType, setSelectedVehicleType] = useState("");
+  const [vehicleName, setVehicleName] = useState("");
+  const [vehicleDes, setVehicleDes] = useState("");
+  const [vehicleCode, setVehicleCode] = useState("");
+  const [driverIdToEdit, setDriverIdToEdit] = useState(null);
   const [canDelete, setCanDelete] = useState(false); // Checkbox trạng thái
 
   const [errors, setErrors] = useState({});
@@ -38,8 +42,15 @@ const DriverTable = () => {
       newErrors.phoneNumber = "Số điện thoại phải là 10 chữ số.";
     }
     if (!selectedGender) newErrors.gender = "Hãy chọn giới tính.";
+  
+    if (!vehicleCode.trim()) {
+      newErrors.vehicleCode = "Mã phương tiện không được để trống.";
+    } else if (!/^[A-Z0-9]{2,3}[A-Z]\d{1} - \d{5}$/.test(vehicleCode)) {
+      newErrors.vehicleCode = "Mã phương tiện không hợp lệ. Định dạng phải là 11A1 - 11111.";
+    }
     return newErrors;
   };
+  
 
   // Fetch drivers
   const fetchdrivers = async () => {
@@ -53,7 +64,6 @@ const DriverTable = () => {
       setLoading(false);
     }
   };
-
   // Add or Edit Customer
   const handleSubmit = async () => {
     const newErrors = validateForm();
@@ -63,22 +73,32 @@ const DriverTable = () => {
     }
 
     try {
-      if (customerIdToEdit) {
-        const id = customerIdToEdit
-        await api.put(`/updateCustomerInfo`, {
+      if (driverIdToEdit) {
+        const id = driverIdToEdit
+        await api.put(`/updateDriverInfo`, {
           id,
           name,
           email,
           phoneNumber,
           gender: selectedGender,
+          licenceNumber: licenceNumber,
+          selectedVehicleType: selectedVehicleType,
+          vehicleName: vehicleName,
+          vehicleDes: vehicleDes,
+          vehicleCode: vehicleCode
         });
       } else {
-        await api.post("/addNewCustomer", {
+        await api.post("/addNewDriver", {
           name,
           email,
           phoneNumber,
           gender: selectedGender,
           created_time: new Date().toISOString(),
+          licenceNumber: licenceNumber,
+          selectedVehicleType: selectedVehicleType,
+          vehicleName: vehicleName,
+          vehicleDes: vehicleDes,
+          vehicleCode: vehicleCode
         });
       }
       setShowAddEditModal(false);
@@ -92,7 +112,7 @@ const DriverTable = () => {
   const handleDelete = async () => {
     if (!canDelete) return; // Chỉ xóa nếu đã tích checkbox
     try {
-      await api.delete(`/deleteCustomer/${customerIdToEdit}`);
+      await api.delete(`/deleteDriver/${driverIdToEdit}`);
       setShowDeleteModal(false);
       fetchdrivers();
     } catch (error) {
@@ -106,13 +126,13 @@ const DriverTable = () => {
     setEmail("");
     setPhoneNumber("");
     setSelectedGender("");
-    setCustomerIdToEdit(null);
+    setDriverIdToEdit(null);
     setErrors({});
   };
 
   const handleCloseDeleteModal = () => {
     setShowDeleteModal(false);
-    setCustomerIdToEdit(null);
+    setDriverIdToEdit(null);
     setCanDelete(false);
     setCanDelete(false);
   };
@@ -123,13 +143,13 @@ const DriverTable = () => {
       setEmail(customer.email);
       setPhoneNumber(customer.phone_number);
       setSelectedGender(customer.gender);
-      setCustomerIdToEdit(customer.id);
+      setDriverIdToEdit(customer.id);
     }
     setShowAddEditModal(true);
   };
 
   const handleShowDeleteModal = (customerId) => {
-    setCustomerIdToEdit(customerId);
+    setDriverIdToEdit(customerId);
     setShowDeleteModal(true);
   };
 
@@ -144,12 +164,12 @@ const DriverTable = () => {
       </h1>
       <div style={{ marginBottom: "20px", textAlign: "right" }}>
         <Button variant="success" onClick={() => handleShowAddEditModal()}>
-          Thêm người dùng
+          Thêm tài xế
         </Button>
       </div>
       <Modal show={showAddEditModal} onHide={handleCloseAddEditModal}>
         <Modal.Header closeButton>
-          <Modal.Title>{customerIdToEdit ? "Chỉnh sửa tài xế" : "Thêm tài xế"}</Modal.Title>
+          <Modal.Title>{driverIdToEdit ? "Chỉnh sửa tài xế" : "Thêm tài xế"}</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form>
@@ -210,65 +230,65 @@ const DriverTable = () => {
             <Form.Group className="mb-3" controlId="formLicenceNumber">
               <Form.Label>Mã số bằng lái xe</Form.Label>
               <Form.Control
-                value={phoneNumber}
+                value={licenceNumber}
                 onChange={(e) => setLicenceNumber(e.target.value)}
                 placeholder="0123456789"
                 // isInvalid={!!errors.phoneNumber}
               />
-              <Form.Control.Feedback type="invalid">
+              {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
-              </Form.Control.Feedback>
+              </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group controlId="genderDropdown">
               <Form.Label>Chọn loại xe</Form.Label>
               <Form.Select
-                value={selectedGender}
-                onChange={(e) => setSelectedGender(e.target.value)}
-                isInvalid={!!errors.gender}
+                value={selectedVehicleType}
+                onChange={(e) => setSelectedVehicleType(e.target.value)}
+                // isInvalid={!!errors.gender}
               >
                 <option value="">Chọn...</option>
                 <option value="motorbike">Xe máy</option>
                 <option value="car-4">Xe 4 chỗ</option>
                 <option value="car-7">Xe 7 chỗ</option>
               </Form.Select>
-              <Form.Control.Feedback type="invalid">
+              {/* <Form.Control.Feedback type="invalid">
                 {errors.gender}
-              </Form.Control.Feedback>
+              </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formLicenceNumber">
               <Form.Label>Tên xe</Form.Label>
               <Form.Control
-                value={phoneNumber}
-                onChange={(e) => setLicenceNumber(e.target.value)}
+                value={vehicleName}
+                onChange={(e) => setVehicleName(e.target.value)}
                 placeholder="0123456789"
                 // isInvalid={!!errors.phoneNumber}
               />
-              <Form.Control.Feedback type="invalid">
+              {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
-              </Form.Control.Feedback>
+              </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formLicenceNumber">
               <Form.Label>Mô tả xe</Form.Label>
               <Form.Control
-                value={phoneNumber}
-                onChange={(e) => setLicenceNumber(e.target.value)}
+                value={vehicleDes}
+                onChange={(e) => setVehicleDes(e.target.value)}
                 placeholder="0123456789"
                 // isInvalid={!!errors.phoneNumber}
               />
-              <Form.Control.Feedback type="invalid">
+              {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
-              </Form.Control.Feedback>
+              </Form.Control.Feedback> */}
             </Form.Group>
             <Form.Group className="mb-3" controlId="formLicenceNumber">
               <Form.Label>Biến số xe</Form.Label>
               <Form.Control
-                value={phoneNumber}
-                onChange={(e) => setLicenceNumber(e.target.value)}
-                placeholder="0123456789"
-                // isInvalid={!!errors.phoneNumber}
+                value={vehicleCode}
+                onChange={(e) => setVehicleCode(e.target.value)}
+                placeholder="11T1 - 11111"
+                isInvalid={!!errors.vehicleCode}
               />
               <Form.Control.Feedback type="invalid">
-                {errors.phoneNumber}
+                {errors.vehicleCode}
               </Form.Control.Feedback>
             </Form.Group>
           </Form>
@@ -278,7 +298,7 @@ const DriverTable = () => {
             Quay lại
           </Button>
           <Button variant="primary" onClick={handleSubmit}>
-            {customerIdToEdit ? "Cập nhật" : "Thêm"}
+            {driverIdToEdit ? "Cập nhật" : "Thêm"}
           </Button>
         </Modal.Footer>
       </Modal>
