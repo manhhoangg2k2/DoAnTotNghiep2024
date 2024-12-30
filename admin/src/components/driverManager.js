@@ -18,6 +18,7 @@ const DriverTable = () => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [licenceNumber, setLicenceNumber] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
+  const [vehicleId, setVehicleId] = useState("");
   const [selectedVehicleType, setSelectedVehicleType] = useState("");
   const [vehicleName, setVehicleName] = useState("");
   const [vehicleDes, setVehicleDes] = useState("");
@@ -42,7 +43,7 @@ const DriverTable = () => {
       newErrors.phoneNumber = "Số điện thoại phải là 10 chữ số.";
     }
     if (!selectedGender) newErrors.gender = "Hãy chọn giới tính.";
-  
+
     if (!vehicleCode.trim()) {
       newErrors.vehicleCode = "Mã phương tiện không được để trống.";
     } else if (!/^[A-Z0-9]{2,3}[A-Z]\d{1} - \d{5}$/.test(vehicleCode)) {
@@ -50,7 +51,7 @@ const DriverTable = () => {
     }
     return newErrors;
   };
-  
+
 
   // Fetch drivers
   const fetchdrivers = async () => {
@@ -82,10 +83,11 @@ const DriverTable = () => {
           phoneNumber,
           gender: selectedGender,
           licenceNumber: licenceNumber,
-          selectedVehicleType: selectedVehicleType,
-          vehicleName: vehicleName,
-          vehicleDes: vehicleDes,
-          vehicleCode: vehicleCode
+          vehicle_type: selectedVehicleType,
+          vehicle_id: vehicleId,
+          vehicle_name: vehicleName,
+          vehicle_description: vehicleDes,
+          code: vehicleCode
         });
       } else {
         await api.post("/addNewDriver", {
@@ -93,12 +95,12 @@ const DriverTable = () => {
           email,
           phoneNumber,
           gender: selectedGender,
-          created_time: new Date().toISOString(),
-          licenceNumber: licenceNumber,
-          selectedVehicleType: selectedVehicleType,
-          vehicleName: vehicleName,
-          vehicleDes: vehicleDes,
-          vehicleCode: vehicleCode
+          created_date: new Date().toISOString(),
+          license_number: licenceNumber,
+          vehicle_type: selectedVehicleType,
+          vehicle_name: vehicleName,
+          vehicle_description: vehicleDes,
+          code: vehicleCode
         });
       }
       setShowAddEditModal(false);
@@ -137,16 +139,39 @@ const DriverTable = () => {
     setCanDelete(false);
   };
 
-  const handleShowAddEditModal = (customer) => {
-    if (customer) {
-      setName(customer.name);
-      setEmail(customer.email);
-      setPhoneNumber(customer.phone_number);
-      setSelectedGender(customer.gender);
-      setDriverIdToEdit(customer.id);
+  const handleShowAddEditModal = (driver) => {
+    if (driver) {
+        setName(driver.name);
+        setEmail(driver.email);
+        setPhoneNumber(driver.phone_number);
+        setSelectedGender(driver.gender);
+        setLicenceNumber(driver.license_number || ""); // Mã số bằng lái xe
+
+        // Điền thông tin xe từ response API
+        let vehicleType = "";
+        switch (driver.vehicle?.type) {
+          case "motorbike":
+              vehicleType = "motorbike";
+              break;
+          case "car-7":
+              vehicleType = "car-7";
+              break;
+          case "car-4":
+              vehicleType = "car-4";
+              break;
+          default:
+              vehicleType = "";
+        }
+        setSelectedVehicleType(vehicleType);
+        setVehicleName(driver.vehicle?.name || "");
+        setVehicleDes(driver.vehicle?.description || "");
+        setVehicleCode(driver.vehicle?.code || "");
+        setVehicleId(driver.vehicle?.id || "");
+        setDriverIdToEdit(driver.id);
     }
     setShowAddEditModal(true);
-  };
+};
+
 
   const handleShowDeleteModal = (customerId) => {
     setDriverIdToEdit(customerId);
@@ -219,9 +244,9 @@ const DriverTable = () => {
                 isInvalid={!!errors.gender}
               >
                 <option value="">Chọn...</option>
-                <option value="Nam">Nam</option>
-                <option value="Nữ">Nữ</option>
-                <option value="Khác">Khác</option>
+                <option value="Male">Nam</option>
+                <option value="Female">Nữ</option>
+                <option value="Other">Khác</option>
               </Form.Select>
               <Form.Control.Feedback type="invalid">
                 {errors.gender}
@@ -233,7 +258,7 @@ const DriverTable = () => {
                 value={licenceNumber}
                 onChange={(e) => setLicenceNumber(e.target.value)}
                 placeholder="0123456789"
-                // isInvalid={!!errors.phoneNumber}
+              // isInvalid={!!errors.phoneNumber}
               />
               {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
@@ -244,12 +269,12 @@ const DriverTable = () => {
               <Form.Select
                 value={selectedVehicleType}
                 onChange={(e) => setSelectedVehicleType(e.target.value)}
-                // isInvalid={!!errors.gender}
+              // isInvalid={!!errors.gender}
               >
                 <option value="">Chọn...</option>
                 <option value="motorbike">Xe máy</option>
-                <option value="car-4">Xe 4 chỗ</option>
-                <option value="car-7">Xe 7 chỗ</option>
+                <option value="car-4">Ô tô 4 chỗ</option>
+                <option value="car-7">Ô tô 7 chỗ</option>
               </Form.Select>
               {/* <Form.Control.Feedback type="invalid">
                 {errors.gender}
@@ -260,8 +285,8 @@ const DriverTable = () => {
               <Form.Control
                 value={vehicleName}
                 onChange={(e) => setVehicleName(e.target.value)}
-                placeholder="0123456789"
-                // isInvalid={!!errors.phoneNumber}
+                placeholder="Toyota Vios"
+              // isInvalid={!!errors.phoneNumber}
               />
               {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
@@ -272,8 +297,8 @@ const DriverTable = () => {
               <Form.Control
                 value={vehicleDes}
                 onChange={(e) => setVehicleDes(e.target.value)}
-                placeholder="0123456789"
-                // isInvalid={!!errors.phoneNumber}
+                placeholder="Màu trắng, 4 chỗ..."
+              // isInvalid={!!errors.phoneNumber}
               />
               {/* <Form.Control.Feedback type="invalid">
                 {errors.phoneNumber}
