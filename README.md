@@ -111,7 +111,7 @@ Dự án được xây dựng với các công nghệ chính sau:
     Ứng dụng sẽ được chạy trên máy ảo. Tương tự với fare_riding_app_driver
 
 4.  **Khởi chạy Frontend Application:**
-    *(Trong thư mục `client`)*
+    *(Trong thư mục `admin`)*
     ```bash
     npm start
     # hoặc
