@@ -126,8 +126,21 @@ Dự án được xây dựng với các công nghệ chính sau:
 
 [Bạn có thể thêm một vài ảnh chụp màn hình các tính năng nổi bật của ứng dụng tại đây. Hoặc nếu có video demo, hãy chèn link vào đây.]
 
-![Ảnh chụp màn hình 1](link-toi-anh.png)
-![Ảnh chụp màn hình 2](link-toi-anh.png)
+![image](https://github.com/user-attachments/assets/0b8d9052-284a-42e5-9132-195fca0acaf3)
+![image](https://github.com/user-attachments/assets/24352e52-3ff8-4d37-9726-639ea8082f96)
+![image](https://github.com/user-attachments/assets/95bc6a1e-901a-4294-b050-c1162ddfaca9)
+![image](https://github.com/user-attachments/assets/433d40b1-0036-4fa1-8602-b24b068f315e)
+![image](https://github.com/user-attachments/assets/5d391e2d-0255-418f-a523-137885a699e9)
+![image](https://github.com/user-attachments/assets/91d67f42-8b2d-4fbc-bab8-8daa3b71e1ae)
+![image](https://github.com/user-attachments/assets/4acccae1-ce1a-49dc-999e-c8b71a1090d7)
+![image](https://github.com/user-attachments/assets/1d704688-db9a-4c77-98ff-8f0ad3d3130d)
+![image](https://github.com/user-attachments/assets/7eb4611f-dd49-417c-af50-fa5072a939b4)
+![image](https://github.com/user-attachments/assets/bab496cb-1b2c-475c-bab4-db701faffba0)
+![image](https://github.com/user-attachments/assets/61838311-cea6-4ba8-87fd-9381734217b1)
+![image](https://github.com/user-attachments/assets/dac43f52-3e9f-42e3-9371-d0ad1b5be909)
+![image](https://github.com/user-attachments/assets/c14a9cbe-0eaf-42bd-8e94-e4a7f550170f)
+![image](https://github.com/user-attachments/assets/c77612cf-0cd7-4889-9783-f628045ec53e)
+![image](https://github.com/user-attachments/assets/e451bd33-3163-4f05-bc2a-5ffee1a2e0ee)
 
 ## 🧑‍💻 Tác giả
 
