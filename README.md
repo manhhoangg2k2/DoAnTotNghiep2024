@@ -47,8 +47,8 @@ Dự án được xây dựng với các công nghệ chính sau:
 ### Yêu cầu hệ thống
 
 * Node.js phiên bản 20.x trở lên
+* Flutter 3.24.x trở lên
 * npm hoặc yarn
-* [Ví dụ: Cài đặt và khởi chạy MongoDB Server]
 
 ### Hướng dẫn cài đặt
 
@@ -63,14 +63,12 @@ Dự án được xây dựng với các công nghệ chính sau:
     ```
 
 3.  **Cài đặt các gói phụ thuộc cho Backend:**
-    *(Giả sử thư mục backend của bạn là `server` hoặc `backend`)*
     ```bash
     cd backend
     npm install
     ```
 
 4.  **Cài đặt các gói phụ thuộc cho Frontend:**
-    *(Giả sử thư mục frontend của bạn là `client` hoặc `frontend`)*
     ```bash
     cd ../client
     npm install
@@ -97,13 +95,12 @@ Dự án được xây dựng với các công nghệ chính sau:
 ### Chạy dự án
 
 1.  **Khởi chạy Backend Server:**
-    *(Trong thư mục `server`)*
     ```bash
     npm start
     # hoặc
     npm run dev
     ```
-    Server sẽ chạy tại `http://localhost:PORT` (ví dụ: `http://localhost:8080`).
+    Server sẽ chạy tại `http://localhost:PORT`.
     
 2.  **Khởi chạy Mobile:**
     *(Trong thư mục `fare_riding_app`)*
@@ -120,12 +117,9 @@ Dự án được xây dựng với các công nghệ chính sau:
     # hoặc
     npm run dev
     ```
-    Ứng dụng sẽ tự động mở trong trình duyệt tại `http://localhost:3000` (hoặc một cổng khác).
+    Ứng dụng sẽ tự động mở trong trình duyệt tại `http://localhost:3000`.
 
 ##  Demo
-
-[Bạn có thể thêm một vài ảnh chụp màn hình các tính năng nổi bật của ứng dụng tại đây. Hoặc nếu có video demo, hãy chèn link vào đây.]
-
 ![image](https://github.com/user-attachments/assets/0b8d9052-284a-42e5-9132-195fca0acaf3)
 ![image](https://github.com/user-attachments/assets/24352e52-3ff8-4d37-9726-639ea8082f96)
 ![image](https://github.com/user-attachments/assets/95bc6a1e-901a-4294-b050-c1162ddfaca9)
@@ -144,8 +138,8 @@ Dự án được xây dựng với các công nghệ chính sau:
 
 ## 🧑‍💻 Tác giả
 
-* **Họ và tên:** [Điền họ tên của bạn]
-* **MSSV:** [Điền mã số sinh viên]
+* **Họ và tên:** Đinh Mạnh Hoàng
+* **MSSV:** B20DCCN271
 * **GitHub:** [https://github.com/manhhoangg2k2](https://github.com/manhhoangg2k2)
 
 ---
